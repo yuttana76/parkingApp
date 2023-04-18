@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>บริการการจองที่จอด</title>
+    {% include "include/customer-css.html" %}
+    {% include "include/customer-js.html" %}
+</head>
+<style>
+    body {
+        background-color: #f8fafb;
+    }
+    .text-modal-reserve {
+        font-size: 20px;
+        font-weight: lighter;
+    }
+    .form-check-label-reserev-step1 {
+        padding-left: 0.8em;
+    }
+    
+</style>
+
+<body>
+    {% include "comps/navbar-2.html" %}
+
+    <div class="container pt-5">
+
+        <div class="row mt-3">
+            <div class="col-lg-12 text-center">
+                <div class="order-progress-stepper">
+                    <div class="step active">เลือกอาคาร<br>ลานจอดรถ</div>
+                    <div class="step">ตรวจสอบ<br>ยอมรับเงื่อนไข</div>
+                    <div class="step">ตรวจสอบ<br>ยืนยันการจอง</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Step 1 เลือกลานจอดรถ -->
+        <h3 class="text-center mt-5">เลือกอาคาร/ลานจอดรถ</h3>
+        <div class="cta filter text-center">
+            <a class="button-0 active" data-filter="all" role="button">ทั้งหมด</a>
+            <a class="button-1" data-filter="button-1" role="button">สายสีน้ำเงิน</a>
+            <a class="button-2" data-filter="button-2" role="button">สายสีม่วง</a>
+            <a class="button-3" data-filter="button-3" role="button">สายสีเขียว</a>
+        </div>
+
+
+        <div class="row boxes">
+            {% for item in parkings %}
+                <div class="col-md-4" data-color="{{ item.mrline }}">
+                    <!-- <form class="needs-validation" method="POST"> -->
+                        <figure class="card-2 card-with-hover">
+                            <img src="/static/image/manage/station/{{item.image_source}}">
+                            <figcaption class="card-caption">
+                                <div class="card-caption-content">
+                                    <h6 name="parking_name" value="parking_name">{{item.name}}</h6>
+                                    <input type="hidden" name="station" value="{{item.name}}" readonly>
+                                    <p>
+                                    <h5 class="mb-0 mt-3">จำนวนที่จอดว่าง</h5>
+                                    <div class="inputNumber">
+                                        <label>{{item.emptyparkinglot}}</label>
+                                    </div>
+                                    <div class="col-12">
+                                        <!-- Button trigger modal -->
+                                        <input type="hidden" value="{{item.status_qr}}" id="status_qr">
+                                        <button type="button" class="btn btn-primary col-5 btn-lg" data-toggle="modal" onclick="checkStatus()"
+                                            data-target="#modal-popup-reservestep1{{ loop.index }}" >จองที่จอด</button>
+                                    </div>
+                                    
+                                    </p>
+                                </div>
+                            </figcaption>
+                        </figure>
+                    <!-- </form> -->
+                </div>
+                <!-- Modal -->
+                <div class="modal fade" id="modal-popup-reservestep1{{ loop.index }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                    <div class="modal-content modal-content-reserve-step1" style="border-radius: 20px;">
+                    <form class="needs-validation" method="POST">
+                        <div class="modal-header">
+                        <h5 class="modal-title-reserve-step1 " id="exampleModalLabel">จองที่จอด</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        </div>
+                        <div class="modal-body">
+                            {% for index in range(item.reserve_floor|length) %}
+                            <select class="custom-select">
+                                
+                                <option value="1">{{item.name}} ชั้นที่ 1 ว่าง {{item.reserve_floor_remain[index]}}</option>
+                                <input type="hidden" value="{{item.reserve_floor[index]}}" name="floor">
+                                <!-- <option value="2">ชั้นที่ 2</option>
+                                <option value="3">ชั้นที่ 3</option>
+                                <option value="4">ชั้นที่ 4</option> -->
+
+                            </select>
+                            {% endfor %}
+                            <!-- {% for index in range(item.reserve_floor|length) %}
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="floor" value="{{item.reserve_floor[index]}}">
+                                <label class="form-check-label-reserev-step1" for="defaultCheck1">
+                                <p class="text-modal-reserve">
+                                    <select class="custom-select">                       
+                                        <option value="1">ชั้น {{item.reserve_floor[index]}} ว่าง {{item.reserve_floor_remain[index]}}</option>
+                                    </select>
+                                </label>
+                            </div>
+                            {% endfor %} -->
+                        </div>
+                        <div class="modal-footer">
+                            <input type="hidden" value="{{item.name}}" name="submit_floor">
+                            <button type="{{item.button}}" class="btn btn-primary" >จอง</button>
+                            <button type="button" class="btn btn-secondary">ยกเลิก</button>
+                        </div>
+                    </form>
+                    </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% include "comps/scroll-top.html" %}
+    {% include "comps/popup-cookie.html" %}
+
+    {% include "comps/footer.html" %}
+</body>
+
+<script>
+    $(document).ready(function () {
+        var $filters = $('.filter [data-filter]')
+        $boxes = $('.boxes [data-color]');
+
+        $filters.on('click', function (e) {
+            e.preventDefault();
+            var $this = $(this);
+
+            $filters.removeClass('active');
+            $this.addClass('active');
+
+            var $filterColor = $this.attr('data-filter');
+
+            if ($filterColor == 'all') {
+                $boxes.removeClass('is-animated')
+                    .fadeOut().promise().done(function () {
+                        $boxes.addClass('is-animated').fadeIn();
+                    });
+            } else {
+                $boxes.removeClass('is-animated')
+                    .fadeOut().promise().done(function () {
+                        $boxes.filter('[data-color = "' + $filterColor + '"]')
+                            .addClass('is-animated').fadeIn();
+                    });
+            }
+        });
+    });
+
+    function checkStatus() {
+        if (document.getElementById("status_qr").value == 1){
+            console.log("status1")
+            alert("ไม่สามารถทำรายการจองได้ เนื่องจาก Qr code ของคุณยังไม่ถูกใช้งาน")
+            window.location.href='/qrcode-opengate'
+        }
+        console.log("status0")
+    }
+
+</script>
+
+</html>

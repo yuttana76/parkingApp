@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>บริการการจองที่จอด</title>
+    {% include "include/customer-css.html" %} {% include
+    "include/customer-js.html" %}
+  </head>
+  <style>
+    body {
+      background-color: #f8fafb;
+    }
+    div.sticky {
+      position: -webkit-sticky;
+      position: sticky;
+      bottom: 0;
+    }
+  </style>
+  <body>
+    {% include "comps/navbar-2.html" %}
+
+    <div class="container pt-5">
+      <div class="row mt-3">
+        <div class="col-lg-12 text-center">
+          <div class="order-progress-stepper">
+            <div class="step completed">เลือกอาคาร<br />ลานจอดรถ</div>
+            <div class="step completed">ตรวจสอบ<br />ยอมรับเงื่อนไข</div>
+            <div class="step active">ตรวจสอบ<br />ยืนยันการจอง</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="mt-3">
+        <!-- GoBack -->
+        <div class="py-3 h4">
+          <a href="javascript: history.go(-1)"
+            ><i class="fa fa-chevron-left mr-2" aria-hidden="true"></i>ลานจอด</a
+          >
+        </div>
+        <div class="row">
+          <div class="col-5">
+            <img
+              src="/static/image/manage/station/{{reserve_station_detail.img}}"
+              class="image-fluid img-thumbnail border"
+              alt="image"
+              loading="lazy"
+            />
+          </div>
+          <div class="col-7 py-3">
+            <h6>{{reserve_station_detail.name}}</h6>
+            <h6>วันที่ {{current_date}}</h6>
+            <h6>ชั้นที่จอง ชั้น {{floor}}</h6>
+            <h6>{{reserve_station_detail.location}}</h6>
+          </div>
+        </div>
+      </div>
+
+      <div class="card-reserve my-3">
+        <div class="card-body">
+
+          <!--<div class="row py-2">
+            <div class="col-7">ระยะเวลาเข้าใช้บริการ</div>
+            <div class="col-5 text-right">{{reserve_station_detail.reserve_checkin_period_format}}</div>
+          </div>
+          <div class="row py-2">
+            <div class="col-7">ระยะเวลาชำระค่าบริการ</div>
+            <div class="col-5 text-right">{{reserve_station_detail.reserve_payment_period_format}}</div>
+          </div>-->
+
+          <div class="row py-2 h5 mb-0"">
+            <div class="col-7">ค่าบริการ</div>
+            <div class="col-5 text-right">{{reserve_station_detail.reserve_price}}</div>
+          </div>
+          <div class="row py-2 h5 mb-0">
+            <div class="col-7">ค่าบริการทั้งหมด</div>
+            <div class="col-5 text-right">{{reserve_station_detail.reserve_price}}</div>
+          </div>
+
+        </div>
+
+      <form class="needs-validation" method="POST" enctype="multipart/form-data" 
+      onsubmit="alert('ดำเนินการบันทึกเรียบร้อย กรุณาทำการชำระภายใน {{reserve_station_detail.reserve_payment_period}} นาที')">
+        <!--Aof 15/02/65 เพิ่มที่อยู่ปัจุบัน กับ บริษัท (ใส่ jinja กับ value ให้ด้วย)-->
+        <div id="main">
+          <div class="accordion" id="faq">
+
+            <!--ที่อยู่ปัจจุบัน-->
+            <div class="card">
+              <div class="card-header" id="faqhead2">
+                  <a href="#" class="btn btn-header-link collapsed" data-toggle="collapse"
+                      data-target="#faq2" aria-expanded="false" aria-controls="faq2"><img
+                          src="{{url_for('static', filename='image/home2.svg')}}" class="mr-2"
+                          width="30"> ข้อมูลที่อยู่ปัจจุบัน</a>
+              </div>
+
+              <div id="faq2" class="collapse show" aria-labelledby="faqhead2" data-parent="#faq">
+                  <div class="card-body">
+                      <div class="form-row">
+                          <div class="col-md-4 mb-3">
+                              <label for="validationCustom16" >เลขที่ <span
+                                      class="text-valid">*</span></label>
+                                      {{form.address_home(class='form-control')}} 
+                              <!-- <select class="custom-select" name="address_type"
+                                  id="validationCustom16" value=""
+                                  required>
+                                  <option selected>...</option>
+                                  <option>...</option>
+                              </select> -->
+                          </div>                  
+                          <div class="col-md-4 mb-3">
+                              <label for="validationCustom16">อาคาร/หมู่บ้าน </label>
+                              {{form.unit_home(class='form-control')}}
+                              <!-- <select class="custom-select" name="unit_type"
+                                  id="validationCustom16" value=""
+                                  required>
+                                  <option selected>...</option>
+                                  <option>...</option>
+                              </select> -->
+                          </div>
+                          <div class="col-md-4 mb-3">
+                              <label for="validationCustom17">หมู่</label>
+                              {{form.village_home(class='form-control')}} 
+                              <!-- <input type="text" class="form-control" name="other"
+                                  id="validationCustom17" value="" required> -->
+                          </div>
+                          <div class="col-md-6 mb-3">
+                              <label for="validationCustom17">ซอย<span
+                                  class="text-valid"></span></label>
+                              {{form.alley_home(class='form-control')}} 
+                              <!-- <input type="text" class="form-control" name="other"
+                                  id="validationCustom17" value="" required> -->
+                          </div>
+                          <div class="col-md-6 mb-3">
+                              <label for="validationCustom17">ถนน<span
+                                  class="text-valid"></span></label>
+                              {{form.road_home(class='form-control')}} 
+                              <!-- <input type="text" class="form-control" name="other"
+                                  id="validationCustom17" value="" required> -->
+                          </div>
+                        
+
+                          <div class="col-md-6 mb-3">
+                              <label for="validationCustom22">จังหวัด <span
+                                      class="text-valid">*</span></label>
+                             {{ form.province_home(class='custom-select')}}
+                              <!-- <select class="custom-select" name="province3" id="validationCustom22"
+                                  value="" required>
+                                  <option selected>...</option>
+                                  <option>...</option>
+                              </select> -->
+                          </div>
+
+                          <div class="col-md-6 mb-3">
+                              <label for="validationCustom20">อำเภอ/เขต <span
+                                      class="text-valid">*</span></label>
+                              {{form.district_home(class='custom-select')}}
+                              <!-- <select class="custom-select" id="validationCustom20" name="district"
+                                  value="" required>
+                                  <option selected>...</option>
+                                  <option>...</option>
+                              </select> -->
+                          </div>
+                          <div class="col-md-6 mb-3">
+                              <label for="validationCustom21">ตำบล/แขวง <span
+                                      class="text-valid">*</span></label>
+                              {{form.sub_district_home(class='custom-select')}}
+                              <!-- <select class="custom-select" id="validationCustom21"
+                                  name="sub_district" value=""
+                                  value="" required>
+                                  <option selected>...</option>
+                                  <option>...</option>
+                              </select> -->
+                          </div>
+                          <div class="col-md-6 mb-3">
+                              <label for="validationCustom19">รหัสไปรษณีย์ <span
+                                      class="text-valid">*</span></label>
+                                      {{form.postal_code_home(class='custom-select')}}
+                              <!-- <select class="custom-select" name="postal_code" id="validationCustom19"
+                                  value="" required>
+                                  <option selected>...</option>
+                                  <option>...</option>
+                              </select> -->
+
+                          </div>
+                      </div>
+                  </div>
+              </div>
+          </div> <!--end home address-->
+
+            <!--ที่อยู่บริษัท-->
+            <div class="card">
+                <div class="card-header" id="faqhead3">
+                    <a href="#" class="btn btn-header-link collapsed" data-toggle="collapse"
+                        data-target="#faq3" aria-expanded="true" aria-controls="faq3"><img
+                            src="{{url_for('static', filename='image/home2.svg')}}" class="mr-2"
+                            width="30"> ข้อมูลสถานที่ทำงาน</a>
+                </div>
+
+                <div id="faq3" class="collapse" aria-labelledby="faqhead3" data-parent="#faq">
+                    <div class="card-body">
+                        <div class="form-row">
+                            <div class="col-md-6 mb-3">
+                                <label for="validationCustom16">เลขที่ผู้เสียภาษี </label>
+                                {{form.identity_com(class='form-control')}}
+                                <!-- <select class="custom-select" name="taxpayer_no"
+                                    id="validationCustom16" value=""
+                                    required>
+                                    <option selected>...</option>
+                                    <option>...</option>
+                                </select> -->
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="validationCustom16">บริษัท </label>
+                                {{form.company_name(class='form-control')}} 
+                                <!-- <select class="custom-select" name="address_type"
+                                    id="validationCustom16" value=""
+                                    required>
+                                    <option selected>...</option>
+                                    <option>...</option>
+                                </select> -->
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label for="validationCustom17">เลขที่</label>
+                                {{form.address_company(class='form-control')}} 
+                                <!-- <input type="text" class="form-control" name="other"
+                                    id="validationCustom17" value="" required> -->
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label for="validationCustom16">อาคาร/หมู่บ้าน </label>
+                                {{form.unit_company(class='form-control')}} 
+                                <!-- <select class="custom-select" name="unit_type"
+                                    id="validationCustom16" value="{{request.form.unit_type}}"
+                                    required>
+                                    <option selected>...</option>
+                                    <option>...</option>
+                                </select> -->
+                            </div>
+                            
+                            <div class="col-md-4 mb-3">
+                                <label for="validationCustom17">หมู่</label>
+                                {{form.village_company(class='form-control')}}
+                                <!-- <input type="text" class="form-control" name="other"
+                                    id="validationCustom17" value="" required> -->
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="validationCustom17">ซอย</label>
+                                {{form.alley_company(class='form-control')}} 
+                                <!-- <input type="text" class="form-control" name="other"
+                                    id="validationCustom17" value="" required> -->
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="validationCustom17">ถนน</label>
+                                {{form.road_company(class='form-control')}} 
+                                <!-- <input type="text" class="form-control" name="other"
+                                    id="validationCustom17" value="" required> -->
+                            </div>
+                            
+
+                            <div class="col-md-6 mb-3">
+                                <label for="validationCustom22">จังหวัด </label>
+                                {{ form.province_company(class='custom-select')}}
+                                <!-- <select class="custom-select" name="province3" id="validationCustom22"
+                                    value="" required>
+                                    <option selected>...</option>
+                                    <option>...</option>
+                                </select> -->
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label for="validationCustom20">อำเภอ/เขต </label>
+                                {{form.district_company(class='custom-select')}}
+                                <!-- <select class="custom-select" id="validationCustom20" name="district"
+                                    value="" required>
+                                    <option selected>...</option>
+                                    <option>...</option>
+                                </select> -->
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="validationCustom21">ตำบล/แขวง</label>
+                                {{form.sub_district_company(class='custom-select')}}
+                                <!-- <select class="custom-select" id="validationCustom21"
+                                    name="sub_district" value=""
+                                    value="" required>
+                                    <option selected>...</option>
+                                    <option>...</option>
+                                </select> -->
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="validationCustom19">รหัสไปรษณีย์</label>
+                                {{form.postal_code_company(class='custom-select')}}
+                                <!-- <select class="custom-select" name="postal_code" id="validationCustom19"
+                                    value="" required>
+                                    <option selected>...</option>
+                                    <option>...</option>
+                                </select> -->
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div> <!--end company address-->
+
+          </div>
+        
+        </div>
+
+      </div> <!--card-reserve my-3-->
+      
+      <div class="bottom-reserve">
+        <!-- ploy -->
+        <!-- <form  method="post" onsubmit="alert('ดำเนินการบันทึกเรียบร้อย กรุณาทำการชำระภายใน {{reserve_station_detail.reserve_payment_period}} นาที')">  -->
+          <!-- <button class="btn mrta-btn-primary-1 btn-block btn-lg" id="submitForm" "> -->
+            {{form.submit(type='submit',class='btn mrta-btn-primary-1 btn-block btn-lg')}}
+          <!-- </button> -->
+        <!-- </form> -->
+      </div>
+    </form>
+    </div>
+
+    {% include "comps/footer.html" %}
+  </body>
+  <script>
+    $(document).ready(function () {});
+  </script>
+  <script>
+    province_select = document.getElementById('province_home');
+    district_select = document.getElementById('district_home');
+    subdistrict_select = document.getElementById('sub_district_home');
+    postcode_select = document.getElementById('postal_code_home');
+
+    province_select.onchange = function(){
+     province = province_select.value;
+     fetch('district/' + province).then(function(response){
+      response.json().then(function(data){
+       optionHTML = '';
+       for (district of data.districtlist){
+        optionHTML += '<option value="' + district.name +'">' + district.name+ '</option>'
+       }
+       district_select.innerHTML = optionHTML;
+      });
+     });
+    }
+    district_select.onchange = function(){
+     district = district_select.value; 
+     province = province_select.value;
+     fetch('subdistrict/'+province +'/' + district).then(function(response){
+      response.json().then(function(data){
+       optionHTML = '';
+       for (sub of data.subdistrictlist){
+        optionHTML += '<option value="' + sub +'">' + sub + '</option>'
+       }
+       subdistrict_select.innerHTML = optionHTML;
+      });
+     });
+    }
+    subdistrict_select.onchange = function(){
+        subdistrict = subdistrict_select.value;
+        province = province_select.value;
+        district_ = district_select.value;
+        fetch('postcode/' +province+'/'+district_+'/'+ subdistrict).then(function(response){
+         response.json().then(function(data){
+          optionHTML = '';
+          for (post of data.postcodelist){
+           optionHTML += '<option value="' + post +'">' + post + '</option>'
+          }
+          postcode_select.innerHTML = optionHTML;
+         });
+        });
+       }
+</script>
+<script>
+  province_select2 = document.getElementById('province_company');
+  district_select2 = document.getElementById('district_company');
+  subdistrict_select2 = document.getElementById('sub_district_company');
+  postcode_select2 = document.getElementById('postal_code_company');
+  
+  province_select2.onchange = function(){
+   province = province_select2.value;
+   fetch('district/' + province).then(function(response){
+    response.json().then(function(data){
+     optionHTML = '';
+     for (district of data.districtlist){
+      optionHTML += '<option value="' + district.name +'">' + district.name+ '</option>'
+     }
+     district_select2.innerHTML = optionHTML;
+    });
+   });
+  }
+  district_select2.onchange = function(){
+   district = district_select2.value; 
+   province = province_select2.value;
+   fetch('subdistrict/'+province+'/' + district).then(function(response){
+    response.json().then(function(data){
+     optionHTML = '';
+     for (sub of data.subdistrictlist){
+      optionHTML += '<option value="' + sub +'">' + sub + '</option>'
+     }
+     subdistrict_select2.innerHTML = optionHTML;
+    });
+   });
+  }
+  subdistrict_select2.onchange = function(){
+      subdistrict = subdistrict_select2.value;
+      district = district_select2.value; 
+      province = province_select2.value; 
+      fetch('postcode/'+province +'/'+district+'/' + subdistrict).then(function(response){
+       response.json().then(function(data){
+        optionHTML = '';
+        for (post of data.postcodelist){
+         optionHTML += '<option value="' + post +'">' + post + '</option>'
+        }
+        postcode_select2.innerHTML = optionHTML;
+       });
+      });
+     }
+</script>
+<script>
+ window.onload = async ()=>{
+   await fetch('/api/query-reserve-address').then(async function (response){
+    await response.json().then(async function (data) {
+      console.log(data)
+      if (data['province'] != ""){
+        console.log("have address")
+        document.getElementById("address_home").value = data['address_no']
+        document.getElementById("unit_home").value = data['unit_home']
+        document.getElementById("village_home").value = data['village']
+        document.getElementById("alley_home").value = data['alley']
+        document.getElementById("road_home").value = data['street']
+        document.getElementById("province_home").value = data['province']
+
+        document.getElementById("identity_com").value = data['identity_com']
+        document.getElementById("company_name").value = data['company_name']
+        document.getElementById("address_company").value = data['company_no']
+        document.getElementById("unit_company").value = data['company_unit']
+        document.getElementById("village_company").value = data['company_village']
+        document.getElementById("alley_company").value = data['company_alley']
+        document.getElementById("road_company").value = data['company_street']
+        document.getElementById("province_company").value = data['company_province']
+      
+        await fetch('district/' + data.province).then(async function(response){
+          await response.json().then(function(data){
+            optionHTML = '';
+            for (district of data.districtlist){
+              optionHTML += '<option value="' + district.name +'">' + district.name+ '</option>'
+              }
+            document.getElementById('district_home').innerHTML = optionHTML;
+          });
+        });
+        document.getElementById('district_home').value = data.district
+
+        await fetch('subdistrict/'+data.province+'/' + data.district).then(async function(response){
+          await response.json().then(function(data){
+            optionHTML = '';
+            for (sub of data.subdistrictlist){
+              optionHTML += '<option value="' + sub +'">' + sub + '</option>'
+              }
+            document.getElementById('sub_district_home').innerHTML = optionHTML;
+          });
+        });
+        document.getElementById('sub_district_home').value = data.sub_district
+        await fetch('postcode/'+data.province+'/' + data.district+'/' + data.sub_district).then(async function(response){
+          await response.json().then(function(data){
+            optionHTML = '';
+            for (post of data.postcodelist){
+              optionHTML += '<option value="' + post +'">' + post + '</option>'
+              }
+            document.getElementById('postal_code_home').innerHTML = optionHTML;
+          });
+        });
+        document.getElementById('postal_code_home').value = data.postal_code
+        
+        // company
+        await fetch('district/' + data.company_province).then(async function(response){
+          await response.json().then(function(data){
+            optionHTML = '';
+            for (district of data.districtlist){
+              optionHTML += '<option value="' + district.name +'">' + district.name+ '</option>'
+              }
+            document.getElementById('district_company').innerHTML = optionHTML;
+          });
+        });
+        document.getElementById('district_company').value = data.company_district
+
+        await fetch('subdistrict/'+data.company_province+'/' + data.company_district).then(async function(response){
+          await response.json().then(function(data){
+            optionHTML = '';
+            for (sub of data.subdistrictlist){
+              optionHTML += '<option value="' + sub +'">' + sub + '</option>'
+              }
+            document.getElementById('sub_district_company').innerHTML = optionHTML;
+          });
+        });
+        document.getElementById('sub_district_company').value = data.company_sub_district
+
+        await fetch('postcode/'+data.company_province+'/' + data.company_district+'/' + data.company_sub_district).then(async function(response){
+          await response.json().then(function(data){
+            optionHTML = '';
+            for (post of data.postcodelist){
+              optionHTML += '<option value="' + post +'">' + post + '</option>'
+              }
+            document.getElementById('postal_code_company').innerHTML = optionHTML;
+          });
+        });
+        document.getElementById('postal_code_company').value = data.company_postal_code
+      }
+    })
+   })
+ }
+</script>
+</html>
+

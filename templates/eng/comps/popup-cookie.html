@@ -1,0 +1,68 @@
+<style>
+    #cookie-popup {
+        position: fixed;
+        bottom: 0;
+        right: -100%;
+        width: 100%;
+        background: rgb(0 34 86);
+        border: 1px solid #e2e2e2;
+        z-index: 9999;
+        /* transition: all 0.3s ease-in-out; */
+        opacity: 0.94;
+        padding: 16px;
+    }
+
+    #cookie-popup p {
+        margin: 0;
+        color: #fff;
+    }
+
+    #cookie-popup #cookie-popup-dismiss-btn {
+        display: inline-block;
+        margin-top: 16px;
+        color: #fff;
+        background-color: #3436a3;
+        padding: 8px 12px;
+        cursor: pointer;
+    }
+
+    #cookie-popup.is-visible {
+        right: 0;
+    }
+</style>
+
+<div id="cookie-popup">
+    <div class="row">
+        <div class="col-md-10">
+            <p>     
+                parking.mrta.co.th This website uses cookies to ensure you get the best experience on our website <a href="{{ url_for('term_th')}}" style="color:#12b1fa"> Terms of use  Web Application</a>
+                and <a href="{{ url_for('privacy_th')}}" style="color:#12b1fa">Privacy Policy</a>
+            </p>
+        </div>
+        <div class="col-md-2">
+            <a id="cookie-popup-dismiss-btn">Agree</a>
+        </div>
+    </div>
+    
+    
+</div>
+
+<script>
+    (function () {
+        window.onload = function () {
+            document.getElementById('cookie-popup-dismiss-btn').addEventListener('click', dismissCookiePopup);
+
+            var shouldShowPopup = localStorage.getItem('cookiePopupConsumed') !== '1';
+            if (shouldShowPopup) {
+                setTimeout(function () {
+                    document.getElementById('cookie-popup').className += ' is-visible';
+                }, 1000);
+            }
+        }
+
+        function dismissCookiePopup() {
+            localStorage.setItem('cookiePopupConsumed', '1');
+            document.getElementById('cookie-popup').className = '';
+        }
+    })();
+</script>

@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ข้อมูลรายการรถของคุณ</title> 
+    {% include "include/customer-css.html" %}
+    {% include "include/customer-js.html" %}
+</head>
+<style>
+   body{
+       background-color: #F0F0F0;            
+   }
+
+   .font-color{
+       color: #091E78;
+   }
+</style>
+
+<body>
+    {% include "comps/navbar-1.html" %}
+
+    <div class="container pt-5">
+
+        <div class="card-reserve my-3">
+            <a href="/find-mycar">
+                <div class="card-body"> 
+                    <div class="row py-2  mb-0">
+                        <div class="font-color font-weight-bold col-7 h5">กท 0660</div>
+                        <div class="font-color col-7">สถานีบางรักน้อยท่าอิฐ</div>
+                        <div class="font-color col-5 text-right">04/01/2565</div>
+                        <div class="font-color col-7 ">เวลาเข้า</div>
+                        <div class="font-color col-5 text-right">12.30</div>
+                    </div>          
+                </div>
+            </a>
+            
+        </div>
+        <div class="card-reserve my-3">
+            <div class="card-body"> 
+                <div class="row py-2  mb-0">
+                    <div class="font-color font-weight-bold col-7 h5">กท 0660</div>
+                    <div class="font-color col-7">สถานีบางรักน้อยท่าอิฐ</div>
+                    <div class="font-color col-5 text-right">04/01/2565</div>
+                    <div class="font-color col-7 ">เวลาเข้า</div>
+                    <div class="font-color col-5 text-right">10.30</div>
+                </div>          
+            </div>
+        </div>
+            
+    </div>
+
+     
+    {% include "comps/popup-cookie.html" %}
+    {% include "comps/fivemenu.html" %}
+
+
+</body>
+
+</html>

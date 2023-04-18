@@ -1,0 +1,48 @@
+<!-- CHAT BAR BLOCK -->
+ <div class="chat-bar-collapsible" style="z-index: 2;">
+    <button id="chat-button" type="button" class="collapsible">contact us
+        <i id="chat-icon" style="color: #fff;" class="fas fa-comment ml-2"></i>
+    </button>
+
+    <div class="content25">
+        <div class="full-chat-block">
+            <!-- Message Container -->
+            <div class="outer-container">
+                <div class="chat-container">
+                    <!-- Messages -->
+                    <div id="chatbox">
+                        <h5 id="chat-timestamp"></h5>
+                        <div class="form-group row col-lg-12">
+                        <div class="msg-img" style="background-image: url(https://image.flaticon.com/icons/svg/327/327779.svg)"></div>
+                        <p id="botStarterMessage" class="botText"><span>Loading...</span></p></div>
+                    </div>
+
+                    <!-- User input box -->
+                    <div class="chat-bar-input-block">
+                        <div id="userInput">                   
+                            <input id="textInput"class="input-box" type="text" name="msg" 
+                                placeholder="is there anything you want to ask?">
+                            <p></p>
+                        </div>
+
+                        <div class="chat-bar-icons">
+                            <!-- <i id="chat-icon" style="color: crimson;" class="fa fa-fw fa-heart"
+                                onclick="heartButton()"></i> -->
+                            <i id="chat-icon" style="color: #333;" class="fas fa-paper-plane"
+                                onclick="sendButton()"></i>
+                        </div>
+                    </div>
+
+                    <div id="chat-bar-bottom">
+                        <p></p>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</div>
+
+

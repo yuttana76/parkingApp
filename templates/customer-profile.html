@@ -1,0 +1,1652 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prefixfree/1.0.7/prefixfree.min.js"></script>
+    <title>ข้อมูลผู้ใช้งาน</title>
+    {% include "include/customer-css.html" %}
+    {% include "include/customer-js.html" %}
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/responsive.css') }}">
+</head>
+<style>
+    .customer-profile {
+        background-color: #E5E5E5;
+        background-size: cover;
+        background-repeat: no-repeat;
+        height: auto;
+        width: 100%;
+        display: flow-root;
+    }
+
+    .box1 {
+        background-color: #fff;
+        box-sizing: border-box;
+        width: auto;
+        height: auto;
+        box-shadow: 5px 5px gainsboro;
+        margin-top: 15px;
+        margin-bottom: 15px;
+    }
+
+    .box2 {
+        background-color: #fff;
+        box-sizing: border-box;
+        width: auto;
+        height: auto;
+        box-shadow: 5px 5px gainsboro;
+        margin-top: 15px;
+        margin-bottom: 15px;
+    }
+
+    .box1:hover {
+        background-color: #fff;
+        box-sizing: border-box;
+        width: auto;
+        height: auto;
+        box-shadow: 5px 5px gainsboro;
+        margin-top: 15px;
+        margin-bottom: 15px;
+        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+        transform: scale(1.05);
+
+    }
+
+    .m-b {
+        margin-bottom: 15px;
+    }
+
+    .m-t-md {
+        margin-top: 20px;
+    }
+
+    .m-20 {
+        margin: 20px;
+    }
+
+
+    .item-mid {
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        margin-left: -15px;
+    }
+
+    /* .view input {
+        border:0;
+        background:0;
+        outline:none !important;
+    } */
+
+    .btn-cc-account{
+        color: rgb(219, 219, 219);
+        border: 2px solid #bbbbbb; 
+        outline: none;
+        outline: 0;
+        box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 2px 5px 0 rgba(0,0,0,0.19);
+    }
+    .btn-cc-account:hover{
+        background-color: darkgrey;
+        border: 2px solid #bbbbbb;
+        outline: none;
+        box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24), 0 17px 50px 0 rgba(0,0,0,0.19);    
+    }
+  
+</style>
+
+<body scroll="no" style="overflow-x: hidden; ">
+    {% include "comps/navbar-2.html" %}
+    
+    <div class="cover-profile"></div>
+    <div class="customer-profile">
+        <div class="col-12 text-center">
+            <div class="avatar-upload">
+                {%if current_user.profile == '' or current_user.profile == none %}
+                <div class="avatar-preview">
+                    <div id="imagePreview" style="background-image: url(https://www.pngjoy.com/pngm/136/2750635_gray-circle-login-user-icon-png-transparent-png.png);">
+                    </div>
+                </div>
+                {%elif current_user.profile != '' and current_user.profile != none %}
+                <div class="avatar-preview">
+                    <div id="imagePreview" style="background-image:url(/static/image/manage/profile/{{current_user.profile}}) ;">
+                    </div>
+                </div>
+                {%endif%}
+                <div class="avatar-edit">
+                    <form action="{{url_for('profile_image')}}" id="form_image" method="POST" enctype="multipart/form-data">
+                    <input type='file' id="imageUpload" name="imageUpload"  />
+                    <label for="imageUpload">อัปโหลดโปรไฟล์</label>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="container" style="margin-top: -10rem;">
+            <h4><i class="fa fa-user-circle mr-2"></i>ข้อมูลผู้ใช้งาน</h4>
+               <!-- message error -->
+            {% with messages = get_flashed_messages(with_categories=true)%}
+            {% if messages %}
+                {%for category,message in messages%} 
+                <div class="alert alert-{{ category }}">
+                    <button type="button" class="m1-2 mb-1 close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    {{message}}
+                </div>
+                {%endfor%}
+            {%endif%}
+            {%endwith%}
+            <div class="box1">
+                <div class="row">
+                    <div class="col-6">                   
+                            <h5 class="m-20"> ชื่อผู้ใช้งาน</h5>
+                            <p class="m-20" id="edit_username" type="text"> {{current_user.first_name}} {{current_user.last_name}}</p>         
+                    </div>
+                    <div class="col-6 item-mid">                
+                        <button href="#" class="btn btn-info" type="button" data-toggle="modal"
+                        data-target="#add_nameuser" style="margin: 10px;"><i
+                                class="fa fa-edit"></i> แก้ไข</button>                                           
+                    </div>
+                </div>
+               
+            </div>
+
+            <!-- Modal username -->
+            <div class="modal fade" id="add_nameuser" tabindex="-1" role="dialog">
+                <div class="modal-dialog" role="document">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title-username" >แก้ไขชื่อผู้ใช้งาน</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <form method="POST">
+                    {{user_form.hidden_tag()}}
+                    <div class="modal-body" id="edit_username" type="text">
+                    <label>ชื่อ</label>
+                    {{user_form.name(class='form-control')}}
+                    <label>นามสกุล</label>
+                    {{user_form.last_name(class='form-control')}}
+                    </div>
+                    <div class="modal-footer">
+                      {{user_form.submit(class="btn btn-primary")}}
+                      <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    </div>
+                    </form>
+                  </div>
+                </div>
+            </div>
+            <!-- Modal username end -->
+          
+            {% if ktb_ac==" " %}
+            <div class="box1" id='boxKTC' style="display: none;">
+            {% else %}
+             <div class="box1" id='boxKTC'>
+            {%endif%}
+                <div class="row" >
+                    <div class="col-6">                   
+                            <h5 class="m-20">ข้อมูลบัญชีธนาคาร</h5>
+                            <p class="m-20" id="ktb_ac" type="text">{{ktb_ac}}</p>         
+                    </div>
+                    <div class="col-6 item-mid">                
+                        <button class="btn btn-danger" type="button" data-toggle="modal"
+                        data-target="#" style="margin: 10px;" onclick="submitDelete_ktb()"><i
+                                class="fa fa-edit"></i>ยกเลิกผูกบัญชี</button>   
+                                <form id='delete_acKTB' action="https://www.inwd.ktb.co.th/P2PRegister/" method="post">
+                                    <input type="hidden" name="tran_type" value="D">
+                                    <input type="hidden" name="site_name" value="https://parking.mrta.co.th/uat/payment-methods/">
+                                    <input type="hidden" name="term_id" value='98427'>
+                                    <input type="hidden" name="term_seq" value={{term_seq}}>
+                                    <input type="hidden" name="ref1" value={{ref1}}>
+                                  </form>
+                                                           
+                    </div>
+                </div>
+               
+            </div>
+        
+
+            <!-- Modal account -->
+            <div class="modal fade" id="" tabindex="-1" role="dialog">
+                <div class="modal-dialog" role="document">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title-username" >ผูกบัญชีผู้ใช้งาน</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                           
+                    <div class="modal-body" id="" type="text">
+                    
+                      <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    </div>
+                    
+                  </div>
+                </div>
+            </div>
+            <!-- Modal account end -->
+           
+
+            <div class="box1">
+                <div class="row">
+                    <div class="col-6">
+                        <h5 class="m-20"> เลขบัตรประชาชน</h5>
+                        <p class="m-20" id="edit_idcard" type="text">{{identity_card}}</p>
+                    </div>
+                    <!-- <div class="col-6 item-mid">
+                        <button href="#" class="btn btn-info" type="button" data-toggle="modal"
+                        data-target="#add_idcard" style="margin: 10px;"><i
+                                class="fa fa-edit"></i> แก้ไข</button>
+                    </div> -->
+                </div>
+
+            </div>
+
+             <!-- Modal id_card -->
+             <!-- <div class="modal fade" id="add_idcard" tabindex="-1" role="dialog">
+                <div class="modal-dialog" role="document">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title-idcard" >เลขบัตรประชาชน</h5>
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                      </button>
+                    </div>
+                    <form method="POST">
+                    {{identity_form.hidden_tag()}}
+                    <div class="modal-body" id="edit_username" type="text">
+                    <label>เลขบัตรประชาชน</label>
+                    {{identity_form.identity(class='form-control',maxlength='13')}}
+                    <span class="error"></span>
+                    </div>
+                    <div class="modal-footer">
+                      {{identity_form.submit(class="btn btn-primary")}}
+                      <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    </div>
+                    </form>
+                  </div>
+                </div>
+            </div> -->
+            <!-- Modal id_card end -->
+
+
+
+
+            <div class="box1">
+                <div class="row">
+                    <div class="col-6">
+                        <h5 class="m-20"> อีเมล</h5>
+                        <p class="m-20" id="edit_email" type="text">{{current_user.email}}</p>
+                    </div>
+                    <div class="col-6 item-mid" >
+                        
+                    </div>
+                </div>
+
+            </div>
+
+             <!-- Modal email -->
+             <div class="modal fade" id="add_email" tabindex="-1" role="dialog">
+                <div class="modal-dialog" role="document">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title-email" >แก้ไขอีเมล</h5>
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                      </button>
+                    </div>
+                    <div class="modal-body" id="edit_email" type="text">
+                      <p>email</p>
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-primary">บันทึก</button>
+                      <button type="button" class="btn btn-secondary" data-dismiss="modal">ยกเลิก</button>
+                    </div>
+                  </div>
+                </div>
+            </div>
+            <!-- Modal email end -->
+
+
+
+            <div class="box1">
+                <div class="row">
+                    <div class="col-6">
+                        <h5 class="m-20">รหัสผ่าน</h5>
+                        <p class="m-20" id="edit_pass" type="text">****************</p>
+                    </div>
+                    <div class="col-6 item-mid">
+                        <a data-toggle="modal" data-target="#add_pass" class="btn btn-info"  style="margin: 10px;"><i
+                                class="fa fa-edit"></i> แก้ไข</a>
+                    </div>
+                </div>
+            </div>
+
+             <!-- Modal password -->
+             <div class="modal fade" id="add_pass" tabindex="-1" role="dialog">
+                <div class="modal-dialog" role="document">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title-pass" >แก้ไขรหัสผ่าน</h5>
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                      </button>
+                    </div>
+                    <form method="POST">
+                    {{password_form.hidden_tag()}}
+                    <div class="modal-body" id="edit_username" type="text">
+                        <label for="">รหัสผ่านใหม่</label>
+                        {{password_form.password(class='form-control')}}
+                        <label for="">ยืนยันรหัสผ่านใหม่</label>
+                        {{password_form.confirm_password(class='form-control')}}
+                    </div>
+                    <div class="modal-footer">
+                        {{password_form.submit(class="btn btn-primary")}}
+                      <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    </div>
+                    </form>
+                  </div>
+                </div>
+            </div>
+            <!-- Modal password end -->
+
+
+
+            <div class="box1">
+                <div class="row">
+                    <div class="col-6">
+                        <h5 class="m-20">เบอร์โทรติดต่อ</h5>
+                        <p class="m-20" id="edit_tel" type="text">{{phone}}</p>
+                        </p>
+                    </div>
+                    <div class="col-6 item-mid">
+                        <button href="#" class="btn btn-info" type="button"  data-toggle="modal"
+                        data-target="#add_tel" style="margin: 10px;"><i
+                                class="fa fa-edit"></i> แก้ไข</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Modal tel -->
+            <div class="modal fade" id="add_tel" tabindex="-1" role="dialog">
+                <div class="modal-dialog" role="document">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title-tel" >แก้ไขเบอร์โทรติดต่อ</h5>
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                      </button>
+                    </div>
+                    <form method="POST">
+                    {{phone_form.hidden_tag()}}
+                    <div class="modal-body" id="edit_username" type="text">
+                    <label>เบอร์โทรติดต่อ</label>
+                    {{phone_form.phone(class='form-control',maxlength='10')}}
+                    </div>
+                    <div class="modal-footer">
+                      {{phone_form.submit(class="btn btn-primary")}}
+                      <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    </div>
+                    </form>
+                  </div>
+                </div>
+            </div>
+            <!-- Modal tel end -->
+
+
+
+            <h4 class="mt-5"><i class="fa fa-id-card" aria-hidden="true"></i> เลขบัตรสมาชิกลานจอดรถ</h4>
+            <div class="row text-right">
+                <div class="col-lg-6">
+                    <h4 class="m-20 text-left" style="margin: 34px;">บัตรใบที่1</h4>
+                    <div class="box1">
+                        <div class="row">
+                            <p class="col-md-7 m-20 text-center" id="edit_card1" type="text" onkeypress='validate(event)'>{{card_id1}}</p>
+                                
+                        </div>
+                    </div>
+                </div>
+
+            <!-- Modal card1 -->
+            <div class="modal fade" id="add_card1" tabindex="-1" role="dialog">
+                <div class="modal-dialog" role="document">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title-card1" >แก้ไขบัตรใบที่1</h5>
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                      </button>
+                    </div>
+                    <form method="POST">
+                    <div class="modal-body" id="edit_username" type="text">
+                      <input type="text">
+                    </div>
+                    <div class="modal-footer">
+                      <button type="submit" class="btn btn-primary">บันทึก</button>
+                      <button type="button" class="btn btn-secondary" data-dismiss="modal">ยกเลิก</button>
+                    </div>
+                    </form>
+                  </div>
+                </div>
+            </div>
+            <!-- Modal card1 end -->
+
+
+
+                <div class="col-lg-6">
+                    <h4 class="m-20 text-left" style="margin: 34px;">บัตรใบที่2</h4>
+                    <div class="box1">
+                        <div class="row">
+                            <p class="col-md-7 m-20 text-center" id="edit_card2" type="text" onkeypress='validate(event)'>{{card_id2}}</p>
+                                
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Modal card2 -->
+            <div class="modal fade" id="add_card2" tabindex="-1" role="dialog">
+                <div class="modal-dialog" role="document">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title-card2" >แก้ไขบัตรใบที่2</h5>
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                      </button>
+                    </div>
+                    <div class="modal-body" id="edit_card2" type="text">
+                      <p class="text-left">เลขบัตรใบที่2</p>
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-primary">บันทึก</button>
+                      <button type="button" class="btn btn-secondary" data-dismiss="modal">ยกเลิก</button>
+                    </div>
+                  </div>
+                </div>
+            </div>
+            <!-- Modal card2 end -->
+
+
+            {%if card_count == 0%}
+            <h4 class="mt-5"><i class="fa fa-home"></i> ที่อยู่</h4>
+            <div class="row text-right">
+                <div class="col-lg-6">
+                    <h4 class="m-20 text-left" style="margin: 34px;">*ที่บ้าน</h4>
+                    <div class="box1">
+                        <div class="row">
+                            <p class="col-md-7 m-20 text-center" id="edit_home" type="text">{{home_address}}</p>
+                                
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <h4 class="m-20 text-left" style="margin: 34px;">ที่ทำงาน</h4>
+                    <div class="box1">
+                        <div class="row">
+                            <p class="col-md-7 m-20 text-center" id="edit_work" type="text">{{company_address}}</p>
+                                
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            {%elif card_count == 1%}
+            <h4 class="mt-5"><i class="fa fa-home"></i> ที่อยู่</h4>
+            <div class="row text-right">
+                <div class="col-lg-6">
+                    <h4 class="m-20 text-left" style="margin: 34px;">*ที่บ้าน</h4>
+                    <div class="box1">
+                        <div class="row">
+                            <p class="col-md-7 m-20 text-center" id="edit_home" type="text">{{home_address}}</p>
+                                <button href="#" class="btn btn-white col-sm-3" type="button" data-toggle="modal"
+                                data-target="#address_home" style="margin: 10px;"><i
+                                class="fa fa-edit text-success"></i> แก้ไข</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Modal address_home -->
+                <div class="modal fade" id="address_home" tabindex="-1" role="dialog">
+                    <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                        <h5 class="modal-title-home" >แก้ไขที่อยู่ที่บ้าน</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        </div>
+                        <form method="POST">
+                        {{home_form.hidden_tag()}}
+                        <div class="modal-body text-left" id="edit_home" type="text">
+                        <label >อาคาร/หมู่บ้าน</label>
+                        {{home_form.unit_home1(class='form-control')}}
+                        <label >บ้านเลขที่</label>
+                        {{home_form.address_no(class='form-control')}}
+                        <label >หมู่</label>
+                        {{home_form.village(class='form-control')}}
+                        <label >จังหวัด</label>
+                        {{home_form.province(class='custom-select')}}
+                        <label >อำเภอ/เขต</label>
+                        {{home_form.district(class='custom-select')}}
+                        <label >ตำบล/แขวง</label>
+                        {{home_form.sub_district(class='custom-select')}}
+                        <label >รหัสไปรษณีย์</label>
+                        {{home_form.postal_code(class='custom-select')}}
+                        </div>
+                        <div class="modal-footer">
+                        {{home_form.submit(class="btn btn-primary")}}
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        </div>
+                        </form>
+                    </div>
+                    </div>
+                </div>
+                <!-- Modal address_home end -->
+
+
+
+
+                <div class="col-lg-6">
+                    <h4 class="m-20 text-left" style="margin: 34px;">ที่ทำงาน</h4>
+                    <div class="box1">
+                        <div class="row">
+                            <p class="col-md-7 m-20 text-center" id="edit_work" type="text">{{company_address}}</p>
+                                <button href="#" class="btn btn-white  col-sm-3" type="button" data-toggle="modal"
+                                data-target="#address_work" style="margin: 10px;"><i
+                                class="fa fa-edit text-success"></i> แก้ไข</button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Modal address_work -->
+            <div class="modal fade" id="address_work" tabindex="-1" role="dialog">
+                <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                    <h5 class="modal-title-work" >แก้ไขที่อยู่ที่ทำงาน</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    </div>
+                    <form method="POST">
+                    {{company_form.hidden_tag()}}
+                    <div class="modal-body text-left" id="edit_home" type="text">
+                    <label>เลขที่ผู้เสียภาษี </label>                      
+                    {{company_form.identity_com1(class='form-control')}} 
+                    <label >เลขที่อยู่บริษัท</label>
+                    {{company_form.company_no(class='form-control')}}
+                    <label >อาคาร/หมู่บ้าน</label>
+                    {{company_form.unit_company1(class='form-control')}}
+                    <label >หมู่</label>
+                    {{company_form.company_village(class='form-control')}}
+                    <label >จังหวัด</label>
+                    {{company_form.company_province(class='custom-select')}}
+                    <label >อำเภอ/เขต</label>
+                    {{company_form.company_district(class='custom-select')}}
+                    <label >ตำบล/แขวง</label>
+                    {{company_form.company_sub_district(class='custom-select')}}
+                    <label >รหัสไปรษณีย์</label>
+                    {{company_form.company_postal_code(class='custom-select')}}
+                    </div>
+                    <div class="modal-footer">
+                    {{company_form.submit(class="btn btn-primary")}}
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    </div>
+                    </form>
+                </div>
+                </div>
+            </div>
+            <!-- Modal address_work end -->
+            {%elif card_count ==2 %} 
+            <h4 class="mt-5"><i class="fa fa-home"></i> ที่อยู่</h4> <!--ที่อยู่บนบัตรใบที่1-->
+            <div class="row text-right">
+                <div class="col-lg-6">
+                    <h4 class="m-20 text-left" style="margin: 34px;">*ที่บ้าน</h4>
+                    <div class="box1">
+                        <div class="row">
+                            <p class="col-md-7 m-20 text-center" id="edit_home" type="text">{{home_address}}</p>
+                                <button href="#" class="btn btn-white col-sm-3" type="button" data-toggle="modal"
+                                data-target="#address_home" style="margin: 10px;"><i
+                                class="fa fa-edit text-success"></i> แก้ไข</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Modal address_home -->
+                <div class="modal fade" id="address_home" tabindex="-1" role="dialog">
+                    <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                        <h5 class="modal-title-home" >แก้ไขที่อยู่ที่บ้าน</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        </div>
+                        <form method="POST">
+                        {{home_form.hidden_tag()}}
+                        <div class="modal-body text-left" id="edit_home" type="text">                  
+                        <label >บ้านเลขที่</label>
+                        {{home_form.address_no(class='form-control')}}
+                        <label >อาคาร/หมู่บ้าน</label>
+                        {{home_form.unit_home1(class='form-control')}}
+                        <label >หมู่</label>
+                        {{home_form.village(class='form-control')}}
+                        <label >จังหวัด</label>
+                        {{home_form.province(class='custom-select')}}
+                        <label >อำเภอ/เขต</label>
+                        {{home_form.district(class='custom-select')}}
+                        <label >ตำบล/แขวง</label>
+                        {{home_form.sub_district(class='custom-select')}}
+                        <label >รหัสไปรษณีย์</label>
+                        {{home_form.postal_code(class='custom-select')}}
+                        </div>
+                        <div class="modal-footer">
+                        {{home_form.submit(class="btn btn-primary")}}
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        </div>
+                        </form>
+                    </div>
+                    </div>
+                </div>
+                <!-- Modal address_home end -->
+
+
+
+
+                <div class="col-lg-6">
+                    <h4 class="m-20 text-left" style="margin: 34px;">ที่ทำงาน</h4>
+                    <div class="box1">
+                        <div class="row">
+                            <p class="col-md-7 m-20 text-center" id="edit_work" type="text">{{company_address}}</p>
+                                <button href="#" class="btn btn-white  col-sm-3" type="button" data-toggle="modal"
+                                data-target="#address_work" style="margin: 10px;"><i
+                                class="fa fa-edit text-success"></i> แก้ไข</button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Modal address_work -->
+            <div class="modal fade" id="address_work" tabindex="-1" role="dialog">
+                <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                    <h5 class="modal-title-work" >แก้ไขที่อยู่ที่ทำงาน</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    </div>
+                    <form method="POST">
+                    {{company_form.hidden_tag()}}
+                    <div class="modal-body text-left" id="edit_home" type="text">
+                    <label>เลขที่ผู้เสียภาษี </label>                      
+                    {{company_form.identity_com1(class='form-control')}} 
+                    <label >เลขที่อยู่บริษัท</label>
+                    {{company_form.company_no(class='form-control')}}
+                    <label >อาคาร/หมู่บ้าน</label>
+                    {{company_form.unit_company1(class='form-control')}}
+                    <label >หมู่</label>
+                    {{company_form.company_village(class='form-control')}}
+                    <label >จังหวัด</label>
+                    {{company_form.company_province(class='custom-select')}}
+                    <label >อำเภอ/เขต</label>
+                    {{company_form.company_district(class='custom-select')}}
+                    <label >ตำบล/แขวง</label>
+                    {{company_form.company_sub_district(class='custom-select')}}
+                    <label >รหัสไปรษณีย์</label>
+                    {{company_form.company_postal_code(class='custom-select')}}
+                    </div>
+                    <div class="modal-footer">
+                    {{company_form.submit(class="btn btn-primary")}}
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    </div>
+                    </form>
+                </div>
+                </div>
+            </div>
+            <!-- Modal address_work end -->
+            <!--------card2-->
+            <h4 class="mt-5"><i class="fa fa-home"></i> ที่อยู่</h4> <!--ที่อยู่บนบัตรใบที่2-->
+            <div class="row text-right">
+                <div class="col-lg-6">
+                    <h4 class="m-20 text-left" style="margin: 34px;">*ที่บ้าน</h4>
+                    <div class="box1">
+                        <div class="row">
+                            <p class="col-md-7 m-20 text-center" id="edit_home" type="text">{{home_address_card2}}</p>
+                                <button href="#" class="btn btn-white col-sm-3" type="button" data-toggle="modal"
+                                data-target="#address_home2" style="margin: 10px;"><i
+                                class="fa fa-edit text-success"></i> แก้ไข</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Modal address_home2 -->
+                <div class="modal fade" id="address_home2" tabindex="-1" role="dialog">
+                    <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                        <h5 class="modal-title-home" >แก้ไขที่อยู่ที่บ้าน</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        </div>
+                        <form method="POST">
+                        {{home_form_card2.hidden_tag()}}
+                        <div class="modal-body text-left" id="edit_home" type="text">
+                        <label >อาคาร/หมู่บ้าน</label>
+                        {{home_form_card2.unit_home2(class='form-control')}}
+                        <label >บ้านเลขที่</label>
+                        {{home_form_card2.address_no_card2(class='form-control')}}
+                        <label >หมู่</label>
+                        {{home_form_card2.village_card2(class='form-control')}}
+                        <label >จังหวัด</label>
+                        {{home_form_card2.province_card2(class='custom-select')}}
+                        <label >อำเภอ/เขต</label>
+                        {{home_form_card2.district_card2(class='custom-select')}}
+                        <label >ตำบล/แขวง</label>
+                        {{home_form_card2.sub_district_card2(class='custom-select')}}
+                        <label >รหัสไปรษณีย์</label>
+                        {{home_form_card2.postal_code_card2(class='custom-select')}}
+                        </div>
+                        <div class="modal-footer">
+                        {{home_form_card2.submit(class="btn btn-primary")}}
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        </div>
+                        </form>
+                    </div>
+                    </div>
+                </div>
+                <!-- Modal address_home end -->
+
+
+
+
+                <div class="col-lg-6">
+                    <h4 class="m-20 text-left" style="margin: 34px;">ที่ทำงาน</h4>
+                    <div class="box1">
+                        <div class="row">
+                            <p class="col-md-7 m-20 text-center" id="edit_work" type="text">{{company_address_card2}}</p>
+                                <button href="#" class="btn btn-white  col-sm-3" type="button" data-toggle="modal"
+                                data-target="#address_work2" style="margin: 10px;"><i
+                                class="fa fa-edit text-success"></i> แก้ไข</button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Modal address_work -->
+            <div class="modal fade" id="address_work2" tabindex="-1" role="dialog">
+                <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                    <h5 class="modal-title-work" >แก้ไขที่อยู่ที่ทำงาน</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    </div>
+                    <form method="POST">
+                    {{company_form_card2.hidden_tag()}}
+                    <div class="modal-body text-left" id="edit_home" type="text">
+                    <label>เลขที่ผู้เสียภาษี </label>    
+                    {{company_form_card2.identity_com2(class='form-control')}}
+                    <label >เลขที่อยู่บริษัท</label>
+                    {{company_form_card2.company_no_card2(class='form-control')}}
+                    <label >อาคาร/หมู่บ้าน</label>
+                    {{company_form_card2.unit_company2(class='form-control')}}
+                    <label >หมู่</label>
+                    {{company_form_card2.company_village_card2(class='form-control')}}
+                    <label >จังหวัด</label>
+                    {{company_form_card2.company_province_card2(class='custom-select')}}
+                    <label >อำเภอ/เขต</label>
+                    {{company_form_card2.company_district_card2(class='custom-select')}}
+                    <label >ตำบล/แขวง</label>
+                    {{company_form_card2.company_sub_district_card2(class='custom-select')}}
+                    <label >รหัสไปรษณีย์</label>
+                    {{company_form_card2.company_postal_code_card2(class='custom-select')}}
+                    </div>
+                    <div class="modal-footer">
+                    {{company_form_card2.submit(class="btn btn-primary")}}
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    </div>
+                    </form>
+                </div>
+                </div>
+            </div>
+            <!-- Modal address_work end -->
+            {%endif%} 
+
+
+
+            {%if card_count == 0%}
+            <h4 class="mt-5"><i class="fa fa-car"></i> ข้อมูลเลขทะเบียนรถ</h4>
+            
+                <div class="box1">
+                    <h4 class="m-20 text-center col-" style="padding: 21px;">ข้อมูลเลขทะเบียนรถ คันที่1</h4>
+                    <div class="row" style="align-items: center;">
+                        <div class="col-lg-3 col-md-4">
+                            <h5 class="m-20">เลขทะเบียนรถ</h5>
+                            <p class="m-20" id="edit_carregis1" type="text">{{license_plate1}}</p>
+                            </p>
+                        </div>   
+                        <div class="col-lg-2 col-md-4">
+                            <h5 class="m-20">สีรถ</h5>
+                            <p class="m-20" id="edit_carcolor1" type="text">{{color1}}</p>
+                            </p>
+                        </div>
+                        <div class="col-lg-2 col-md-4">
+                            <h5 class="m-20">ยี่ห้อรถ</h5>
+                            <p class="m-20" id="edit_model1" type="text">{{brand_name1}}</p>
+                            </p>
+                        </div>
+                        <div class="col-lg-3 col-md-4">
+                            <h5 class="m-20">จังหวัด</h5>
+                            <p class="m-20" id="edit_province1" type="text">{{province_car1}}</p>
+                            </p>
+                        </div>
+                        <div class="col-lg-2 col-md-4 text-center text-lg-right">
+                            
+                        </div>
+                    </div>
+                </div>
+
+                
+                <div class="box1">
+                    <h4 class="m-20 text-center col-12" style="padding: 21px;">ข้อมูลเลขทะเบียนรถ คันที่2</h4>
+                    <div class="row" style="align-items: center;">
+                        <div class="col-lg-3 col-md-4">
+                            <h5 class="m-20">เลขทะเบียนรถ</h5>
+                            <p class="m-20" id="edit_carregis2" type="text">{{license_plate2}}</p>
+                            </p>
+                        </div>   
+                        <div class="col-lg-2 col-md-4">
+                            <h5 class="m-20">สีรถ</h5>
+                            <p class="m-20" id="edit_carcolor2" type="text">{{color2}}</p>
+                            </p>
+                        </div>
+                        <div class="col-lg-2 col-md-4">
+                            <h5 class="m-20">ยี่ห้อรถ</h5>
+                            <p class="m-20" id="edit_model2" type="text">{{brand_name2}}</p>
+                            </p>
+                        </div>
+                        <div class="col-lg-3 col-md-4">
+                            <h5 class="m-20">จังหวัด</h5>
+                            <p class="m-20" id="edit_province2" type="text">{{province_car2}}</p>
+                            </p>
+                        </div>
+                        <div class="col-lg-2 col-md-4 text-center text-lg-right">
+                            
+                        </div>
+                    </div>
+                </div>
+            {%elif card_count == 1%}
+            <h4 class="mt-5"><i class="fa fa-car"></i> ข้อมูลเลขทะเบียนรถ</h4>
+            
+                <div class="box1">
+                    <h4 class="m-20 text-center col-" style="padding: 21px;">ข้อมูลเลขทะเบียนรถ คันที่1</h4>
+                    <div class="row" style="align-items: center;">
+                        <div class="col-lg-3 col-md-4">
+                            <h5 class="m-20">เลขทะเบียนรถ</h5>
+                            <p class="m-20" id="edit_carregis1" type="text">{{license_plate1}}</p>
+                            </p>
+                        </div>   
+                        <div class="col-lg-2 col-md-4">
+                            <h5 class="m-20">สีรถ</h5>
+                            <p class="m-20" id="edit_carcolor1" type="text">{{color1}}</p>
+                            </p>
+                        </div>
+                        <div class="col-lg-2 col-md-4">
+                            <h5 class="m-20">ยี่ห้อรถ</h5>
+                            <p class="m-20" id="edit_model1" type="text">{{brand_name1}}</p>
+                            </p>
+                        </div>
+                        <div class="col-lg-3 col-md-4">
+                            <h5 class="m-20">จังหวัด</h5>
+                            <p class="m-20" id="edit_province1" type="text">{{province_car1}}</p>
+                            </p>
+                        </div>
+                        <div class="col-lg-2 col-md-4 text-center text-lg-right">
+                            <button href="#" class="btn btn-info" type="button" data-toggle="modal"
+                            data-target="#car_regis1" style="margin: 10px;"><i
+                                    class="fa fa-edit"></i> แก้ไข</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Modal car registration1 -->
+                <div class="modal fade" id="car_regis1" tabindex="-1" role="dialog">
+                    <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                        <h5 class="modal-title-car-registration1" >แก้ไขข้อมูลเลขทะเบียนรถ คันที่1</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        </div>
+                        <form method="POST">
+                        {{car_form.hidden_tag()}}
+                        <div class="modal-body" id="edit_home" type="text">
+                        <label >ทะเบียนรถคันที่ 1</label>
+                        {{car_form.license_plate1(class='form-control')}}
+                        <label >ยี่ห้อรถ</label>
+                        {{car_form.brand_name1(class='custom-select')}}
+                        <label >สีรถ</label>
+                        {{car_form.color1(class='form-control')}}
+                        <label >จังหวัดบนป้ายทะเบียน</label>
+                        {{car_form.province_car1(class='custom-select')}}
+                        </div>
+                        <div class="modal-footer">
+                        {{company_form.submit(class="btn btn-primary")}}
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        </div>
+                        </form>
+                    </div>
+                    </div>
+                </div>
+                <!-- Modal car registration1 end -->
+
+
+
+
+                <div class="box1">
+                    <h4 class="m-20 text-center col-12" style="padding: 21px;">ข้อมูลเลขทะเบียนรถ คันที่2</h4>
+                    <div class="row" style="align-items: center;">
+                        <div class="col-lg-3 col-md-4">
+                            <h5 class="m-20">เลขทะเบียนรถ</h5>
+                            <p class="m-20" id="edit_carregis2" type="text">{{license_plate2}}</p>
+                            </p>
+                        </div>   
+                        <div class="col-lg-2 col-md-4">
+                            <h5 class="m-20">สีรถ</h5>
+                            <p class="m-20" id="edit_carcolor2" type="text">{{color2}}</p>
+                            </p>
+                        </div>
+                        <div class="col-lg-2 col-md-4">
+                            <h5 class="m-20">ยี่ห้อรถ</h5>
+                            <p class="m-20" id="edit_model2" type="text">{{brand_name2}}</p>
+                            </p>
+                        </div>
+                        <div class="col-lg-3 col-md-4">
+                            <h5 class="m-20">จังหวัด</h5>
+                            <p class="m-20" id="edit_province2" type="text">{{province_car2}}</p>
+                            </p>
+                        </div>
+                        <div class="col-lg-2 col-md-4 text-center text-lg-right">
+                            <button href="#" class="btn btn-info" type="button" data-toggle="modal"
+                            data-target="#car_regis2" style="margin: 10px;"><i
+                                    class="fa fa-edit"></i> แก้ไข</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Modal car registration2 -->
+                <div class="modal fade" id="car_regis2" tabindex="-1" role="dialog">
+                    <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                        <h5 class="modal-title-car-registration2" >แก้ไขข้อมูลเลขทะเบียนรถ คันที่2</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        </div>
+                        <form method="POST">
+                        {{car_form2.hidden_tag()}}
+                        <div class="modal-body" id="edit_home" type="text">
+                        <label >ทะเบียนรถคันที่ 2</label>
+                        {{car_form2.license_plate2(class='form-control')}}
+                        <label >ยี่ห้อรถ</label>
+                        {{car_form2.brand_name2(class='form-control')}}
+                        <label >สีรถ</label>
+                        {{car_form2.color2(class='form-control')}}
+                        <label >จังหวัดบนป้ายทะเบียน</label>
+                        {{car_form2.province_car2(class='custom-select')}}
+                        </div>
+                        <div class="modal-footer">
+                        {{car_form2.submit_car2(class="btn btn-primary")}}
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        </div>
+                        </form>
+                    </div>
+                    </div>
+                </div>
+                <!-- Modal car registration2 end -->
+                <!---------owned 2 card-->
+            {%elif card_count == 2 %} 
+            <h4 class="mt-5"><i class="fa fa-car"></i> ข้อมูลเลขทะเบียนรถบัตรใบที่1</h4>
+            
+                <div class="box1">
+                    <h4 class="m-20 text-center col-" style="padding: 21px;">ข้อมูลเลขทะเบียนรถ คันที่1</h4>
+                    <div class="row" style="align-items: center;">
+                        <div class="col-lg-3 col-md-4">
+                            <h5 class="m-20">เลขทะเบียนรถ</h5>
+                            <p class="m-20" id="edit_carregis1" type="text">{{license_plate1}}</p>
+                            </p>
+                        </div>   
+                        <div class="col-lg-2 col-md-4">
+                            <h5 class="m-20">สีรถ</h5>
+                            <p class="m-20" id="edit_carcolor1" type="text">{{color1}}</p>
+                            </p>
+                        </div>
+                        <div class="col-lg-2 col-md-4">
+                            <h5 class="m-20">ยี่ห้อรถ</h5>
+                            <p class="m-20" id="edit_model1" type="text">{{brand_name1}}</p>
+                            </p>
+                        </div>
+                        <div class="col-lg-3 col-md-4">
+                            <h5 class="m-20">จังหวัด</h5>
+                            <p class="m-20" id="edit_province1" type="text">{{province_car1}}</p>
+                            </p>
+                        </div>
+                        <div class="col-lg-2 col-md-4 text-center text-lg-right">
+                            <button href="#" class="btn btn-info" type="button" data-toggle="modal"
+                            data-target="#car_regis1" style="margin: 10px;"><i
+                                    class="fa fa-edit"></i> แก้ไข</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Modal car registration1 -->
+                <div class="modal fade" id="car_regis1" tabindex="-1" role="dialog">
+                    <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                        <h5 class="modal-title-car-registration1" >แก้ไขข้อมูลเลขทะเบียนรถ คันที่1</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        </div>
+                        <form method="POST">
+                        {{car_form.hidden_tag()}}
+                        <div class="modal-body" id="edit_home" type="text">
+                        <label >ทะเบียนรถคันที่ 1</label>
+                        {{car_form.license_plate1(class='form-control')}}
+                        <label >ยี่ห้อรถ</label>
+                        {{car_form.brand_name1(class='custom-select')}}
+                        <label >สีรถ</label>
+                        {{car_form.color1(class='form-control')}}
+                        <label >จังหวัดบนป้ายทะเบียน</label>
+                        {{car_form.province_car1(class='custom-select')}}
+                        </div>
+                        <div class="modal-footer">
+                        {{company_form.submit(class="btn btn-primary")}}
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        </div>
+                        </form>
+                    </div>
+                    </div>
+                </div>
+                <!-- Modal car registration1 end -->
+
+
+
+
+                <div class="box1">
+                    <h4 class="m-20 text-center col-12" style="padding: 21px;">ข้อมูลเลขทะเบียนรถ คันที่2</h4>
+                    <div class="row" style="align-items: center;">
+                        <div class="col-lg-3 col-md-4">
+                            <h5 class="m-20">เลขทะเบียนรถ</h5>
+                            <p class="m-20" id="edit_carregis2" type="text">{{license_plate2}}</p>
+                            </p>
+                        </div>   
+                        <div class="col-lg-2 col-md-4">
+                            <h5 class="m-20">สีรถ</h5>
+                            <p class="m-20" id="edit_carcolor2" type="text">{{color2}}</p>
+                            </p>
+                        </div>
+                        <div class="col-lg-2 col-md-4">
+                            <h5 class="m-20">ยี่ห้อรถ</h5>
+                            <p class="m-20" id="edit_model2" type="text">{{brand_name2}}</p>
+                            </p>
+                        </div>
+                        <div class="col-lg-3 col-md-4">
+                            <h5 class="m-20">จังหวัด</h5>
+                            <p class="m-20" id="edit_province2" type="text">{{province_car2}}</p>
+                            </p>
+                        </div>
+                        <div class="col-lg-2 col-md-4 text-center text-lg-right">
+                            <button href="#" class="btn btn-info" type="button" data-toggle="modal"
+                            data-target="#car_regis2" style="margin: 10px;"><i
+                                    class="fa fa-edit"></i> แก้ไข</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Modal car registration2 -->
+                <div class="modal fade" id="car_regis2" tabindex="-1" role="dialog">
+                    <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                        <h5 class="modal-title-car-registration2" >แก้ไขข้อมูลเลขทะเบียนรถ คันที่2</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        </div>
+                        <form method="POST">
+                        {{car_form2.hidden_tag()}}
+                        <div class="modal-body" id="edit_home" type="text">
+                        <label >ทะเบียนรถคันที่ 2</label>
+                        {{car_form2.license_plate2(class='form-control')}}
+                        <label >ยี่ห้อรถ</label>
+                        {{car_form2.brand_name2(class='custom-select')}}
+                        <label >สีรถ</label>
+                        {{car_form2.color2(class='form-control')}}
+                        <label >จังหวัดบนป้ายทะเบียน</label>
+                        {{car_form2.province_car2(class='custom-select')}}
+                        </div>
+                        <div class="modal-footer">
+                        {{car_form2.submit_car2(class="btn btn-primary")}}
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        </div>
+                        </form>
+                    </div>
+                    </div>
+                </div>
+                <!-- Modal car registration2 end -->
+                <!-----card 1 end-->
+                <h4 class="mt-5"><i class="fa fa-car"></i> ข้อมูลเลขทะเบียนรถบัตรใบที่2</h4>
+            
+                <div class="box1">
+                    <h4 class="m-20 text-center col-" style="padding: 21px;">ข้อมูลเลขทะเบียนรถ คันที่1</h4>
+                    <div class="row" style="align-items: center;">
+                        <div class="col-lg-3 col-md-4">
+                            <h5 class="m-20">เลขทะเบียนรถ</h5>
+                            <p class="m-20" id="edit_carregis1" type="text">{{license_plate1_card2}}</p>
+                            </p>
+                        </div>   
+                        <div class="col-lg-2 col-md-4">
+                            <h5 class="m-20">สีรถ</h5>
+                            <p class="m-20" id="edit_carcolor1" type="text">{{color1_card2}}</p>
+                            </p>
+                        </div>
+                        <div class="col-lg-2 col-md-4">
+                            <h5 class="m-20">ยี่ห้อรถ</h5>
+                            <p class="m-20" id="edit_model1" type="text">{{brand_name1_card2}}</p>
+                            </p>
+                        </div>
+                        <div class="col-lg-3 col-md-4">
+                            <h5 class="m-20">จังหวัด</h5>
+                            <p class="m-20" id="edit_province1" type="text">{{province_car1_card2}}</p>
+                            </p>
+                        </div>
+                        <div class="col-lg-2 col-md-4 text-center text-lg-right">
+                            <button href="#" class="btn btn-info" type="button" data-toggle="modal"
+                            data-target="#car_regis1_card2" style="margin: 10px;"><i
+                                    class="fa fa-edit"></i> แก้ไข</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Modal car registration1 -->
+                <div class="modal fade" id="car_regis1_card2" tabindex="-1" role="dialog">
+                    <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                        <h5 class="modal-title-car-registration1" >แก้ไขข้อมูลเลขทะเบียนรถ คันที่1</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        </div>
+                        <form method="POST">
+                        {{car_form3.hidden_tag()}}
+                        <div class="modal-body" id="edit_home" type="text">
+                        <label >ทะเบียนรถคันที่ 2</label>
+                        {{car_form3.license_plate1_card2(class='form-control')}}
+                        <label >ยี่ห้อรถ</label>
+                        {{car_form3.brand_name1_card2(class='custom-select')}}
+                        <label >สีรถ</label>
+                        {{car_form3.color1_card2(class='form-control')}}
+                        <label >จังหวัดบนป้ายทะเบียน</label>
+                        {{car_form3.province_car1_card2(class='custom-select')}}
+                        </div>
+                        <div class="modal-footer">
+                        {{car_form3.submit(class="btn btn-primary")}}
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        </div>
+                        </form>
+                    </div>
+                    </div>
+                </div>
+                <!-- Modal car registration1 end -->
+
+
+
+
+                <div class="box1">
+                    <h4 class="m-20 text-center col-12" style="padding: 21px;">ข้อมูลเลขทะเบียนรถ คันที่2</h4>
+                    <div class="row" style="align-items: center;">
+                        <div class="col-lg-3 col-md-4">
+                            <h5 class="m-20">เลขทะเบียนรถ</h5>
+                            <p class="m-20" id="edit_carregis2" type="text">{{license_plate2_card2}}</p>
+                            </p>
+                        </div>   
+                        <div class="col-lg-2 col-md-4">
+                            <h5 class="m-20">สีรถ</h5>
+                            <p class="m-20" id="edit_carcolor2" type="text">{{color2_card2}}</p>
+                            </p>
+                        </div>
+                        <div class="col-lg-2 col-md-4">
+                            <h5 class="m-20">ยี่ห้อรถ</h5>
+                            <p class="m-20" id="edit_model2" type="text">{{brand_name2_card2}}</p>
+                            </p>
+                        </div>
+                        <div class="col-lg-3 col-md-4">
+                            <h5 class="m-20">จังหวัด</h5>
+                            <p class="m-20" id="edit_province2" type="text">{{province_car2_card2}}</p>
+                            </p>
+                        </div>
+                        <div class="col-lg-2 col-md-4 text-center text-lg-right">
+                            <button href="#" class="btn btn-info" type="button" data-toggle="modal"
+                            data-target="#car_regis2_card2" style="margin: 10px;"><i
+                                    class="fa fa-edit"></i> แก้ไข</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Modal car registration2 -->
+                <div class="modal fade" id="car_regis2_card2" tabindex="-1" role="dialog">
+                    <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                        <h5 class="modal-title-car-registration2" >แก้ไขข้อมูลเลขทะเบียนรถ คันที่2</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        </div>
+                        <form method="POST">
+                        {{car_form4.hidden_tag()}}
+                        <div class="modal-body" id="edit_home" type="text">
+                        <label >ทะเบียนรถคันที่ 2</label>
+                        {{car_form4.license_plate2_card2(class='form-control')}}
+                        <label >ยี่ห้อรถ</label>
+                        {{car_form4.brand_name2_card2(class='custom-select')}}
+                        <label >สีรถ</label>
+                        {{car_form4.color2_card2(class='form-control')}}
+                        <label >จังหวัดบนป้ายทะเบียน</label>
+                        {{car_form4.province_car2_card2(class='custom-select')}}
+                        </div>
+                        <div class="modal-footer">
+                        {{car_form4.submit(class="btn btn-primary")}}
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        </div>
+                        </form>
+                    </div>
+                    </div>
+                </div>
+                <!-- Modal car registration2 end -->
+            {%endif%} 
+            {%if card_count <= 1 %} 
+            <h4 class="mt-5"><i class="fa fa-address-card"></i> บัตรสมาชิกรายเดือน</h4>
+            <div class="row text-center pb-5">
+                <div class="col-lg-3"></div>
+                <div class="col-lg-6">
+                    <div class="dropzone-wrapper">
+                        <div class="dropzone-desc">
+                            <a button href="member-register-step1" class="h4 btn btn-white" type="button"><i
+                                    class="fa fa-plus-square text-success"></i><br>เพิ่มสมาชิกรายเดือน</a>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3"></div>
+                <!-- <div class="col-lg-6">
+                    <div class="dropzone-wrapper">
+                        <div class="dropzone-desc">
+                            <button href="/member-register-step1" class="h4 btn btn-white" type="button"><i
+                                    class="fa fa-plus-square text-success"></i><br>เพิ่มสมาชิกรายเดือน</button>
+                        </div>
+                    </div>
+                </div> -->
+            </div>        
+            {%endif%} 
+       
+            <div class="row text-center pb-5">
+                <div class="col-lg-4"></div>
+                <div class="col-lg-4">
+                     <button class="btn-cc-account" name="cancle_account" 
+                     type="button" id="" onclick="DeleteAccount()" 
+                     style="border-radius: 10px;" >ยกเลิกบัญชีผู้ใช้งาน</button>
+                </div>     
+                <div class="col-lg-4"></div>
+            </div>
+
+        </div>
+    </div>
+    {% include "comps/scroll-top.html" %}
+    {% include "comps/popup-cookie.html" %}
+
+    {% include "comps/footer.html" %}
+</body>
+
+
+<script>
+    function submitDelete_ktb(){
+        document.getElementById("delete_acKTB").submit();
+    }
+
+    $(".dial").knob({
+        'min': 0,
+        'max': 30
+    });
+    $(".dial2").knob({
+        'min': 0,
+        'max': 30
+    });
+</script>
+
+<script>
+    function validate(evt) {
+  var theEvent = evt || window.event;
+
+  // Handle paste
+  if (theEvent.type === 'paste') {
+      key = event.clipboardData.getData('text/plain');
+  } else {
+  // Handle key press
+      var key = theEvent.keyCode || theEvent.which;
+      key = String.fromCharCode(key);
+  }
+  var regex = /[0-9]|\./;
+  if( !regex.test(key) ) {
+    theEvent.returnValue = false;
+    if(theEvent.preventDefault) theEvent.preventDefault();
+  }
+}
+</script>
+
+<script>
+    function readURL(input) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+            reader.onload = function (e) {
+                $('#imagePreview').css('background-image', 'url(' + e.target.result + ')');
+                $('#imagePreview').hide();
+                $('#imagePreview').fadeIn(650);
+            }
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+    $("#imageUpload").change(function () {
+        readURL(this);
+    });
+</script>
+<script>
+    province_select2 = document.getElementById('company_province');
+    district_select2 = document.getElementById('company_district');
+    subdistrict_select2 = document.getElementById('company_sub_district');
+    postcode_select2 = document.getElementById('company_postal_code');
+    
+    province_select2.onchange = function(){
+     province = province_select2.value;
+     fetch('district/' + province).then(function(response){
+      response.json().then(function(data) {
+       optionHTML = '';
+       for (district of data.districtlist) {
+        optionHTML += '<option value="' + district.name +'">' + district.name+ '</option>'
+       }
+       district_select2.innerHTML = optionHTML;
+      });
+     });
+    }
+    district_select2.onchange = function(){
+     district = district_select2.value; 
+     province = province_select2.value;
+     fetch('subdistrict/'+province+'/' + district).then(function(response){
+      response.json().then(function(data) {
+       optionHTML = '';
+       for (sub of data.subdistrictlist) {
+        optionHTML += '<option value="' + sub +'">' + sub + '</option>'
+       }
+       subdistrict_select2.innerHTML = optionHTML;
+      });
+     });
+    }
+    subdistrict_select2.onchange = function(){
+        subdistrict = subdistrict_select2.value; 
+        district = district_select2.value;
+        province = province_select2.value;
+        fetch('postcode/'+province+'/'+district+'/' + subdistrict).then(function(response){
+         response.json().then(function(data) {
+          optionHTML = '';
+          for (post of data.postcodelist) {
+           optionHTML += '<option value="' + post +'">' + post + '</option>'
+          }
+          postcode_select2.innerHTML = optionHTML;
+         });
+        });
+       }
+</script>
+<script>
+    province_select = document.getElementById('province');
+    district_select = document.getElementById('district');
+    subdistrict_select = document.getElementById('sub_district');
+    postcode_select = document.getElementById('postal_code');
+    
+    province_select.onchange = function(){
+     province = province_select.value;
+     fetch('district/' + province).then(function(response){
+      response.json().then(function(data) {
+       optionHTML = '';
+       for (district of data.districtlist) {
+        optionHTML += '<option value="' + district.name +'">' + district.name+ '</option>'
+       }
+       district_select.innerHTML = optionHTML;
+      });
+     });
+    }
+    district_select.onchange = function(){
+     district = district_select.value; 
+     province = province_select.value;
+     fetch('subdistrict/'+province +'/' + district).then(function(response){
+      response.json().then(function(data){
+       optionHTML = '';
+       for (sub of data.subdistrictlist){
+        optionHTML += '<option value="' + sub +'">' + sub + '</option>'
+       }
+       subdistrict_select.innerHTML = optionHTML;
+      });
+     });
+    }
+    subdistrict_select.onchange = function(){
+        subdistrict = subdistrict_select.value;
+        province = province_select.value;
+        district_ = district_select.value;
+        fetch('postcode/' +province+'/'+district_+'/'+ subdistrict).then(function(response){
+         response.json().then(function(data){
+          optionHTML = '';
+          for (post of data.postcodelist){
+           optionHTML += '<option value="' + post +'">' + post + '</option>'
+          }
+          postcode_select.innerHTML = optionHTML;
+         });
+        });
+       }
+</script>
+<script>
+    province_select3 = document.getElementById('province_card2');
+    district_select3 = document.getElementById('district_card2');
+    subdistrict_select3 = document.getElementById('sub_district_card2');
+    postcode_select3 = document.getElementById('postal_code_card2');
+    
+    province_select3.onchange = function(){
+     province = province_select3.value;
+     fetch('district/' + province).then(function(response){
+      response.json().then(function(data) {
+       optionHTML = '';
+       for (district of data.districtlist) {
+        optionHTML += '<option value="' + district.name +'">' + district.name+ '</option>'
+       }
+       district_select3.innerHTML = optionHTML;
+      });
+     });
+    }
+    district_select3.onchange = function(){
+     district = district_select3.value; 
+     province = province_select3.value;
+     fetch('subdistrict/' +province  +'/'+district).then(function(response){
+      response.json().then(function(data) {
+       optionHTML = '';
+       for (sub of data.subdistrictlist) {
+        optionHTML += '<option value="' + sub +'">' + sub + '</option>'
+       }
+       subdistrict_select3.innerHTML = optionHTML;
+      });
+     });
+    }
+    subdistrict_select3.onchange = function(){
+        subdistrict = subdistrict_select3.value; 
+        district = district_select3.value;
+        province = province_select3.value;
+        fetch('postcode/'+province +'/'+district+'/' + subdistrict).then(function(response){
+         response.json().then(function(data) {
+          optionHTML = '';
+          for (post of data.postcodelist) {
+           optionHTML += '<option value="' + post+'">' + post + '</option>'
+          }
+          postcode_select3.innerHTML = optionHTML;
+         });
+        });
+       }
+</script>
+<script>
+    province_select4 = document.getElementById('company_province_card2');
+    district_select4 = document.getElementById('company_district_card2');
+    subdistrict_select4 = document.getElementById('company_sub_district_card2');
+    postcode_select4 = document.getElementById('company_postal_code_card2');
+    
+    province_select4.onchange = function(){
+     province = province_select4.value;
+     fetch('district/' + province).then(function(response){
+      response.json().then(function(data) {
+       optionHTML = '';
+       for (district of data.districtlist) {
+        optionHTML += '<option value="' + district.name +'">' + district.name+ '</option>'
+       }
+       district_select4.innerHTML = optionHTML;
+      });
+     });
+    }
+    district_select4.onchange = function(){
+     district = district_select4.value; 
+     province = district_select4.value;
+     fetch('subdistrict/'+province+'/' + district).then(function(response){
+      response.json().then(function(data) {
+       optionHTML = '';
+       for (sub of data.subdistrictlist) {
+        optionHTML += '<option value="' + sub +'">' + sub + '</option>'
+       }
+       subdistrict_select4.innerHTML = optionHTML;
+      });
+     });
+    }
+    subdistrict_select4.onchange = function(){
+        subdistrict = subdistrict_select4.value; 
+        district = district_select4.value;
+        province = province_select4.value;
+        fetch('postcode/'+province+'/'+district+'/' + subdistrict).then(function(response){
+         response.json().then(function(data) {
+          optionHTML = '';
+          for (post of data.postcodelist) {
+           optionHTML += '<option value="' + post +'">' + post + '</option>'
+          }
+          postcode_select4.innerHTML = optionHTML;
+         });
+        });
+       }
+</script>
+<script>
+    $(document).ready(function () {
+        $('#identity').on('keyup', function () {
+            if ($.trim($(this).val()) != '' && $(this).val().length == 13) {
+                id = $(this).val().replace(/-/g, "");
+                var result = Script_checkID(id);
+                if (result === false) {
+                    $('span.error').removeClass('true').text('เลขบัตรประชาชนผิด');
+                } else {
+                    $('span.error').addClass('true').text('เลขบัตรประชาชนถูกต้อง');
+                }
+            } else {
+                $('span.error').removeClass('true').text('');
+
+            }
+        })
+    });
+    // ตรวจสอบตัวแปรบัตรประชาชน
+    function Script_checkID(id) {
+        if (!IsNumeric(id)) return false;
+        if (id.substring(0, 1) == 0) return false;
+        if (id.length != 13) return false;
+        for (i = 0, sum = 0; i < 12; i++)
+            sum += parseFloat(id.charAt(i)) * (13 - i);
+        if ((11 - sum % 11) % 10 != parseFloat(id.charAt(12))) return false;
+        return true;
+    }
+    function IsNumeric(input) {
+        var RE = /^-?(0|INF|(0[1-7][0-7]*)|(0x[0-9a-fA-F]+)|((0|[1-9][0-9]*|(?=[\.,]))([\.,][0-9]+)?([eE]-?\d+)?))$/;
+        return (RE.test(input));
+    }
+</script>
+<script>
+    
+    document.getElementById('imageUpload').addEventListener('input',() => {
+        const fileSize = document.getElementById('imageUpload').files[0].size / 1024 / 1024; 
+        console.log('asdfsdf')
+        if (fileSize > 2) {
+          alert('File size exceeds 2 MB');
+          document.getElementById('imageUpload').value = null
+          console.log('success')
+        }else{
+            document.getElementById('form_image').submit();
+        }
+    } 
+    );
+    
+</script>
+<script>
+    function DeleteAccount() {
+    var r = confirm("ลูกค้ายืนการยกเลิกบัญชีผู้ใช้งานหรือไม่");
+    if (r == true) {
+      let r2 = confirm("กรณีที่ลูกค้ายืนยันยกเลิกบัญชี ระบบจะมีเวลาให้ลูกค้าสามารถกลับมาใช้งานได้อีกภายใน 30 วัน ระบบจะทำการยกเลิกบัญชีลูกค้าอัตโนมัติ และลูกค้าจะไม่สามารถกลับมาใช้งานได้อีกจนกว่าลูกค้าจะลงทะเบียนสมัครสมาชิก Application ใหม่");
+      console.log(r2)
+      if (r2 == true){
+        window.location.href='https://parking.mrta.co.th/delete_account'
+    }
+    }
+  }
+</script>
+<!-- <script>
+    $('#edit').click(function(){
+  $('#form').toggleClass('view');
+  $('input').each(function(){
+    var inp = $(this);
+    if (inp.attr('readonly')) {
+     inp.removeAttr('readonly');
+    }
+    else {
+      inp.attr('readonly', 'readonly');
+    }
+  });
+});
+</script> -->
+
+
+<!-- <script>
+    function openWin()
+    {
+    myWindow=window.open("","","width=200,height=100");
+    myWindow.document.open();
+    myWindow.document.write("<p>NEW WINDOW<p>");
+    myWindow.document.write("<scr" + "ipt>alert('Script works!')</scr"+"ipt>");
+    myWindow.document.close();
+    }
+</script> -->
+
+</html>

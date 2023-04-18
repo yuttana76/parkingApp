@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  {% include "include/manage-css.html" %}
+  {% include "include/manage-js.html" %}
+  <title>การจัดการ User Mapping Site</title>
+  <link href="//cdn.datatables.net/1.10.20/css/jquery.dataTables.min.css" rel="stylesheet" />
+  <link href="//cdn.datatables.net/buttons/1.6.2/css/buttons.dataTables.min.css" rel="stylesheet" />
+  <script src="//code.jquery.com/jquery-3.5.1.js"></script>
+  <script src="//cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script>
+
+  <script src="//cdn.datatables.net/buttons/1.6.2/js/dataTables.buttons.min.js"></script>
+  <script src="//cdn.datatables.net/buttons/1.6.2/js/buttons.flash.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
+  <script src="//cdn.datatables.net/buttons/1.6.2/js/buttons.html5.min.js"></script>
+  <script src="//cdn.datatables.net/buttons/1.6.2/js/buttons.print.min.js"></script>
+</head>
+
+<body class="hold-transition sidebar-mini layout-fixed">
+  <div class="wrapper">
+    {% include "manage/comps/header.html" %}
+    {% include "manage/comps/sidebar.html" %}
+
+      <!-- Messenger ปลั๊กอินแชท Code -->
+      <div id="fb-root"></div>
+
+      <!-- Your ปลั๊กอินแชท code -->
+      <div id="fb-customer-chat" class="fb-customerchat"></div>
+
+    <div class="content-wrapper">
+      <div class="content-header">
+        <div class="container-fluid">
+          <div class="row mb-3">
+            <div class="col-sm-12 mb-3">
+              <h1 class="m-0" style="color: #1a086e; font-size: 38px; font-weight: bold;">การจัดการ User Mapping Site
+              </h1>
+            </div>
+            <div class="col-sm-12">
+              <div class="card">
+                <div class="card-body">
+                  <table id="parking-list1" class="table table-bordered table-striped" style="width:100%">
+                    <!--Start search -->
+                    <div class="wrap">
+                      <div class="input-group row">
+                        <div class="col-sm-4 input-group">
+                          <input type="text" id="usermanage" class="form-control" placeholder="ค้นหา" name="search" />
+                          <div class="input-group-btn">
+                            <button class="btn btn-primary " type="submit">
+                              <i class="fas fa-search"></i></button>
+                          </div>
+                        </div>
+
+
+                        <button class="btn btn-success mb-2 ml-3" id="excel"><i class="far fa-file-excel"></i> Export to
+                          Excel</button>
+
+                        <button class="btn btn-primary mb-2" data-toggle="modal" data-target="#exampleModal-add"
+                          style="margin-left: auto;  ">
+                          <i class="fas fa-plus"></i> เพิ่มข้อมูล
+                        </button>
+                        <!--button add -->
+                      </div>
+                    </div>
+                </div>
+                <!--end search -->
+                <thead>
+                  <tr>
+                    <th>NO.</th>
+                    <!--Topic No-->
+                    <th>ชื่อ-นามสกุล</th>
+                    <th>User</th>
+                    <th>Password</th>
+                    <!-- <th>Confirm Password</th> -->
+                    <th>แผนก/หน่วยงาน</th>
+                    <th>User/Role</th>
+                    <th>รหัสลานจอด</th>
+                    <th>Line Token</th>
+                    <th>วันที่สร้าง</th>
+                    <th>วันที่แก้ไข</th>
+                    <!-- <th>User สร้าง</th>
+                        <th>User แก้ไข</th> -->
+                    <th class="textbox" colspan="1">การจัดการ</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for row in datas %}
+                  <tr>
+                    <td>{{row.Id}}</td>
+                    <td>{{row.first_name}} {{row.last_name}}</td>
+                    <td>{{row.username}}</td>
+                    <td>{{row.password}}</td>
+                    <!-- <td>{{row.4}}</td> -->
+                    {%if row.dep_id == 1 %}
+                    <td>รฟม.</td>
+                    {%elif row.dep_id == 2 %}
+                    <td>ประสานงานสายสีม่วง.</td>
+                    {%elif row.dep_id == 3 %}
+                    <td>ธุรการกะเช้าคลองบางไผ่.</td>
+                    {%elif row.dep_id == 4 %}
+                    <td>ธุรการกะบ่ายคลองบางไผ่.</td>
+                    {%elif row.dep_id == 5 %}
+                    <td>ธุรการกะเช้าสามแยกบางใหญ่.</td>
+                    {%elif row.dep_id == 6 %}
+                    <td>ธุรการกะบ่ายสามแยกบางใหญ่.</td>
+                    {%elif row.dep_id == 7%}
+                    <td>ธุรการกะเช้าบางรักน้อยท่าอิฐ.</td>
+                    {%elif row.dep_id == 8 %}
+                    <td>ธุรการกะบ่ายบางรักน้อยท่าอิฐ.</td>
+                    {%elif row.dep_id == 9 %}
+                    <td>ธุรการกะเช้าแยกนนทบุรี1.</td>
+                    {%elif row.dep_id == 10 %}
+                    <td>ธุรการกะบ่ายแยกนนทบุรี1.</td>
+                    {%elif row.dep_id == 11 %}
+                    <td>ผู้ประสานงานสายสีน้ำเงิน.</td>
+                    {%elif row.dep_id == 12 %}
+                    <td>ธุรการกะเช้าลาดพร้าว.</td>
+                    {%elif row.dep_id == 13 %}
+                    <td>ธุรการกะบ่ายลาดพร้าว.</td>
+                    {%elif row.dep_id == 14 %}
+                    <td>ธุรการกะเช้าศูนย์วัฒนฯ.</td>
+                    {%elif row.dep_id == 15 %}
+                    <td>ธุรการกะบ่ายศูนย์วัฒนฯ.</td>
+                    {%elif row.dep_id == 16 %}
+                    <td>ธุรการกะเช้าหลักสอง.</td>
+                    {%elif row.dep_id == 17 %}
+                    <td>ธุรการกะบ่ายหลักสอง.</td>
+                    {%elif row.dep_id == 18 %}
+                    <td>ธุรการกะเช้าเคหะฯ.</td>
+                    {%elif row.dep_id == 19 %}
+                    <td>ธุรการกะบ่ายเคหะฯ.</td>
+                    {%elif row.dep_id == 20 %}
+                    <td>ผู้ประสานงานสายสีเขียวเหนือ.</td>
+                    {%elif row.dep_id == 21 %}
+                    <td>ธุรการกะเช้าแยกคปอ.</td>
+                    {%elif row.dep_id == 22 %}
+                    <td>ธุรการกะบ่ายแยกคปอ.</td>
+                    {%elif row.dep_id == 23 %}
+                    <td>ธุรการกะเช้าคูคต.</td>
+                    {%elif row.dep_id == 24 %}
+                    <td>ธุรการกะบ่ายคูคต.</td>
+                    {%elif row.dep_id == 25 %}
+                    <td>JPARK.</td>
+                    {%else%} 
+                    <td>none</td>
+                    {%endif%}
+                    <!-- <td>{{row.dep_id}}</td> -->
+                    {%if row.role_id == 2 %}
+                    <td>operator</td>
+                    {%elif row.role_id ==3 %}
+                    <td>backoffice</td>
+                    {%elif row.role_id ==4 %}
+                    <td>administrators</td>
+                    {%elif row.role_id ==5 %}
+                    <td>extendcard</td>
+                    {%else%}
+                    <td>none</td>
+                    {%endif%}
+                    <td>{{row.parking_code}}</td>
+                    <td>{{row.line_token}}</td>
+                    <td>{{row.user_create_date}}</td>
+                    <td>{{row.user_edit_date}}</td>
+                    <!-- <td>{{row.11}}</td>
+                        <td>{{row.12}}</td> -->
+                    <td class="textbox">
+                      <!--Button edit and delete in table-->
+                      <button class="btn btn-warning-del" data-toggle="modal" data-target="#Modaledit{{row.Id}}"><i
+                          class="fas fa-edit"></i>แก้ไข</button>
+                    </td>
+                    <!--end button edit and delete in table-->
+                  </tr>
+
+                  <!--Modal Edit-->
+                  <div class="modal fade bd-example-modal-lg" id="Modaledit{{row.Id}}" tabindex="-1" role="dialog"
+                    aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-lg">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                          <h5 class="modal-title">อัปเดตข้อมูล</h5>
+                          <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        </div>
+                        <div class="modal-body">
+                          <form action="{{ url_for('update_user_manage2') }}" method="POST">
+                            <div class="form-group d-none">
+                              <input type="hidden" name="id" value="{{row.Id}}">
+                            </div>
+
+                            <div class="form-group row mt-2">
+                              <div class="col-sm-6 mt-4">
+                                <label>ชื่อ: <span
+                                  class="text-valid">*</span></label>
+                                <input type="text" class="form-control" name="first_name" value="{{row.first_name}}">
+                              </div>
+
+
+                              <div class="col-sm-6 mt-4">
+                                <label>นามสกุล: <span
+                                  class="text-valid">*</span></label>
+                                <input type="text" class="form-control" name="last_name" value="{{row.last_name}}">
+                              </div>
+                            </div>
+
+                            <div class="form-group row mt-2">
+                              <div class="col-sm-6 mt-4">
+                                <label>User: <span
+                                  class="text-valid">*</span></label>
+                                <input type="text" class="form-control" name="username" value="{{row.username}}">
+                              </div>
+
+
+
+                              <div class="col-sm-6 mt-4">
+                                <label>Password: <span
+                                  class="text-valid">*</span></label>
+                                <input type="text" class="form-control" name="password" value="{{row.password}}">
+                              </div>
+                            </div>
+
+                            <div class="form-group row mt-2">
+                              <div class="col-sm-6 mt-4">
+                                <label for="dep_name">แผนก/หน่วยงาน: <span
+                                  class="text-valid">*</span></label>
+                                <!-- <input type="text" class="form-control" name="dep_id" value="{{row.dep_id}}"> -->
+                                <select class="form-control" name="dep_name">
+                                  <option value="1">รฟม.</option>
+                                  <option value="2">ประสานงานสายสีม่วง</option>
+                                  <option value="3">ธุรการกะเช้าคลองบางไผ่</option>
+                                  <option value="4">ธุรการกะบ่ายคลองบางไผ่</option>
+                                  <option value="5">ธุรการกะเช้าสามแยกบางใหญ่</option>
+                                  <option value="6">ธุรการกะบ่ายสามแยกบางใหญ่</option>
+                                  <option value="7">ธุรการกะเช้าบางรักน้อยท่าอิฐ</option>
+                                  <option value="8">ธุรการกะบ่ายบางรักน้อยท่าอิฐ</option>
+                                  <option value="9">ธุรการกะเช้าแยกนนทบุรี1</option>
+                                  <option value="10">ธุรการกะบ่ายแยกนนทบุรี1</option>
+                                  <option value="11">ผู้ประสานงานสายสีน้ำเงิน</option>
+                                  <option value="12">ธุรการกะเช้าลาดพร้าว</option>
+                                  <option value="13">ธุรการกะบ่ายลาดพร้าว</option>
+                                  <option value="14">ธุรการกะเช้าศูนย์วัฒนฯ</option>
+                                  <option value="15">ธุรการกะบ่ายศูนย์วัฒนฯ</option>
+                                  <option value="16">ธุรการกะเช้าหลักสอง</option>
+                                  <option value="17">ธุรการกะบ่ายหลักสอง</option>
+                                  <option value="18">ธุรการกะเช้าเคหะฯ</option>
+                                  <option value="19">ธุรการกะบ่ายเคหะฯ</option>
+                                  <option value="20">ผู้ประสานงานสายสีเขียวเหนือ</option>
+                                  <option value="21">ธุรการกะเช้าแยกคปอ.</option>
+                                  <option value="22">ธุรการกะบ่ายแยกคปอ.</option>
+                                  <option value="23">ธุรการกะเช้าคูคต</option>
+                                  <option value="24">ธุรการกะบ่ายคูคต</option>
+                                  <option value="25">JPARK</option>
+                                </select>
+                              </div>
+                              <div class="col-sm-6 mt-4">
+                                <label for="role_name">User/Role: <span
+                                  class="text-valid">*</span></label>
+                                <!-- <input type="text" class="form-control" name="role_id" value="{{row.role_id}}"> -->
+                                <select class="form-control" name="role_name">
+                                  <!-- <option value="1">customer</option> -->
+                                  <option value="2">operator</option>
+                                  <option value="3">backoffice</option>
+                                  <option value="4">administrators</option>
+                                  <option value="5">extendcard</option>
+                                </select>
+                              </div>
+                            </div>
+
+                            <!-- Checkbox รหัสลานจอด -->
+                            <div class="mb-3">
+                              <label>รหัสลานจอด <span
+                                class="text-valid">*</span></label>
+                            </div>
+
+                            
+                            <div class="row">
+                              {% for row1 in datas1 %}
+                              <div class="col-md-3 mb-3">
+                                <div class="form-check">
+                                  <input class="form-check-input" type="checkbox" id="parking_code" name="parking_code"
+                                    value="{{row1.1}}">
+                                  <label class="form-check-label">{{row1.1}}</label>
+                                </div>
+                              </div>
+                              {% endfor %}
+                            </div>
+
+                            
+
+                            <!-- <div class="form-group row mt-2">
+                                  <div class="col-sm-12 mt-4">
+                                    <label for="inputCar">ลานจอดรถ</label>
+                                    <select class="muti_select" id="parking_name" name="parking_name" value="{{row.7}}">
+                                    {% for row1 in datas1 %}
+                                    <option value={{row1.2}}>{{row1.2}}</option>
+                                    {% endfor %}
+                                  </select>
+                                </div>
+                              </div> -->
+
+
+                            <div class="form-group row mt-2">
+                              <div class="col-sm-12">
+                                <label>Line token (group): <span
+                                  class="text-valid">*</span></label>
+                                <input type="text" class="form-control" name="line_token" value="{{row.line_token}}">
+                              </div>
+                            </div>
+
+                            <div class="form-group row mt-2">
+                              <div class="col-sm-6">
+                                <label>วันที่สร้าง:</label>
+                                <input type="text" class="form-control" name="user_create_date" value="{{row.user_create_date}}"
+                                  readonly>
+                              </div>
+
+                              <div class="col-sm-6">
+                                <label>วันที่แก้ไข:</label>
+                                <input type="text" class="form-control" name="user_edit_date" value="{{row.user_edit_date}}"
+                                  readonly>
+                              </div>
+                            </div>
+
+                            <button class="btn btn-primary" type="submit">อัปเดต</button>
+                            <button type="button" class="btn btn-default ml-2" data-dismiss="modal">Close</button>
+                          </form>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  {% endfor %}
+                </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  </div>
+
+  <!--modal Add-->
+  <div class="modal fade bd-example-modal-lg" id="exampleModal-add" tabindex="-1" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">เพิ่มรายชื่อใหม่</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form class="row" method="POST" action="{{ url_for('insert_user_manage') }}">
+            <div class="col-md-6 mb-3">
+              <label for="first_name">ชื่อ: <span
+                class="text-valid">*</span> </label>
+              <input class="form-control" type="text" id="first_name" name="first_name">
+            </div>
+            <div class="col-md-6 mb-3">
+              <label for="last_name">นามสกุล: <span
+                class="text-valid">*</span> </label>
+              <input class="form-control" type="text" id="last_name" name="last_name">
+            </div>
+            <div class="col-md-6 mb-3">
+              <label for="username">Username: <span
+                class="text-valid">*</span></label>
+              <input class="form-control" type="text" id="username" name="username">
+            </div>
+            <div class="col-md-6 mb-3">
+              <label for="password">Password: <span
+                class="text-valid">*</span> </label>
+              <input class="form-control" type="text" id="password" name="password">
+            </div>
+
+            <div class="col-md-6 mb-3">
+              <label for="dep_name">แผนก/หน่วยงาน: <span
+                class="text-valid">*</span> </label>
+              <!-- <input class="form-control" type="text" id="dep_name" name="dep_name"> -->
+              <select class="form-control" name="dep_name">
+                <option value="1">รฟม.</option>
+                <option value="2">ประสานงานสายสีม่วง</option>
+                <option value="3">ธุรการกะเช้าคลองบางไผ่</option>
+                <option value="4">ธุรการกะบ่ายคลองบางไผ่</option>
+                <option value="5">ธุรการกะเช้าสามแยกบางใหญ่</option>
+                <option value="6">ธุรการกะบ่ายสามแยกบางใหญ่</option>
+                <option value="7">ธุรการกะเช้าบางรักน้อยท่าอิฐ</option>
+                <option value="8">ธุรการกะบ่ายบางรักน้อยท่าอิฐ</option>
+                <option value="9">ธุรการกะเช้าแยกนนทบุรี1</option>
+                <option value="10">ธุรการกะบ่ายแยกนนทบุรี1</option>
+                <option value="11">ผู้ประสานงานสายสีน้ำเงิน</option>
+                <option value="12">ธุรการกะเช้าลาดพร้าว</option>
+                <option value="13">ธุรการกะบ่ายลาดพร้าว</option>
+                <option value="14">ธุรการกะเช้าศูนย์วัฒนฯ</option>
+                <option value="15">ธุรการกะบ่ายศูนย์วัฒนฯ</option>
+                <option value="16">ธุรการกะเช้าหลักสอง</option>
+                <option value="17">ธุรการกะบ่ายหลักสอง</option>
+                <option value="18">ธุรการกะเช้าเคหะฯ</option>
+                <option value="19">ธุรการกะบ่ายเคหะฯ</option>
+                <option value="20">ผู้ประสานงานสายสีเขียวเหนือ</option>
+                <option value="21">ธุรการกะเช้าแยกคปอ.</option>
+                <option value="22">ธุรการกะบ่ายแยกคปอ.</option>
+                <option value="23">ธุรการกะเช้าคูคต</option>
+                <option value="24">ธุรการกะบ่ายคูคต</option>
+                <option value="25">JPARK</option>
+              </select>
+            </div>
+
+            <div class="col-md-6 mb-3">
+              <label for="role_name">User/Role: <span
+                class="text-valid">*</span> </label>
+              <select class="form-control" name="role_name">
+                <!-- <option value="1">customer</option> -->
+                <option value="2">operator</option>
+                <option value="3">backoffice</option>
+                <option value="4">administrators</option>
+                <option value="5">extendcard</option>
+              </select>
+            </div>
+
+            <div class="col-md-12 mb-3">
+              <label>รหัสลานจอด  <span
+                class="text-valid">*</span></label>
+            </div>
+
+            <!-- Checkbox รหัสลานจอด -->
+            {% for row1 in datas1 %}
+            <div class="col-md-3 mb-3">
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="parking_code" name="parking_code"
+                  value="{{row1.1}}">
+                <label class="form-check-label">{{row1.1}}</label>
+              </div>
+            </div>
+            {% endfor %}
+
+            <div class="col-md-12">
+              <div class="row">
+                <div class="col-md-6 mb-3">
+                  <label for="line_token">Line token (group): <span
+                    class="text-valid">*</span> </label>
+                  <input class="form-control" type="text" id="line_token" name="line_token">
+                </div>
+                <div class="col-md-6 mb-3">
+                  <label for="user_create_date">วันที่สร้าง: <span
+                    class="text-valid">*</span> </label>
+                  <input class="form-control" type="date" id="user_create_date" name="user_create_date" required>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-12 text-center">
+              <button type="submit" class="btn btn-primary ml-2 mt-4" class="fas fa-save">บันทึกข้อมูล</button>
+              <button type="button" class="btn btn-secondary ml-2 mt-4" data-dismiss="modal">ยกเลิก</button>
+            </div>
+          </form>
+        </div>
+        <!-- <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary">Send message</button>
+        </div> -->
+      </div>
+    </div>
+  </div>
+
+  {% include "manage/comps/footer.html" %}
+</body>
+
+
+
+<script>
+  $(document).ready(function () {
+    $('muti_select').selectpicker();
+  })
+  $(document).ready(function () {
+    $('#parking-list1').DataTable({
+      "dom": 'Btip',
+      "processing": true,
+      "pageLength": 10,
+      "scrollY": 300,
+      "scrollX": true,
+      "order": [[ 0, "desc" ]],
+      "responsive": "true",
+      "oLanguage": {
+        "sLengthMenu": "แสดง _MENU_ ลำดับ ต่อหน้า",
+        "sZeroRecords": "ไม่พบข้อมูลที่ค้นหา",
+        "sInfo": "แสดง _START_ ถึง _END_ ของ _TOTAL_ ลำดับ",
+        "sInfoEmpty": "แสดง 0 ถึง 0 ของ 0 ลำดับ",
+        "sInfoFiltered": "(แสดงค้นหาทั้งหมด _MAX_ รายการ)",
+        "oPaginate": {
+          "sFirst": "หน้าแรก",
+          "sLast": "หน้าสุดท้าย",
+          "sNext": "ถัดไป",
+          "sPrevious": "ก่อนหน้า"
+        }
+      }
+    });
+
+    oTable = $('#parking-list1').DataTable();
+    oTable.buttons('.buttons-csv').nodes().css("display", "none");
+    oTable.buttons('.buttons-excel').nodes().css("display", "none");
+    oTable.buttons('.buttons-print').nodes().css("display", "none");
+    oTable.buttons('.buttons-pdf').nodes().css("display", "none");
+    oTable.buttons('.buttons-copy').nodes().css("display", "none");
+    $('#usermanage').keyup(function () {
+      oTable.search($(this).val()).draw();
+    });
+    $('#excel').on('click', function () {
+      oTable.button('.buttons-excel').trigger();
+    })
+  });
+</script>
+
+<script>
+  var chatbox = document.getElementById('fb-customer-chat');
+  chatbox.setAttribute("page_id", "106927381737911");
+  chatbox.setAttribute("attribution", "biz_inbox");
+
+  window.fbAsyncInit = function() {
+    FB.init({
+      xfbml            : true,
+      version          : 'v11.0'
+    });
+  };
+
+  (function(d, s, id) {
+    var js, fjs = d.getElementsByTagName(s)[0];
+    if (d.getElementById(id)) return;
+    js = d.createElement(s); js.id = id;
+    js.src = 'https://connect.facebook.net/th_TH/sdk/xfbml.customerchat.js';
+    fjs.parentNode.insertBefore(js, fjs);
+  }(document, 'script', 'facebook-jssdk'));
+</script>
+
+</html>

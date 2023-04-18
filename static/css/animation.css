@@ -1,0 +1,368 @@
+/* ----------------------------------- Show Text : Home ----------------------------------------- */
+.animation-parking {
+  font-size: 100px;
+  color: #fff;
+  top: 250px;
+  line-height: 300px;
+  position: absolute;
+  transform: rotate(90deg);
+  letter-spacing: 10px;
+  margin-left: -55px;
+}
+
+.animation-mrta {
+  font-size: 150px;
+  color: #000;
+  opacity: 0.4;
+  transform: translate(20px, 360px) rotate(-90deg);
+  letter-spacing: 18px;
+}
+
+.animation-mrta-2 {
+  font-size: 150px;
+  position: absolute;
+  top: 1400px;
+  bottom: 0;
+  letter-spacing: 20px;
+  opacity: 0.5;
+}
+
+.animation-mrta-2 {
+  font-size: 150px;
+  position: absolute;
+  top: 1400px;
+  bottom: 0;
+  letter-spacing: 20px;
+}
+.animation-mrta-2 strong {
+  opacity: 0.1;
+}
+.animation-mrta-2 span {
+  font-size: 270px;
+  position: absolute;
+  bottom: -275px;
+  left: 650px;
+  opacity: 0.1;
+}
+
+.logo-mrta-responsive {
+  display: block;
+}
+.logo-mrta-responsive2 {
+  display: none;
+}
+@media (max-width: 575.98px) {
+  .circle {
+    height: 100px;
+    width: 100px;
+  }
+  .circle .icon img {
+    width: 55px;
+  }
+  .logo-mrta-responsive {
+    display: none;
+  }
+  .logo-mrta-responsive2 {
+    display: block;
+  }
+  .animation-mrta {
+    font-size: 60px;
+    color: #000;
+    opacity: 0.1;
+    transform: translate(-100px, 350px) rotate(0deg);
+    letter-spacing: 18px;
+    margin-top: 1150px;
+    margin-left: 100px;
+    z-index: 2;
+    position: absolute;
+  }
+
+  .animation-mrta-2 {
+    font-size: 120px;
+    position: absolute;
+    margin-top: 710px;
+    top: 950px;
+    bottom: 0;
+    left: 190px;
+    letter-spacing: 20px;
+  }
+  .animation-mrta-2 strong {
+    opacity: 0.1;
+    z-index: 1;
+    display: none;
+  }
+
+  .animation-mrta-2 span {
+    font-size: 60px;
+    position: inherit;
+    left: -150px;
+    opacity: 0.1;
+    z-index: 1;
+  }
+
+  .animation-news {
+    font-size: 150px;
+    position: absolute;
+    top: 1400px;
+    bottom: 0;
+    margin-left: -250px;
+    letter-spacing: 20px;
+  }
+
+  .animation-news span {
+    font-size: 110px;
+    position: absolute;
+    bottom: -250px;
+    left: 250px;
+    margin-bottom: -1650px;
+    opacity: 0.1;
+    z-index: 1;
+  }
+
+  .col-lg-2 .mrta-parking-public {
+    display: none; /*parking col-lg-2*/
+  }
+
+  .animation-parking {
+    display: none; /*parking col-lg-2*/
+  }
+}
+@media (min-width: 285px) and (max-width: 320px) {
+  .circle {
+    height: 80px;
+    width: 80px;
+  }
+  .circle .icon img {
+    width: 45px;
+  }
+}
+@media (min-width: 576px) and (max-width: 767.98px) {
+  .logo-mrta-responsive {
+    display: block;
+  }
+  .logo-mrta-responsive2 {
+    display: none;
+  }
+  .animation-parking {
+    font-size: 130px;
+    margin-top: 55px;
+    color: #fff;
+    line-height: 145px;
+    position: inherit;
+    transform: rotate(0deg);
+    letter-spacing: 10px;
+  }
+
+  .animation-mrta {
+    font-size: 120px;
+    color: #000;
+    opacity: 0.1;
+    transform: translate(-30px, 350px) rotate(0deg);
+    letter-spacing: 18px;
+    margin-top: 1100px;
+    margin-left: 15px;
+    z-index: 1;
+    position: absolute;
+  }
+
+  .animation-mrta-2 {
+    font-size: 120px;
+    position: absolute;
+    margin-top: 710px;
+    top: 950px;
+    bottom: 0;
+    letter-spacing: 20px;
+  }
+  .animation-mrta-2 strong {
+    opacity: 0.1;
+    z-index: 1;
+    display: none;
+  }
+
+  .animation-mrta-2 span {
+    font-size: 70px;
+    position: absolute;
+    top: 1900px;
+    left: 400px;
+    opacity: 0.1;
+    z-index: 1;
+  }
+
+  .animation-news {
+    font-size: 150px;
+    position: absolute;
+    top: 1400px;
+    bottom: 0;
+    margin-left: -250px;
+    letter-spacing: 20px;
+  }
+
+  .animation-news span {
+    font-size: 110px;
+    position: absolute;
+    bottom: -250px;
+    left: 300px;
+    margin-bottom: -1650px;
+    opacity: 0.1;
+    z-index: 1;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 991.98px) {
+  .logo-mrta-responsive {
+    display: block;
+  }
+  .logo-mrta-responsive2 {
+    display: none;
+  }
+  .animation-mrta {
+    font-size: 120px;
+    color: #000;
+    opacity: 0.1;
+    transform: translate(-30px, 350px) rotate(0deg);
+    letter-spacing: 18px;
+    margin-top: -480px;
+    margin-left: 15px;
+    z-index: 1;
+    position: absolute;
+    display: none;
+  }
+
+  .animation-mrta-2 {
+    font-size: 120px;
+    position: absolute;
+    margin-top: 710px;
+    top: 950px;
+    bottom: 0;
+    letter-spacing: 20px;
+  }
+  .animation-mrta-2 strong {
+    opacity: 0.1;
+    z-index: 1;
+    display: none;
+  }
+
+  .animation-mrta-2 span {
+    font-size: 100px;
+    position: absolute;
+    bottom: -280px;
+    left: 400px;
+    opacity: 0.1;
+    z-index: 1;
+  }
+
+  .animation-news {
+    font-size: 150px;
+    position: absolute;
+    top: 1400px;
+    bottom: 0;
+    margin-left: -250px;
+    letter-spacing: 20px;
+  }
+
+  .animation-news span {
+    font-size: 110px;
+    position: absolute;
+    bottom: -250px;
+    left: 300px;
+    margin-bottom: -1650px;
+    opacity: 0.1;
+    z-index: 1;
+  }
+
+  /* Note */
+  .form-login {
+    padding: 30px 120px 30px 120px;
+  }
+}
+
+@media (min-width: 992px) and (max-width: 1199.98px) {
+  .logo-mrta-responsive {
+    display: block;
+  }
+  .logo-mrta-responsive2 {
+    display: none;
+  }
+  .col-lg-2 .mrta-parking-public {
+    display: block; /*parking col-lg-2*/
+  }
+
+  .animation-parking {
+    display: block; /*parking col-lg-2*/
+  }
+
+  .animation-mrta-2 span {
+    font-size: 170px;
+    position: absolute;
+    bottom: -155px;
+    left: 480px;
+    opacity: 0.1;
+  }
+
+  .form-login {
+    padding: 30px;
+  }
+
+  .padding-park-name {
+    padding: 18px 15px 10px 10px;
+  }
+
+  .animation-mrta {
+    font-size: 90px;
+    color: #000;
+    opacity: 0.1;
+    transform: translate(-5px, 360px) rotate(-90deg);
+    letter-spacing: 18px;
+  }
+}
+
+@media (max-width: 1024px) {
+  .animation-mrta {
+    display: none;
+  }
+}
+
+@media only screen /*Galaxy note20 */ and (max-width: 1080px) and (max-height: 2400px) {
+  .circle {
+    height: 80px;
+    width: 80px;
+  }
+
+  .circle .icon img {
+    width: 45px;
+  }
+}
+
+@media only screen /*android 6นิ้ว*/ and (max-width: 1080px) and (max-height: 2340px) {
+  .circle {
+    height: 80px;
+    width: 80px;
+  }
+
+  .circle .icon img {
+    width: 45px;
+  }
+}
+
+@media only screen /*android 5.5นิ้ว*/ and (max-width: 2160px) and (max-height: 1080px) {
+  .circle {
+    height: 80px;
+    width: 80px;
+  }
+
+  .circle .icon img {
+    width: 45px;
+  }
+}
+
+@media only screen /*android 5นิ้ว*/ and (max-width: 1080px) and (max-height: 1920px) {
+  .circle {
+    height: 80px;
+
+    width: 80px;
+  }
+
+  .circle .icon img {
+    width: 45px;
+  }
+}

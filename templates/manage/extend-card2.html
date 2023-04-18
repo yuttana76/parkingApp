@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ตรวจสอบและบันทึกการต่ออายุรายเดือน</title>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}">
+    {% include "include/manage-css.html" %}
+    {% include "include/manage-js.html" %}
+</head>
+
+<style>
+    body {
+        background: #EFEFEF;
+        font-size: 18px;
+    }
+
+    a {
+        text-decoration: none;
+    }
+
+    a:hover {
+        color: #fff;
+        text-decoration: none;
+    }
+
+    .button-1 {
+        display: inline-block;
+        margin: 0.75rem;
+        padding: 0.75rem 1.5rem;
+        border: none;
+        border-radius: 15px;
+        outline: none;
+        background-color: #02347E;
+        color: white;
+        font-size: 24px;
+        font-weight: 600;
+        line-height: 57.13px;
+        text-decoration: none;
+        text-align: center;
+        cursor: pointer;
+        transition: all 150ms ease-out;
+        width: 316px;
+    }
+
+    .button-1:focus,
+    .button-1:hover {
+        background-color: #02347E;
+        box-shadow: 0 0 0 0.1875rem white, 0 0 0 0.375rem #02347E;
+    }
+
+    .button-1:active {
+        background-color: #02347E;
+        box-shadow: 0 0 0 0.1875rem #02347E, 0 0 0 0.375rem #02347E;
+        transition-duration: 75ms;
+    }
+
+    .button-1.is-outlined {
+        border: 0.1875rem solid #02347E;
+        background-color: transparent;
+        color: #02347E;
+    }
+
+    .button-1.is-outlined:focus,
+    .button-1.is-outlined:hover {
+        border-color: #02347E;
+        color: #02347E;
+    }
+
+    .button-1.is-outlined:active {
+        border-color: #02347E;
+        color: #02347E;
+    }
+
+    .button-2 {
+        display: inline-block;
+        margin: 0.75rem;
+        padding: 0.75rem 1.5rem;
+        border: none;
+        border-radius: 15px;
+        outline: none;
+        background-color: #EE2D24;
+        color: white;
+        font-size: 24px;
+        font-weight: 600;
+        line-height: 57.13px;
+        text-decoration: none;
+        text-align: center;
+        cursor: pointer;
+        transition: all 150ms ease-out;
+        width: 316px;
+    }
+
+    .button-2:focus,
+    .button-2:hover {
+        background-color: #EE2D24;
+        box-shadow: 0 0 0 0.1875rem white, 0 0 0 0.375rem #EE2D24;
+    }
+
+    .button-2:active {
+        background-color: #EE2D24;
+        box-shadow: 0 0 0 0.1875rem #EE2D24, 0 0 0 0.375rem #EE2D24;
+        transition-duration: 75ms;
+    }
+
+    .button-2.is-outlined {
+        border: 0.1875rem solid #EE2D24;
+        background-color: transparent;
+        color: #EE2D24;
+    }
+
+    .button-2.is-outlined:focus,
+    .button-2.is-outlined:hover {
+        border-color: #EE2D24;
+        color: #EE2D24;
+    }
+
+    .button-2.is-outlined:active {
+        border-color: #EE2D24;
+        color: #EE2D24;
+    }
+
+    thead {
+        background: #02347E;
+        color: white;
+        text-align: center;
+    }
+
+    tbody {
+        background: #fff;
+        text-align: center;
+    }
+
+    .no-data {
+        display: none;
+        text-align: center;
+    }
+
+    .bg-content {
+        background: #F6F6F6;
+    }
+
+    .mrta-btn-primary-1 {
+        background: #162d50;
+        color: #fff;
+        font-size: 1.2rem;
+        /* border-radius: 35rem; */
+        padding: 10px 20px;
+    }
+
+    .btn:hover {
+        color: rgb(255, 220, 168);
+        text-decoration: none;
+    }
+</style>
+
+<body>
+    <div class="container">
+        <h4 class="py-3 text-center">ระบบตรวจสอบการชำระเงิน
+            และบันทึกการต่ออายุรายเดือน</h4>
+        <div class="form-group">
+            <form action="{{url_for('search')}}">
+                <div class="row my-3">
+                    <!-- ค้นหา -->
+                    <label class="col-3 col-form-label">ค้นหา :</label>
+                    <div class="col-6">
+                        <input type="text" id="search" name="search" class="form-control">
+                    </div>
+                    <div class="col-3">
+                        <button class="btn mrta-btn-primary-1" type="submit"><i class="fas fa-search"></i></button>
+                    </div>
+                </div>
+            </form>
+
+
+            <div class="row my-3">
+                <!-- หมายเลขบัตร -->
+                <label class="col-5 col-form-label">หมายเลขบัตร :</label>
+                <div class="col-7 mt-2">
+                    <span class="h4">{{cid}}</span>
+                </div>
+            </div>
+
+
+        </div>
+        <table class="table table-bordered" style="width:100%">
+            <thead>
+                <tr>
+                    <th>ช่องทางชำระเงิน</th>
+                    <th>วันที่ชำระ</th>
+                    <th>สถานะ</th>
+                </tr>
+            </thead>
+            <tbody class="searchable">
+               
+                <tr>
+                    <td>{{paytype}}</td>
+                    <td>{{payment_date}}</td>
+                    <td>{{status}}</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="row mt-3">
+            <div class="col-md-4 text-center text-md-right">
+              
+            </div>
+            <div class="col-md-8 text-center text-md-left">
+                <a class="button-2" data-toggle="modal" data-target="#renewModal">ต่ออายุบัตร</a>
+                <div class="modal fade" id="renewModal" tabindex="-1" role="dialog" aria-labelledby="renewModalLabel"
+                    aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="text-right px-3 py-2 bg-content" style="border-radius: 5px 5px 0px 0px;">
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body text-center bg-content">
+                                <div class="row">
+                                    <div class="col-5"><img src="{{url_for('static', filename='image/employee.svg')}}"
+                                            class="my-2 img-fluid" width="100"></div>
+                                    <div class="col-7 align-self-center text-left">ยืนยันการต่ออายุหรือไม่ ?</div>
+                                </div>
+                            </div>
+                            <div class="justify-content-center">
+                                <div class="row m-3">
+                                    <div class="col-6 text-right">
+                                        <buttonRenew type="button" class="btn btn-success w-75" data-toggle="modal"
+                                            data-target="#comfirmrenewModal">ยืนยัน</buttonRenew>
+                                        <div class="modal fade" id="comfirmrenewModal" tabindex="-1" role="dialog"
+                                            aria-labelledby="comfirmpayModal" aria-hidden="true">
+                                            <div class="modal-dialog" role="document">
+                                                <div class="modal-content">
+                                                    <div class="text-right px-3 py-2 bg-content"
+                                                        style="border-radius: 5px 5px 0px 0px;">
+                                                        <button type="button" class="close" data-dismiss="modal"
+                                                            aria-label="Close" onclick="reload()">
+                                                            <span aria-hidden="true">&times;</span>
+                                                        </button>
+                                                    </div>
+                                                    <div class="modal-body text-center bg-content">
+                                                        <div class="row">
+                                                            <div class="col-12"><img
+                                                                    src="{{url_for('static', filename='image/video-conference.svg')}}"
+                                                                    class="my-2 img-fluid" width="100"></div>
+                                                            <div class="col-12 align-self-center">
+                                                                <h5 class="mb-2">ระบบ MRT PARKING</h5>
+                                                                <h5 class="mb-2">บันทึกการอ่านบัตรเรียบร้อย</h5>
+                                                                <input style="border: none; outline:none; background-color:#F6F6F6; width:53%;" id="newexpire" readonly>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-6 text-left">
+                                        <button type="button" class="btn btn-danger w-75"
+                                            data-dismiss="modal">ไม่ยืนยัน</button>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+<script>
+var id_expi = document.getElementById('newexpire')
+$("buttonRenew").click(function(){
+      $.ajax({
+          url:'/renew_card',
+          type:'POST',
+          data:'update',
+          success:function(response){
+              id_expi.value = response
+               
+          }
+      })
+});
+function reload(){
+     console.log("hello")
+      location.reload();
+
+    }
+</script>
+
+</html>

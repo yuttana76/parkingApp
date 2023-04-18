@@ -1,0 +1,1615 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>บริการรายเดือน</title>
+    {% include "include/customer-css.html" %}
+    {% include "include/customer-js.html" %}
+</head>
+<style>
+    .btn-modal{
+    border-radius: 10px;
+    width: 112px;
+    height: 42px;
+    color: #FFF;  
+    background-color: #1B3E6C;
+    font-size: 1.2rem;
+  }
+    body {
+        background-color: #f8fafb;
+    }
+
+    /*upload file เพิ่มเติม*/
+    .file-upload {
+        /*ปุ่มอัปโหลด*/
+        position: relative;
+        overflow: hidden;
+        background-color: #053273;
+    }
+
+
+    .file-upload input.upload {
+        position: absolute;
+        top: 0;
+        right: 0;
+        margin: 0;
+        padding: 0;
+        font-size: 20px;
+        cursor: pointer;
+        opacity: 0;
+        filter: alpha(opacity=0);
+    }
+
+    #fileuploadurl {
+        display: inline-block;
+        border: none;
+        vertical-align: middle;
+        background: none;
+        box-shadow: none;
+        font-size: 11px;
+        padding-left: 0;
+        width: 220px;
+        padding-right: 0;
+        text-align: center;
+    }
+
+    #fileuploadurl_2 {
+        display: inline-block;
+        border: none;
+        vertical-align: middle;
+        background: none;
+        box-shadow: none;
+        font-size: 11px;
+        padding-left: 0;
+        width: 220px;
+        padding-right: 0;
+        text-align: center;
+    }
+
+    #fileuploadurl_3 {
+        display: inline-block;
+        border: none;
+        vertical-align: middle;
+        background: none;
+        box-shadow: none;
+        font-size: 11px;
+        padding-left: 0;
+        width: 220px;
+        padding-right: 0;
+        text-align: center;
+    }
+
+
+    #fileuploadurl_4 {
+        display: inline-block;
+        border: none;
+        vertical-align: middle;
+        background: none;
+        box-shadow: none;
+        font-size: 11px;
+        padding-left: 0;
+        width: 220px;
+        padding-right: 0;
+        text-align: center;
+    }
+
+    /*upload file end เพิ่มเติม*/
+
+/**************************pop up auto**********************************/
+
+.img-replace {
+  /* replace text with an image */
+  display: inline-block;
+  overflow: hidden;
+  text-indent: 100%; 
+  color: transparent;
+  white-space: nowrap;
+}
+.bts-popup {
+  position: fixed;
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  opacity: 0;
+  visibility: hidden;
+  -webkit-transition: opacity 0.3s 0s, visibility 0s 0.3s;
+  -moz-transition: opacity 0.3s 0s, visibility 0s 0.3s;
+  transition: opacity 0.3s 0s, visibility 0s 0.3s;
+  z-index: 1;
+}
+.bts-popup.is-visible {
+  opacity: 1;
+  visibility: visible;
+  -webkit-transition: opacity 0.3s 0s, visibility 0s 0s;
+  -moz-transition: opacity 0.3s 0s, visibility 0s 0s;
+  transition: opacity 0.3s 0s, visibility 0s 0s;
+}
+
+.bts-popup-container {
+  position: relative;
+  width: 90%;
+  max-width: 400px;
+  margin: 4em auto;
+  background: linear-gradient(180deg, #FFF 90%, #172F54 10%);
+  border-radius: none; 
+  text-align: center;
+  box-shadow: 0 0 2px rgba(0, 0, 0, 0.2);
+  -webkit-transform: translateY(-40px);
+  -moz-transform: translateY(-40px);
+  -ms-transform: translateY(-40px);
+  -o-transform: translateY(-40px);
+  transform: translateY(-40px);
+  /* Force Hardware Acceleration in WebKit */
+  -webkit-backface-visibility: hidden;
+  -webkit-transition-property: -webkit-transform;
+  -moz-transition-property: -moz-transform;
+  transition-property: transform;
+  -webkit-transition-duration: 0.3s;
+  -moz-transition-duration: 0.3s;
+  transition-duration: 0.3s;
+  z-index: 99;
+}
+
+.bts-popup-container img {
+  padding: 20px 0 0 0;
+}
+.bts-popup-container p {
+	color: white;
+  padding: 10px 40px;
+}
+.bts-popup-container .bts-popup-button {
+  padding: 5px 25px;
+  border: 2px solid white;
+	display: inline-block;
+  margin-bottom: 10px;
+}
+
+.bts-popup-button{
+    border-radius: 10px;
+}
+
+.bts-popup-container a {
+  color: white;
+  text-decoration: none;
+  text-transform: uppercase;
+}
+
+
+
+
+.bts-popup-container .bts-popup-close {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 30px;
+  height: 30px;
+}
+.bts-popup-container .bts-popup-close::before, .bts-popup-container .bts-popup-close::after {
+  content: '';
+  position: absolute;
+  top: 12px;
+  width: 16px;
+  height: 3px;
+  background-color: rgb(0, 0, 0);
+}
+.bts-popup-container .bts-popup-close::before {
+  -webkit-transform: rotate(45deg);
+  -moz-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
+  -o-transform: rotate(45deg);
+  transform: rotate(45deg);
+  left: 8px;
+}
+.bts-popup-container .bts-popup-close::after {
+  -webkit-transform: rotate(-45deg);
+  -moz-transform: rotate(-45deg);
+  -ms-transform: rotate(-45deg);
+  -o-transform: rotate(-45deg);
+  transform: rotate(-45deg);
+  right: 6px;
+  top: 13px;
+}
+.is-visible .bts-popup-container {
+  -webkit-transform: translateY(0);
+  -moz-transform: translateY(0);
+  -ms-transform: translateY(0);
+  -o-transform: translateY(0);
+  transform: translateY(0);
+}
+@media only screen and (min-width: 1170px) {
+  .bts-popup-container {
+    margin: 8em auto;
+  }
+}
+/**************************pop up auto end**********************************/
+
+
+div.sticky {
+  position: -webkit-sticky;
+  position: sticky;
+  bottom: 0  ;
+}
+
+
+</style>
+<body>
+    {% include "comps/navbar-2.html" %}
+    <div class="text-center my-3">
+        <div class="modal fade" id="policyModal3" tabindex="-1"
+            aria-labelledby="policyLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header card-header-mrta">
+                        <h5 class="modal-title" id="policyLabel3"></h5>
+                        <!-- <button type="button" class="close" data-dismiss="modal"
+                            aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button> -->
+                    </div>
+                    <div class="modal-body">
+                        <img src="{{url_for('static', filename='image/alert.png')}}" width="125"> <br><br>
+                          <h4 id="modalalerttext" style="color: #1B3E6C;">กรุณาอัปโหลดประเภทของไฟล์ตามที่กำหนด</h4>
+                   
+                    </div>
+                    <div class="modal-footer">
+                        <div class="col-md-12 text-center">
+                            <button type="button" class="btn-modal col-6" data-dismiss="modal">ปิด</p></button>
+                        </div>
+                      
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{%if check_user == 1%}
+    <div class="container pt-5">
+
+        <div class="row mt-3">
+            <div class="col-lg-12 text-center">
+                <div class="order-progress-stepper">
+                    <div class="step completed">เลือกอาคาร<br>ลานจอดรถ</div>
+                    <div class="step completed">ตรวจสอบ<br>ยอมรับเงื่อนไข</div>
+                    <div class="step active">กรอกรายละเอียด</div>
+                    <div class="step">ตรวจสอบ<br>ยืนยันการสมัคร</div>
+                </div>
+            </div>
+        </div>
+
+	 <!--pop up aleart-->
+        {% if parking_type == 'AFC'%}
+        <div class="bts-popup" role="alert">
+            <div class="bts-popup-container">
+                <img src="{{url_for('static', filename='image/employee.svg')}}" width="125">
+                <br>
+                  <h6 style="color: #000;">กรุณากรอก <br><span>"หมายเลขบัตรโดยสารรถไฟฟ้า MRT"</span></h6>
+                  <img class="col-10 col-md-10 col-lg-8" src="{{url_for('static', filename='image/Group 156.svg')}}" width="300" style="margin-top: -20px;"><br><br>
+                  <img class="col-10 col-md-10 col-lg-8" src="{{url_for('static', filename='image/Card_TAFF.svg')}}" width="300" style="margin-top: -20px;">
+                  <br><br>
+                        <div class="bts-popup-button btn-success">
+                      	 ตกลง
+                 	</div>
+                <a href="#0" class="bts-popup-close img-replace">Close</a>
+            </div>
+        </div>
+        {%endif%} 
+
+        <!-- Step 3 กรอกรายละเอียดผู้สมัครรายเดือน -->
+        <form class="needs-validation" method="POST" enctype="multipart/form-data" id="form" >
+            {{form.hidden_tag()}}
+            <!-- message error -->
+            {% with messages = get_flashed_messages(with_categories=true)%}
+                {% if messages %}
+                    {%for category,message in messages%} 
+                    <div class="alert alert-{{ category }}">
+                        <button type="button" class="m1-2 mb-1 close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        {{message}}
+                    </div>
+                    {%endfor%}
+                {%endif%}
+            {%endwith%}
+            <h4 class="text-center mt-5">กรอกรายละเอียดผู้สมัครรายเดือน</h4>
+            <div class="row">
+                <div class="col-md-8">
+                    <div id="main">
+                        <div class="accordion" id="faq">
+                            <div class="card">
+                                <div class="card-header" id="faqhead1">
+                                    <a href="#" class="btn btn-header-link" data-toggle="collapse" data-target="#faq1"
+                                        aria-expanded="true" aria-controls="faq1"><img
+                                            src="{{url_for('static', filename='image/book.svg')}}" class="mr-2"
+                                            width="30"> ข้อมูลของผู้สมัครรายเดือน</a>
+                                </div>
+
+                                <div id="faq1" class="collapse show" aria-labelledby="faqhead1" data-parent="#faq">
+                                    <div class="card-body">
+                                        <div class="form-row">
+                                            <div class="col-md-6 mb-3">
+                                                {% if parking_type =='AFC'%} 
+                                                <label for="validationCustom01">หมายเลขบัตรโดยสารรถไฟฟ้า MRT <br>(สำหรับผู้ใช้บริการรายเดิม)<span
+                                                    class="text-valid">*</span></label>
+                                                {%elif parking_type !='AFC'%}
+                                                <label for="card_id">หมายเลขบัตรสมาชิกจอดรถรายเดือน </label>
+                                                {%endif%}
+                                                {% if parking_type == 'AFC'%}
+                                                {{form.card_id(class='form-control',label='หมายเลขบัตรสมาชิกจอดรถรายเดือน',maxlength='8',required='required',onchange='check_dup(this)')}}
+                                                {% elif parking_type != 'AFC'%} 
+                                                {{form.card_id(class='form-control',id="validationCustom01",maxlength='8',onchange='check_dup(this)')}}
+                                                {%endif%} 
+                                                <!-- <input type="text" class="form-control" name="member_no"
+                                                    id="validationCustom01" value="{{request.form.member_no}}" required> -->
+                                            </div>
+                                            <div class="col-md-6 mb-3">
+                                                <label for="validationCustom02" readonly >เลขประจำตัวประชาชน/Passport<span
+                                                        class="text-valid">*</span> </label>
+                                                {{form.identity_card(class='form-control',id='validationCustom02',maxlength='13',readonly='readonly',value=current_user.identity_card)}}
+                                                <!-- <input type="text" class="form-control" name="id_card"
+                                                    id="validationCustom02" value="{{request.form.id_card}}" required> -->
+                                                <span class="error"></span>
+                                            </div>
+                                        </div> 
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card">
+                                <div class="card-header" id="faqhead2">
+                                    <a href="#" class="btn btn-header-link collapsed" data-toggle="collapse"
+                                        data-target="#faq2" aria-expanded="true" aria-controls="faq2"><img
+                                            src="{{url_for('static', filename='image/eco-car.svg')}}" class="mr-2"
+                                            width="30"> ข้อมูลรถยนต์</a>
+                                </div>
+
+                                <div id="faq2" class="collapse" aria-labelledby="faqhead2" data-parent="#faq">
+                                    <div class="card-body">
+                                        <div class="mb-3 tab-sub">
+                                            ข้อมูลป้ายทะเบียน คันที่ 1
+                                        </div>
+
+                                        <div class="form-row">
+                                            <div class="col-md-6 mb-3">
+                                                <label for="validationCustom07">ทะเบียนรถ <span
+                                                        class="text-valid">*</span></label>
+                                                {{form.license_plate1(class='form-control',label='ทะเบียนรถ')}}
+                                                <!-- <input type="text" class="form-control" name="license_plate"
+                                                    id="validationCustom07" value="{{request.form.license_plate}}"
+                                                    required> -->
+                                            </div>
+                                            <div class="col-md-6 mb-3">
+                                                <label for="validationCustom08">จังหวัดบนป้ายทะเบียน <span
+                                                        class="text-valid">*</span></label>
+                                                        {{ form.province_car1(class='custom-select',label='จังหวัดบนป้ายทะเบียน')}}
+                                                <!-- <input type="text" class="form-control" name="province"
+                                                    id="validationCustom08" value="{{request.form.province}}" required> -->
+                                            </div>
+                                        </div>
+                                        <div class="form-row">
+                                            <div class="col-md-6 mb-3">
+                                                <label for="validationCustom09">ยี่ห้อรถ <span
+                                                        class="text-valid">*</span></label>
+                                                {{form.brand_name1(class='form-control',label='ยี่ห้อรถ')}}
+                                                <!-- <input type="text" class="form-control" name="brand"
+                                                    id="validationCustom09" value="{{request.form.brand}}" required> -->
+                                            </div>
+                                            <div class="col-md-6 mb-3">
+                                                <label for="validationCustom10">สีรถ <span
+                                                        class="text-valid">*</span></label>
+                                                {{form.color1(class='form-control',label='สีรถ')}}
+                                                <!-- <input type="text" class="form-control" name="color"
+                                                    id="validationCustom10" value="{{request.form.color}}" required> -->
+                                            </div>
+                                        </div>
+
+                                        <div class="mb-3 tab-sub">
+                                            ข้อมูลป้ายทะเบียน คันที่ 2
+                                        </div>
+
+                                        <div class="form-row">
+                                            <div class="col-md-6 mb-3">
+                                                <label for="validationCustom11">ทะเบียนรถ</label>
+                                                {{form.license_plate2(class='form-control')}}
+                                                <!-- <input type="text" class="form-control" name="license_plates"
+                                                    id="validationCustom11" value="{{request.form.license_plates}}"
+                                                    required> -->
+                                            </div>
+                                            <div class="col-md-6 mb-3">
+                                                <label for="validationCustom12">จังหวัดบนป้ายทะเบียน</label>
+                                                {{ form.province_car2(class='custom-select')}}
+                                                <!-- <input type="text" class="form-control" name="province2"
+                                                    id="validationCustom12" value="{{request.form.province2}}" required> -->
+                                            </div>
+                                        </div>
+                                        <div class="form-row">
+                                            <div class="col-md-6 mb-3">
+                                                <label for="validationCustom13">ยี่ห้อรถ</label>
+                                                {{form.brand_name2(class='form-control')}}
+                                                <!-- <input type="text" class="form-control" name="brand2"
+                                                    id="validationCustom13" value="{{request.form.brand2}}" required> -->
+                                            </div>
+                                            <div class="col-md-6 mb-3">
+                                                <label for="validationCustom14">สีรถ</label>
+                                                {{form.color2(class='form-control')}}
+                                                <!-- <input type="text" class="form-control" name="color2"
+                                                    id="validationCustom14" value="{{request.form.color2}}" required> -->
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+               
+
+                <div class="col-md-4">
+                    <!-- <div class="card-circle">
+                        <div class="card-circle_img">
+                            <img src="https://st4.depositphotos.com/14953852/24787/v/600/depositphotos_247872612-stock-illustration-no-image-available-icon-vector.jpg"
+                                alt="user-image">
+                        </div>
+                        <div class="card_info">
+                            <h5 class="mt-2">ยินดีต้อนรับ <br>
+                                คุณ ADMINISTRATOR</h5>
+                        </div>
+                    </div> -->
+
+                    <!--modify by ittipon 23/6/2564 -->
+                    <div class="card mt-5">
+                        <div class="card-header card-header-mrta">
+                            <div class="row align-items-center">
+                                <div class="col-2">
+                                    <img src="{{url_for('static', filename='image/park 2.svg')}}" class="mr-2"
+                                        width="35">
+                                </div>
+                                <div class="col-10">
+                                    <span class="mb-0 h6" id="station_name">{{station_name}} <br>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <img src="/static/image/manage/station/{{image}}"
+                                class="card-img-top" style="height: 10rem;">
+                            <div class="my-4">
+                                ที่ตั้ง : {{location}}
+                            </div>
+                            <div class="mb-3 text-right">
+                                <h5>{{price}} บาท/เดือน</h5>
+                            </div>
+                            <div class="mb-2 text-center">
+                                <a href="{{url_for('member_register_step1')}}"
+                                    class="a-link">เปลี่ยนลานจอดรถที่ท่านเลือก</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card mt-2 mb-3">
+                        <div class="card-header card-header-mrta">
+                            <div class="row align-items-center">
+                                <div class="col-2">
+                                    <img src="{{url_for('static', filename='image/attachment.svg')}}" class="mr-2"
+                                        width="35">
+                                </div>
+                                <div class="col-10">
+                                    <span class="mb-0 h5">แนบไฟล์เอกสาร</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="card mb-3">
+                                <div class="card-body">
+                                    <div class="text-center">
+                                        <div class="mb-2">
+                                            สำเนาบัตรประชาชน             
+                                        </div>
+                                        <div class="file-upload btn btn-primary">
+                                            <span><i class="fas fa-plus-square"></i>
+                                                เพิ่ม</span>
+                                            {{form.copy_id_card(class='upload', id="FileAttachment",accept="image/*",label='สำเนาบัตรประชาชน')}}
+                                            
+                                        </div>
+                                        <input type="text" id="fileuploadurl" readonly
+                                            placeholder="อัปโหลดไฟล์ได้ไม่เกิน 5MB">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card mb-3">
+                                <div class="card-body">
+                                    <div class="text-center">
+                                        <div class="mb-2">
+                                            สำเนาทะเบียนรถยนต์ คันที่ 1                                  
+                                        </div>
+                                        <div class="file-upload btn btn-mrta2">
+                                            <span><i class="fas fa-plus-square"></i>
+                                                เพิ่ม</span>
+                                            {{form.copy_doc_car1(class='upload',id="FileAttachment_2",accept="image/*",label='สำเนาทะเบียนรถยนต์ คันที่ 1')}}
+                                            
+                                        </div>
+                                        <input type="text" id="fileuploadurl_2" readonly
+                                            placeholder="อัปโหลดไฟล์ได้ไม่เกิน 5MB">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card mb-3">
+                                <div class="card-body">
+                                    <div class="text-center">
+                                        <div class="mb-2">
+                                            สำเนาทะเบียนรถยนต์ คันที่ 2
+                                        </div>
+                                        <div class="file-upload btn btn-mrta2">
+                                            <span><i class="fas fa-plus-square"></i>
+                                                เพิ่ม</span>
+                                            {{form.copy_doc_car2(class='upload',id="FileAttachment_3",accept="image/*",label='สำเนาทะเบียนรถยนต์ คันที่ 2')}}
+                                            
+                                        </div>
+                                        <input type="text" id="fileuploadurl_3" readonly
+                                            placeholder="อัปโหลดไฟล์ได้ไม่เกิน 5MB">
+                                    </div>
+                                </div>
+                            </div>
+                            {% if parking_type == 'AFC'%}
+                            <div class="card mb-3">
+                                <div class="card-body">
+                                    <div class="text-center">
+                                        <div class="mb-2">
+                                            รูปหลังบัตรโดยสารรถไฟฟ้า
+                                        </div>
+                                        <div class="file-upload btn btn-mrta2">
+                                            <span><i class="fas fa-plus-square"></i>
+                                                เพิ่ม</span>
+                                            {% if parking_type == 'AFC'%}
+                                            {{form.card_member_copy(class='upload',id="FileAttachment_4",onchange='validateSize(this)',required=True,accept="image/*",label='รูปหลังบัตรโดยสารรถไฟฟ้า')}}
+                                            {%else%}
+                                            {{form.card_member_copy(class='upload',id="FileAttachment_4",onchange='validateSize(this)',accept="image/*")}} 
+                                            {%endif%}
+                                            
+                                        </div>
+                                        <input type="text" id="fileuploadurl_4" readonly
+                                            placeholder="อัพโหลดไฟล์ได้ไม่เกิน 5MB รองรับไฟล์ jpg, png">
+                                    </div>
+                                </div>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+
+            <div class="sticky">
+                <div class="row text-center" >
+                    <!-- <div class="col-md-8 mb-3">
+                        <a href="#" class="a-link">ล้างข้อมูล</a>
+                    </div> -->
+                    <div class="col-md-8 mb-4 text-md-center text-center">
+                        <button type="button" class="btn btn-secondary col-md-5 col-8 "
+                            onclick="window.location.href='/member-register-step2'">ย้อนกลับ</button>
+                    <!-- </div>
+                    <div class="col-4 mb-4 text-md-left text-center"> -->
+                        <!-- modify by ittipon -->
+                        {{form.submit(type='submit',class='btn btn-danger col-md-5 col-8',onclick="validateForm()")}}
+                        <!-- <button type="submit" class="btn btn-danger col-md-5 col-8">ถัดไป</button> -->
+                        <div class="col-4 mb-4 text-md-left text-center"></div>
+                    </div>
+                </div>
+            </div>
+
+        </form>
+    </div>
+
+
+    {% include "comps/footer.html" %}
+</body>
+<script>
+    $(document).ready(function () {
+        $(".filter-btn").click(function () {
+            $(".filter-btn").removeClass('active');
+            $(this).addClass('active');
+            var value = $(this).attr('data-filter');
+            if (value == "all") {
+                //$('.filter').removeClass('hidden');
+                $('.filter').show('1000');
+            } else {
+                //$('.filter[filter-item="'+value+'"]').removeClass('hidden');
+                //$(".filter").not('.filter[filter-item="'+value+'"]').addClass('hidden');
+                $(".filter").not('.' + value).hide('3000');
+                $(".filter").filter('.' + value).show('3000');
+            }
+        });
+
+    });
+</script>
+
+<script> //อัปโหลดไฟล์เอกสาร
+    // Upload 1
+    document.getElementById("FileAttachment").onchange = function () {
+        validateSize(this);
+        document.getElementById("fileuploadurl").value = this.value;
+    };
+
+    // Upload 2
+    document.getElementById("FileAttachment_2").onchange = function () {
+        validateSize(this);
+        document.getElementById("fileuploadurl_2").value = this.value;
+    };
+
+    // Upload 3
+    document.getElementById("FileAttachment_3").onchange = function () {
+        validateSize(this);
+        document.getElementById("fileuploadurl_3").value = this.value;
+    };
+
+    // Upload 4
+    document.getElementById("FileAttachment_4").onchange = function () {
+        validateSize(this);
+        document.getElementById("fileuploadurl_4").value = this.value;
+    };
+  // -------------------------------------------------------------------------------------------------
+    // ตรวจสอบรหัสบัตรประชาชน
+    $(document).ready(function () {
+        $('#validationCustom02').on('keyup', function () {
+            if ($.trim($(this).val()) != '' && $(this).val().length == 13) {
+                id = $(this).val().replace(/-/g, "");
+                var result = Script_checkID(id);
+                if (result === false) {
+                    $('span.error').removeClass('true').text('เลขบัตรประชาชนผิด');
+                } else {
+                    $('span.error').addClass('true').text('เลขบัตรประชาชนถูกต้อง');
+                }
+            } else {
+                $('span.error').removeClass('true').text('');
+
+            }
+        })
+    });
+    // ตรวจสอบตัวแปรบัตรประชาชน
+    function Script_checkID(id) {
+        if (!IsNumeric(id)) return false;
+        if (id.substring(0, 1) == 0) return false;
+        if (id.length != 13) return false;
+        for (i = 0, sum = 0; i < 12; i++)
+            sum += parseFloat(id.charAt(i)) * (13 - i);
+        if ((11 - sum % 11) % 10 != parseFloat(id.charAt(12))) return false;
+        return true;
+    }
+    function IsNumeric(input) {
+        var RE = /^-?(0|INF|(0[1-7][0-7]*)|(0x[0-9a-fA-F]+)|((0|[1-9][0-9]*|(?=[\.,]))([\.,][0-9]+)?([eE]-?\d+)?))$/;
+        return (RE.test(input));
+    }
+    function check_dup(input) {
+        const station =  document.getElementById('station_name').innerText
+        console.log(station)
+        fetch('checkdupcard/' + input.value+'/'+station).then(function (response) {
+            response.json().then(function (datacheck) {
+                if (datacheck.status == 'dup') {
+                    //alert('รหัสบัตรนี้มีอยู่ในระบบแล้ว')
+                    document.getElementById('modalalerttext').innerHTML = 'รหัสบัตรนี้มีอยู่ในระบบแล้ว'
+                    $('#policyModal3').modal('show')
+                    input.value = null
+                }
+            })
+        })
+        
+    }
+</script>
+
+<script>
+    jQuery(document).ready(function($){
+  
+  window.onload = function (){
+    $(".bts-popup").delay(1000).addClass('is-visible');
+	}
+  
+	//open popup
+	$('.bts-popup-trigger').on('click', function(event){
+		event.preventDefault();
+		$('.bts-popup').addClass('is-visible');
+	});
+	
+	//close popup
+	$('.bts-popup').on('click', function(event){
+		if( $(event.target).is('.bts-popup-button,.bts-popup-close') || $(event.target).is('.bts-popup') ) {
+			event.preventDefault();
+			$(this).removeClass('is-visible');
+		}
+	});
+	//close popup when clicking the esc keyboard button
+	$(document).keyup(function(event){
+    	if(event.which=='27'){
+    		$('.bts-popup').removeClass('is-visible');
+	    }
+    });
+});
+</script>
+<script>
+    
+    function validateSize(input) {
+        const fileSize = input.files[0].size / 5120 / 5120; 
+        console.log('asdfsdf')
+        if (fileSize > 5) {
+          //alert('File size exceeds 5 MB');
+          document.getElementById('modalalerttext').innerHTML = 'File size exceeds 5 MB'
+          $('#policyModal3').modal('show')
+          input.value = null
+          console.log('success')
+        }else{
+
+        }
+    } 
+    function validateForm(){
+        for (const el of document.getElementById('form').querySelectorAll("[required]")) {
+            if (!el.reportValidity()) {
+                //alert('กรุณากรอกข้อมูล '+el.getAttribute('label'))
+                document.getElementById('modalalerttext').innerHTML = 'กรุณากรอกข้อมูล '+el.getAttribute('label')
+                $('#policyModal3').modal('show')
+                return;
+            }
+            }
+    }
+</script>
+
+</html>
+
+
+    <!------------------------------------------------------------------------------------------------------------------------------->
+{%elif check_user == 0 %}
+
+    <div class="container pt-5">
+
+        <div class="row mt-3">
+            <div class="col-lg-12 text-center">
+                <div class="order-progress-stepper">
+                    <div class="step completed">เลือกอาคาร<br>ลานจอดรถ</div>
+                    <div class="step completed">ตรวจสอบ<br>ยอมรับเงื่อนไข</div>
+                    <div class="step active">กรอกรายละเอียด</div>
+                    <div class="step">ตรวจสอบ<br>ยืนยันการสมัคร</div>
+                </div>
+            </div>
+        </div>
+
+	 <!--pop up aleart-->
+        {% if parking_type == 'AFC'%}
+        <div class="bts-popup" role="alert">
+            <div class="bts-popup-container">
+                <img src="{{url_for('static', filename='image/employee.svg')}}" width="125">
+                <br>
+                  <h6 style="color: #000;">กรุณากรอก <br><span>"หมายเลขบัตรโดยสารรถไฟฟ้า MRT"</span></h6>
+                  <img class="col-10 col-md-10 col-lg-8" src="{{url_for('static', filename='image/Group 156.svg')}}" width="300" style="margin-top: -20px;"><br><br>
+                  <img class="col-10 col-md-10 col-lg-8" src="{{url_for('static', filename='image/Card_TAFF.svg')}}" width="300" style="margin-top: -20px;">
+                  <br><br>
+                        <div class="bts-popup-button btn-success">
+                      	 ตกลง
+                 	</div>
+                <a href="#0" class="bts-popup-close img-replace">Close</a>
+            </div>
+        </div>
+        {%endif%} 
+
+        <!-- Step 3 กรอกรายละเอียดผู้สมัครรายเดือน -->
+        <form class="needs-validation" method="POST" enctype="multipart/form-data" id="form" >
+            {{form.hidden_tag()}}
+            <!-- message error -->
+            {% with messages = get_flashed_messages(with_categories=true)%}
+                {% if messages %}
+                    {%for category,message in messages%} 
+                    <div class="alert alert-{{ category }}">
+                        <button type="button" class="m1-2 mb-1 close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        {{message}}
+                    </div>
+                    {%endfor%}
+                {%endif%}
+            {%endwith%}
+            <h4 class="text-center mt-5">กรอกรายละเอียดผู้สมัครรายเดือน</h4>
+            <div class="row">
+                <div class="col-md-8">
+                    <div id="main">
+                        <div class="accordion" id="faq">
+                            <div class="card">
+                                <div class="card-header" id="faqhead1">
+                                    <a href="#" class="btn btn-header-link" data-toggle="collapse" data-target="#faq1"
+                                        aria-expanded="true" aria-controls="faq1"><img
+                                            src="{{url_for('static', filename='image/book.svg')}}" class="mr-2"
+                                            width="30"> ข้อมูลของผู้สมัครรายเดือน</a>
+                                </div>
+
+                                <div id="faq1" class="collapse show" aria-labelledby="faqhead1" data-parent="#faq">
+                                    <div class="card-body">
+                                        <div class="form-row">
+                                            <div class="col-md-6 mb-3">
+                                                {% if parking_type =='AFC'%} 
+                                                <label for="validationCustom01">หมายเลขบัตรโดยสารรถไฟฟ้า MRT <span
+                                                    class="text-valid">*</span></label>
+                                                {%elif parking_type !='AFC'%}
+                                                <label for="card_id">หมายเลขบัตรสมาชิกจอดรถรายเดือน</label>
+                                                {%endif%}
+                                                {% if parking_type == 'AFC'%}
+                                                {{form.card_id(class='form-control',label='หมายเลขบัตรสมาชิกจอดรถรายเดือน',maxlength='8',required='required',onchange='check_dup(this)')}}
+                                                {% elif parking_type != 'AFC'%} 
+                                                {{form.card_id(class='form-control',id="validationCustom01",maxlength='8',onchange='check_dup(this)')}}
+                                                {%endif%} 
+                                                <!-- <input type="text" class="form-control" name="member_no"
+                                                    id="validationCustom01" value="{{request.form.member_no}}" required> -->
+                                            </div>
+                                            <div class="col-md-6 mb-3">
+                                                <label for="validationCustom02" readonly>เลขประจำตัวประชาชน/Passport <span
+                                                        class="text-valid">*</span></label>
+                                                {{form.identity_card(class='form-control',id='validationCustom02',maxlength='13',readonly='readonly',value=current_user.identity_card)}}
+                                                <!-- <input type="text" class="form-control" name="id_card"{{form.identity_card(class='form-control',id='validationCustom02',maxlength='13',readonly='readonly',value=current_user.identity_card)}}
+                                                    id="validationCustom02" value="{{request.form.id_card}}" required> -->
+                                                <span class="error"></span>
+                                            </div>
+                                        </div>
+                                        <div class="form-row">
+                                            <div class="col-md-6 mb-3">
+                                                <label for="validationCustom03">ชื่อ (TH) <span
+                                                        class="text-valid">*</span></label>
+                                                {{form.first_name_th(class='form-control',label='ชื่อ (TH)')}}
+                                                <!-- <input type="text" class="form-control" name="first_name_th"
+                                                    id="validationCustom03" value="{{request.form.first_name_th}}"
+                                                    required> -->
+                                            </div>
+                                            <div class="col-md-6 mb-3">
+                                                <label for="validationCustom04">นามสกุล (TH)<span
+                                                        class="text-valid">*</span></label>
+                                                {{form.last_name_th(class='form-control',label='นามสกุล (TH)')}}
+                                                <!-- <input type="text" class="form-control" name="last_name_th"
+                                                    id="validationCustom04" value="{{request.form.last_name_th}}"
+                                                    required> -->
+                                            </div>
+                                        </div>
+                                        <div class="form-row">
+                                            <div class="col-md-6 mb-3">
+                                                <label for="validationCustom032">ชื่อ (EN)<span
+                                                        class="text-valid">*</span></label>
+                                                {{form.first_name_en(class='form-control',label='ชื่อ (EN)')}}
+                                                <!-- <input type="text" class="form-control" name="first_name_en"
+                                                    id="validationCustom032" value="{{request.form.first_name_en}}"
+                                                    required> -->
+                                            </div>
+                                            <div class="col-md-6 mb-3">
+                                                <label for="validationCustom042">นามสกุล (EN)<span
+                                                        class="text-valid">*</span></label>
+                                                {{form.last_name_en(class='form-control',label='นามสกุล (EN)')}}
+                                                <!-- <input type="text" class="form-control" name="last_name_en"
+                                                    id="validationCustom042" value="{{request.form.last_name_en}}"
+                                                    required> -->
+                                            </div>
+                                        </div>
+                                        <div class="form-row">
+                                            <div class="col-md-6 mb-3">
+                                                <label for="validationCustom05">วัน/เดือน/ปีเกิด <span
+                                                        class="text-valid">*</span></label>
+                                                {{form.birth_date(class='form-control',type='date',label='วัน/เดือน/ปีเกิด')}}
+                                                <!-- <input type="date" class="form-control" name="birth_date"
+                                                    id="validationCustom05" value="{{request.form.birth_date}}"
+                                                    required> -->
+                                            </div>
+                                            <div class="col-md-6 mb-3">
+                                                <label for="validationCustom06">เบอร์โทรศัพท์ <span
+                                                        class="text-valid">*</span></label>
+                                                {{form.phone(class='form-control',maxlength='10',label='เบอร์โทรศัพท์')}}
+                                                <!-- <input type="text" class="form-control" name="phone"
+                                                    id="validationCustom06" value="{{request.form.phone}}" required> -->
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card">
+                                <div class="card-header" id="faqhead2">
+                                    <a href="#" class="btn btn-header-link collapsed" data-toggle="collapse"
+                                        data-target="#faq2" aria-expanded="true" aria-controls="faq2"><img
+                                            src="{{url_for('static', filename='image/eco-car.svg')}}" class="mr-2"
+                                            width="30"> ข้อมูลรถยนต์</a>
+                                </div>
+
+                                <div id="faq2" class="collapse" aria-labelledby="faqhead2" data-parent="#faq">
+                                    <div class="card-body">
+                                        <div class="mb-3 tab-sub">
+                                            ข้อมูลป้ายทะเบียน คันที่ 1
+                                        </div>
+
+                                        <div class="form-row">
+                                            <div class="col-md-6 mb-3">
+                                                <label for="validationCustom07">ทะเบียนรถ <span
+                                                        class="text-valid">*</span></label>
+                                                {{form.license_plate1(class='form-control',label='ทะเบียนรถ')}}
+                                                <!-- <input type="text" class="form-control" name="license_plate"
+                                                    id="validationCustom07" value="{{request.form.license_plate}}"
+                                                    required> -->
+                                            </div>
+                                            <div class="col-md-6 mb-3">
+                                                <label for="validationCustom08">จังหวัดบนป้ายทะเบียน <span
+                                                        class="text-valid">*</span></label>
+                                                        {{ form.province_car1(class='custom-select',label='จังหวัดบนป้ายทะเบียน')}}
+                                                <!-- <input type="text" class="form-control" name="province"
+                                                    id="validationCustom08" value="{{request.form.province}}" required> -->
+                                            </div>
+                                        </div>
+                                        <div class="form-row">
+                                            <div class="col-md-6 mb-3">
+                                                <label for="validationCustom09">ยี่ห้อรถ <span
+                                                        class="text-valid">*</span></label>
+                                                {{form.brand_name1(class='form-control',label='ยี่ห้อรถ')}}
+                                                <!-- <input type="text" class="form-control" name="brand"
+                                                    id="validationCustom09" value="{{request.form.brand}}" required> -->
+                                            </div>
+                                            <div class="col-md-6 mb-3">
+                                                <label for="validationCustom10">สีรถ <span
+                                                        class="text-valid">*</span></label>
+                                                {{form.color1(class='form-control',label='สีรถ')}}
+                                                <!-- <input type="text" class="form-control" name="color"
+                                                    id="validationCustom10" value="{{request.form.color}}" required> -->
+                                            </div>
+                                        </div>
+
+                                        <div class="mb-3 tab-sub">
+                                            ข้อมูลป้ายทะเบียน คันที่ 2
+                                        </div>
+
+                                        <div class="form-row">
+                                            <div class="col-md-6 mb-3">
+                                                <label for="validationCustom11">ทะเบียนรถ</label>
+                                                {{form.license_plate2(class='form-control')}}
+                                                <!-- <input type="text" class="form-control" name="license_plates"
+                                                    id="validationCustom11" value="{{request.form.license_plates}}"
+                                                    required> -->
+                                            </div>
+                                            <div class="col-md-6 mb-3">
+                                                <label for="validationCustom12">จังหวัดบนป้ายทะเบียน</label>
+                                                {{ form.province_car2(class='custom-select')}}
+                                                <!-- <input type="text" class="form-control" name="province2"
+                                                    id="validationCustom12" value="{{request.form.province2}}" required> -->
+                                            </div>
+                                        </div>
+                                        <div class="form-row">
+                                            <div class="col-md-6 mb-3">
+                                                <label for="validationCustom13">ยี่ห้อรถ</label>
+                                                {{form.brand_name2(class='form-control')}}
+                                                <!-- <input type="text" class="form-control" name="brand2"
+                                                    id="validationCustom13" value="{{request.form.brand2}}" required> -->
+                                            </div>
+                                            <div class="col-md-6 mb-3">
+                                                <label for="validationCustom14">สีรถ</label>
+                                                {{form.color2(class='form-control')}}
+                                                <!-- <input type="text" class="form-control" name="color2"
+                                                    id="validationCustom14" value="{{request.form.color2}}" required> -->
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!--ที่อยู่ปัจจุบัน-->
+                            <div class="card">
+                                <div class="card-header" id="faqhead3">
+                                    <a href="#" class="btn btn-header-link collapsed" data-toggle="collapse"
+                                        data-target="#faq3" aria-expanded="true" aria-controls="faq3"><img
+                                            src="{{url_for('static', filename='image/home2.svg')}}" class="mr-2"
+                                            width="30"> ข้อมูลที่อยู่ปัจจุบัน</a>
+                                </div>
+
+                                <div id="faq3" class="collapse" aria-labelledby="faqhead3" data-parent="#faq">
+                                    <div class="card-body">
+                                        <div class="form-row">
+                                            <div class="col-md-4 mb-3">
+                                                <label for="validationCustom16">เลขที่ <span
+                                                        class="text-valid">*</span></label>
+                                                {{form.address_home(class='form-control',label='เลขที่')}} 
+                                                <!-- <select class="custom-select" name="address_type"
+                                                    id="validationCustom16" value="{{request.form.address_type}}"
+                                                    required>
+                                                    <option selected>...</option>
+                                                    <option>...</option>
+                                                </select> -->
+                                            </div>
+                                            <!--เพิ่มใหม่ AOF 05/08/64-->
+                                            <div class="col-md-4 mb-3">
+                                                <label for="validationCustom16">อาคาร/หมู่บ้าน </label>
+                                                {{form.unit_home(class='form-control',label='อาคาร/หมู่บ้าน')}} 
+                                                <!-- <select class="custom-select" name="unit_type"
+                                                    id="validationCustom16" value="{{request.form.unit_type}}"
+                                                    required>
+                                                    <option selected>...</option>
+                                                    <option>...</option>
+                                                </select> -->
+                                            </div>
+                                            <div class="col-md-4 mb-3">
+                                                <label for="validationCustom17">หมู่</label>
+                                                 {{form.village_home(class='form-control',label='หมู่')}} 
+                                                <!-- <input type="text" class="form-control" name="other"
+                                                    id="validationCustom17" value="{{request.form.other}}" required> -->
+                                            </div>
+                                            <div class="col-md-6 mb-3">
+                                                <label for="validationCustom17">ซอย<span
+                                                    class="text-valid"></span></label>
+                                                 {{form.alley_home(class='form-control',label='ซอย')}} 
+                                                <!-- <input type="text" class="form-control" name="other"
+                                                    id="validationCustom17" value="{{request.form.other}}" required> -->
+                                            </div>
+                                            <div class="col-md-6 mb-3">
+                                                <label for="validationCustom17">ถนน<span
+                                                    class="text-valid"></span></label>
+                                                 {{form.road_home(class='form-control',label='ถนน')}} 
+                                                <!-- <input type="text" class="form-control" name="other"
+                                                    id="validationCustom17" value="{{request.form.other}}" required> -->
+                                            </div>
+                                          
+
+                                            <div class="col-md-6 mb-3">
+                                                <label for="validationCustom22">จังหวัด <span
+                                                        class="text-valid">*</span></label>
+                                                {{ form.province_home(class='custom-select',label='จังหวัด')}}
+                                                <!-- <select class="custom-select" name="province3" id="validationCustom22"
+                                                    value="{{request.form.province3}}" required>
+                                                    <option selected>...</option>
+                                                    <option>...</option>
+                                                </select> -->
+                                            </div>
+
+                                            <div class="col-md-6 mb-3">
+                                                <label for="validationCustom20">อำเภอ/เขต <span
+                                                        class="text-valid">*</span></label>
+                                                {{form.district_home(class='custom-select',label='อำเภอ/เขต')}}
+                                                <!-- <select class="custom-select" id="validationCustom20" name="district"
+                                                    value="{{request.form.distric}}" required>
+                                                    <option selected>...</option>
+                                                    <option>...</option>
+                                                </select> -->
+                                            </div>
+                                            <div class="col-md-6 mb-3">
+                                                <label for="validationCustom21">ตำบล/แขวง <span
+                                                        class="text-valid">*</span></label>
+                                                {{form.sub_district_home(class='custom-select',label='ตำบล/แขวง')}}
+                                                <!-- <select class="custom-select" id="validationCustom21"
+                                                    name="sub_district" value="{{request.form.sub_district}}"
+                                                    value="{{request.form.sub_district}}" required>
+                                                    <option selected>...</option>
+                                                    <option>...</option>
+                                                </select> -->
+                                            </div>
+                                            <div class="col-md-6 mb-3">
+                                                <label for="validationCustom19">รหัสไปรษณีย์ <span
+                                                        class="text-valid">*</span></label>
+                                                {{form.postal_code_home(class='custom-select',label='รหัสไปรษณีย์')}}
+                                                <!-- <select class="custom-select" name="postal_code" id="validationCustom19"
+                                                    value="{{request.form.postal_code}}" required>
+                                                    <option selected>...</option>
+                                                    <option>...</option>
+                                                </select> -->
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div> <!--end home address-->
+
+                             <!--ที่อยู่บริษัท-->
+                             <div class="card">
+                                <div class="card-header" id="faqhead3">
+                                    <a href="#" class="btn btn-header-link collapsed" data-toggle="collapse"
+                                        data-target="#faq3" aria-expanded="true" aria-controls="faq3"><img
+                                            src="{{url_for('static', filename='image/home2.svg')}}" class="mr-2"
+                                            width="30"> ข้อมูลสถานที่ทำงาน</a>
+                                </div>
+
+                                <div id="faq3" class="collapse" aria-labelledby="faqhead3" data-parent="#faq">
+                                    <div class="card-body">
+                                        <div class="form-row">
+                                            <div class="col-md-6 mb-3">
+                                                <label for="validationCustom16">เลขที่ผู้เสียภาษี </label>
+                                                {{form.identity_com(class='form-control')}}
+                                                <!-- <select class="custom-select" name="taxpayer_no"
+                                                    id="validationCustom16" value="{{request.form.taxpayer_no}}"
+                                                    required>
+                                                    <option selected>...</option>
+                                                    <option>...</option>
+                                                </select> -->
+                                            </div>
+                                            <div class="col-md-6 mb-3">
+                                                <label for="validationCustom16">บริษัท </label>
+                                                {{form.company_name(class='form-control')}} 
+                                                <!-- <select class="custom-select" name="address_type"
+                                                    id="validationCustom16" value="{{request.form.address_type}}"
+                                                    required>
+                                                    <option selected>...</option>
+                                                    <option>...</option>
+                                                </select> -->
+                                            </div>
+                                            <div class="col-md-4 mb-3">
+                                                <label for="validationCustom17">เลขที่</label>
+                                                 {{form.address_company(class='form-control')}} 
+                                                <!-- <input type="text" class="form-control" name="other"
+                                                    id="validationCustom17" value="{{request.form.other}}" required> -->
+                                            </div>
+                                             <!--เพิ่มใหม่ AOF 05/08/64-->
+                                             <div class="col-md-4 mb-3">
+                                                <label for="validationCustom16">อาคาร/หมู่บ้าน </label>
+                                                {{form.unit_company(class='form-control')}} 
+                                                <!-- <select class="custom-select" name="unit_type"
+                                                    id="validationCustom16" value="{{request.form.unit_type}}"
+                                                    required>
+                                                    <option selected>...</option>
+                                                    <option>...</option>
+                                                </select> -->
+                                            </div>
+                                            
+                                            <div class="col-md-4 mb-3">
+                                                <label for="validationCustom17">หมู่</label>
+                                                 {{form.village_company(class='form-control')}} 
+                                                <!-- <input type="text" class="form-control" name="other"
+                                                    id="validationCustom17" value="{{request.form.other}}" required> -->
+                                            </div>
+                                            <div class="col-md-6 mb-3">
+                                                <label for="validationCustom17">ซอย</label>
+                                                 {{form.alley_company(class='form-control')}} 
+                                                <!-- <input type="text" class="form-control" name="other"
+                                                    id="validationCustom17" value="{{request.form.other}}" required> -->
+                                            </div>
+                                            <div class="col-md-6 mb-3">
+                                                <label for="validationCustom17">ถนน</label>
+                                                 {{form.road_company(class='form-control')}} 
+                                                <!-- <input type="text" class="form-control" name="other"
+                                                    id="validationCustom17" value="{{request.form.other}}" required> -->
+                                            </div>
+                                            
+
+                                            <div class="col-md-6 mb-3">
+                                                <label for="validationCustom22">จังหวัด </label>
+                                                {{ form.province_company(class='custom-select')}}
+                                                <!-- <select class="custom-select" name="province3" id="validationCustom22"
+                                                    value="{{request.form.province3}}" required>
+                                                    <option selected>...</option>
+                                                    <option>...</option>
+                                                </select> -->
+                                            </div>
+
+                                            <div class="col-md-6 mb-3">
+                                                <label for="validationCustom20">อำเภอ/เขต </label>
+                                                {{form.district_company(class='custom-select')}}
+                                                <!-- <select class="custom-select" id="validationCustom20" name="district"
+                                                    value="{{request.form.distric}}" required>
+                                                    <option selected>...</option>
+                                                    <option>...</option>
+                                                </select> -->
+                                            </div>
+                                            <div class="col-md-6 mb-3">
+                                                <label for="validationCustom21">ตำบล/แขวง</label>
+                                                {{form.sub_district_company(class='custom-select')}}
+                                                <!-- <select class="custom-select" id="validationCustom21"
+                                                    name="sub_district" value="{{request.form.sub_district}}"
+                                                    value="{{request.form.sub_district}}" required>
+                                                    <option selected>...</option>
+                                                    <option>...</option>
+                                                </select> -->
+                                            </div>
+                                            <div class="col-md-6 mb-3">
+                                                <label for="validationCustom19">รหัสไปรษณีย์</label>
+                                                {{form.postal_code_company(class='custom-select')}}
+                                                <!-- <select class="custom-select" name="postal_code" id="validationCustom19"
+                                                    value="{{request.form.postal_code}}" required>
+                                                    <option selected>...</option>
+                                                    <option>...</option>
+                                                </select> -->
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div> <!--end company address-->
+                        </div>
+                    </div>
+                </div>
+                <!--End -->
+                <div class="col-md-4">
+                    <!-- <div class="card-circle">
+                        <div class="card-circle_img">
+                            <img src="https://st4.depositphotos.com/14953852/24787/v/600/depositphotos_247872612-stock-illustration-no-image-available-icon-vector.jpg"
+                                alt="user-image">
+                        </div>
+                        <div class="card_info">
+                            <h5 class="mt-2">ยินดีต้อนรับ <br>
+                                คุณ ADMINISTRATOR</h5>
+                        </div>
+                    </div> -->
+
+                    <!--modify by ittipon 23/6/2564 -->
+                    <div class="card mt-5">
+                        <div class="card-header card-header-mrta">
+                            <div class="row align-items-center">
+                                <div class="col-2">
+                                    <img src="{{url_for('static', filename='image/park 2.svg')}}" class="mr-2"
+                                        width="35">
+                                </div>
+                                <div class="col-10">
+                                    <span class="mb-0 h6" id="station_name">{{station_name}} <br>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <img src="/static/image/manage/station/{{image}}"
+                                class="card-img-top" style="height: 10rem;">
+                            <div class="my-4">
+                                ที่ตั้ง : {{location}}
+                            </div>
+                            <div class="mb-3 text-right">
+                                <h5>{{price}} บาท/เดือน</h5>
+                            </div>
+                            <div class="mb-2 text-center">
+                                <a href="{{url_for('member_register_step1')}}"
+                                    class="a-link">เปลี่ยนลานจอดรถที่ท่านเลือก</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card mt-2 mb-3">
+                        <div class="card-header card-header-mrta">
+                            <div class="row align-items-center">
+                                <div class="col-2">
+                                    <img src="{{url_for('static', filename='image/attachment.svg')}}" class="mr-2"
+                                        width="35">
+                                </div>
+                                <div class="col-10">
+                                    <span class="mb-0 h5">แนบไฟล์เอกสาร</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="card mb-3">
+                                <div class="card-body">
+                                    <div class="text-center">
+                                        <div class="mb-2">
+                                            สำเนาบัตรประชาชน<span
+                                            class="text-valid">*</span>
+                                        </div>
+                                        <div class="file-upload btn btn-primary">
+                                            <span><i class="fas fa-plus-square"></i>
+                                                เพิ่ม</span>
+                                            {{form.copy_id_card(class='upload', id="FileAttachment",onchange='validateSize(this)',accept="image/*",label='สำเนาบัตรประชาชน')}}
+                                       
+                                        </div>
+                                        <input type="text" id="fileuploadurl" readonly
+                                            placeholder="อัปโหลดไฟล์ได้ไม่เกิน 5MB รองรับไฟล์ jpg, png">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card mb-3">
+                                <div class="card-body">
+                                    <div class="text-center">
+                                        <div class="mb-2">
+                                            สำเนาทะเบียนรถยนต์ คันที่ 1 <span
+                                            class="text-valid">*</span>
+                                        </div>
+                                        <div class="file-upload btn btn-mrta2">
+                                            <span><i class="fas fa-plus-square"></i>
+                                                เพิ่ม</span>
+                                            {{form.copy_doc_car1(class='upload',id="FileAttachment_2",onchange='validateSize(this)',accept="image/*",label='สำเนาทะเบียนรถยนต์ คันที่ 1')}}
+                                            
+                                        </div>
+                                        <input type="text" id="fileuploadurl_2" readonly
+                                            placeholder="อัปโหลดไฟล์ได้ไม่เกิน 5MB รองรับไฟล์ jpg, png">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card mb-3">
+                                <div class="card-body">
+                                    <div class="text-center">
+                                        <div class="mb-2">
+                                            สำเนาทะเบียนรถยนต์ คันที่ 2
+                                        </div>
+                                        <div class="file-upload btn btn-mrta2">
+                                            <span><i class="fas fa-plus-square"></i>
+                                                เพิ่ม</span>
+                                            {{form.copy_doc_car2(class='upload',id="FileAttachment_3",onchange='validateSize(this)',accept="image/*",label='สำเนาทะเบียนรถยนต์ คันที่ 2')}}
+                                        
+                                        </div>
+                                        <input type="text" id="fileuploadurl_3" readonly
+                                            placeholder="อัปโหลดไฟล์ได้ไม่เกิน 5MB รองรับไฟล์ jpg, png">
+                                    </div>
+                                </div>
+                            </div>
+                            {% if parking_type == 'AFC'%}
+                            <div class="card mb-3">
+                                <div class="card-body">
+                                    <div class="text-center">
+                                        <div class="mb-2">
+                                            รูปหลังบัตรโดยสารรถไฟฟ้า
+                                        </div>
+                                        <div class="file-upload btn btn-mrta2">
+                                            <span><i class="fas fa-plus-square"></i>
+                                                เพิ่ม</span>
+                                            {% if parking_type == 'AFC'%}
+                                            {{form.card_member_copy(class='upload',id="FileAttachment_4",onchange='validateSize(this)',required=True,accept="image/*",label='รูปหลังบัตรโดยสารรถไฟฟ้า')}}
+                                            {%else%}
+                                            {{form.card_member_copy(class='upload',id="FileAttachment_4",onchange='validateSize(this)',accept="image/*")}} 
+                                            {%endif%}
+                                            
+                                        </div>
+                                        <input type="text" id="fileuploadurl_4" readonly
+                                            placeholder="อัพโหลดไฟล์ได้ไม่เกิน 5MB รองรับไฟล์ jpg, png">
+                                    </div>
+                                </div>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row text-center" >
+                <div class="col-md-8 mb-3">
+                    <a href="#" class="a-link">ล้างข้อมูล</a>
+                </div>
+                <div class="col-md-8 mb-4 text-md-center text-center">
+                    <button type="button" class="btn btn-secondary col-md-5 col-8 "
+                        onclick="window.location.href='/member-register-step2'">ย้อนกลับ</button>
+                <!-- </div>
+                <div class="col-4 mb-4 text-md-left text-center"> -->
+                    <!-- modify by ittipon -->
+                    {{form.submit(class='btn btn-danger col-md-5 col-8',type='submit',onclick='validateForm()')}}
+                    <!-- <button type="submit" class="btn btn-danger col-md-5 col-8">ถัดไป</button> -->
+                    <div class="col-4 mb-4 text-md-left text-center"></div>
+                </div>
+            </div>
+       
+            
+        </form>
+    </div>
+    {% include "comps/scroll-top.html" %}
+    {% include "comps/popup-cookie.html" %}
+
+
+    {% include "comps/footer.html" %}
+    
+</body>
+
+<script>
+    $(document).ready(function () {
+        $(".filter-btn").click(function () {
+            $(".filter-btn").removeClass('active');
+            $(this).addClass('active');
+            var value = $(this).attr('data-filter');
+            if (value == "all") {
+                //$('.filter').removeClass('hidden');
+                $('.filter').show('1000');
+            } else {
+                //$('.filter[filter-item="'+value+'"]').removeClass('hidden');
+                //$(".filter").not('.filter[filter-item="'+value+'"]').addClass('hidden');
+                $(".filter").not('.' + value).hide('3000');
+                $(".filter").filter('.' + value).show('3000');
+            }
+        });
+
+    });
+</script>
+
+<script>
+    // Upload 1
+    document.getElementById("FileAttachment").onchange = function () {
+        validateSize(this);
+        document.getElementById("fileuploadurl").value = this.value;
+    };
+
+    // Upload 2
+    document.getElementById("FileAttachment_2").onchange = function () {
+        validateSize(this);
+        document.getElementById("fileuploadurl_2").value = this.value;
+    };
+
+    // Upload 3
+    document.getElementById("FileAttachment_3").onchange = function () {
+        validateSize(this);
+        document.getElementById("fileuploadurl_3").value = this.value;
+    };
+
+    // Upload 4
+    document.getElementById("FileAttachment_4").onchange = function () {
+        validateSize(this);
+        document.getElementById("fileuploadurl_4").value = this.value;
+    };
+  // -------------------------------------------------------------------------------------------------
+    // ตรวจสอบรหัสบัตรประชาชน
+    $(document).ready(function () {
+        $('#validationCustom02').on('keyup', function () {
+            if ($.trim($(this).val()) != '' && $(this).val().length == 13) {
+                id = $(this).val().replace(/-/g, "");
+                var result = Script_checkID(id);
+                if (result === false) {
+                    $('span.error').removeClass('true').text('เลขบัตรประชาชนผิด');
+                } else {
+                    $('span.error').addClass('true').text('เลขบัตรประชาชนถูกต้อง');
+                }
+            } else {
+                $('span.error').removeClass('true').text('');
+
+            }
+        })
+    });
+    // ตรวจสอบตัวแปรบัตรประชาชน
+    function Script_checkID(id) {
+        if (!IsNumeric(id)) return false;
+        if (id.substring(0, 1) == 0) return false;
+        if (id.length != 13) return false;
+        for (i = 0, sum = 0; i < 12; i++)
+            sum += parseFloat(id.charAt(i)) * (13 - i);
+        if ((11 - sum % 11) % 10 != parseFloat(id.charAt(12))) return false;
+        return true;
+    }
+    function IsNumeric(input) {
+        var RE = /^-?(0|INF|(0[1-7][0-7]*)|(0x[0-9a-fA-F]+)|((0|[1-9][0-9]*|(?=[\.,]))([\.,][0-9]+)?([eE]-?\d+)?))$/;
+        return (RE.test(input));
+    }
+
+    function check_dup(input) {
+        const station =  document.getElementById('station_name').innerText
+        console.log(station)
+        fetch('checkdupcard/' + input.value+'/'+station).then(function (response) {
+            response.json().then(function (datacheck) {
+                if (datacheck.status == 'dup') {
+                    //alert('รหัสบัตรนี้มีอยู่ในระบบแล้ว')
+                    document.getElementById('modalalerttext').innerHTML = 'รหัสบัตรนี้มีอยู่ในระบบแล้ว'
+                    $('#policyModal3').modal('show')
+                    input.value = null
+                }
+            })
+        })
+        
+    }
+</script>
+
+<script>
+    jQuery(document).ready(function($){
+  
+  window.onload = function (){
+    $(".bts-popup").delay(1000).addClass('is-visible');
+	}
+  
+	//open popup
+	$('.bts-popup-trigger').on('click', function(event){
+		event.preventDefault();
+		$('.bts-popup').addClass('is-visible');
+	});
+	
+	//close popup
+	$('.bts-popup').on('click', function(event){
+		if( $(event.target).is('.bts-popup-button,.bts-popup-close') || $(event.target).is('.bts-popup') ) {
+			event.preventDefault();
+			$(this).removeClass('is-visible');
+		}
+	});
+	//close popup when clicking the esc keyboard button
+	$(document).keyup(function(event){
+    	if(event.which=='27'){
+    		$('.bts-popup').removeClass('is-visible');
+	    }
+    });
+});
+</script>
+<script>
+    province_select = document.getElementById('province_home');
+    district_select = document.getElementById('district_home');
+    subdistrict_select = document.getElementById('sub_district_home');
+    postcode_select = document.getElementById('postal_code_home');
+
+    province_select.onchange = function(){
+     province = province_select.value;
+     fetch('district/' + province).then(function(response){
+      response.json().then(function(data){
+       optionHTML = '';
+       for (district of data.districtlist){
+        optionHTML += '<option value="' + district.name +'">' + district.name+ '</option>'
+       }
+       district_select.innerHTML = optionHTML;
+      });
+     });
+    }
+    district_select.onchange = function(){
+     district = district_select.value; 
+     province = province_select.value;
+     fetch('subdistrict/'+province +'/' + district).then(function(response){
+      response.json().then(function(data){
+       optionHTML = '';
+       for (sub of data.subdistrictlist){
+        optionHTML += '<option value="' + sub +'">' + sub + '</option>'
+       }
+       subdistrict_select.innerHTML = optionHTML;
+      });
+     });
+    }
+    subdistrict_select.onchange = function(){
+        subdistrict = subdistrict_select.value;
+        province = province_select.value;
+        district_ = district_select.value;
+        fetch('postcode/' +province+'/'+district_+'/'+ subdistrict).then(function(response){
+         response.json().then(function(data){
+          optionHTML = '';
+          for (post of data.postcodelist){
+           optionHTML += '<option value="' + post +'">' + post + '</option>'
+          }
+          postcode_select.innerHTML = optionHTML;
+         });
+        });
+       }
+</script>
+<script>
+    province_select2 = document.getElementById('province_company');
+    district_select2 = document.getElementById('district_company');
+    subdistrict_select2 = document.getElementById('sub_district_company');
+    postcode_select2 = document.getElementById('postal_code_company');
+    
+    province_select2.onchange = function(){
+     province = province_select2.value;
+     fetch('district/' + province).then(function(response){
+      response.json().then(function(data){
+       optionHTML = '';
+       for (district of data.districtlist){
+        optionHTML += '<option value="' + district.name +'">' + district.name+ '</option>'
+       }
+       district_select2.innerHTML = optionHTML;
+      });
+     });
+    }
+    district_select2.onchange = function(){
+     district = district_select2.value; 
+     province = province_select2.value;
+     fetch('subdistrict/'+province+'/' + district).then(function(response){
+      response.json().then(function(data){
+       optionHTML = '';
+       for (sub of data.subdistrictlist){
+        optionHTML += '<option value="' + sub +'">' + sub + '</option>'
+       }
+       subdistrict_select2.innerHTML = optionHTML;
+      });
+     });
+    }
+    subdistrict_select2.onchange = function(){
+        subdistrict = subdistrict_select2.value;
+        district = district_select2.value; 
+        province = province_select2.value; 
+        fetch('postcode/'+province +'/'+district+'/' + subdistrict).then(function(response){
+         response.json().then(function(data){
+          optionHTML = '';
+          for (post of data.postcodelist){
+           optionHTML += '<option value="' + post +'">' + post + '</option>'
+          }
+          postcode_select2.innerHTML = optionHTML;
+         });
+        });
+       }
+</script>
+<script>
+    
+    function validateSize(input) {
+        const fileSize = input.files[0].size / 5120 / 5120;
+        // console.log('asdfsdf')
+        if (fileSize > 5) {
+            //alert('File size exceeds 5 MB');
+            document.getElementById('modalalerttext').innerHTML = 'File size exceeds 5 MB'
+            $('#policyModal3').modal('show')
+            input.value = null
+            // console.log('success')
+        } else {
+
+        }
+    }
+    function validateForm(){
+        for (const el of document.getElementById('form').querySelectorAll("[required]")) {
+            if (!el.reportValidity()) {
+                //alert('กรุณากรอกข้อมูล '+el.getAttribute('label'))
+                document.getElementById('modalalerttext').innerHTML = 'กรุณากรอกข้อมูล '+el.getAttribute('label')
+                $('#policyModal3').modal('show')
+                return;
+            }
+            }
+    }
+</script>
+{%endif%}
+</html>

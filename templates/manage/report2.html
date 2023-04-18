@@ -1,0 +1,128 @@
+<style>
+    #ui-datepicker-div {
+        background: white;
+    }
+</style>
+
+<body>
+    <table id="userprofile" class="table table-bordered table-striped" width="100%">
+        <!--Start search -->
+        <div class="input-group row">
+            <div class="col-sm-3 input-group">
+                <input type="text" id="taguser" class="form-control" placeholder="ค้นหา" name="search" />
+                <div class="input-group-btn">
+                    <button class="btn btn-primary" type="submit">
+                        <i class="fas fa-search"></i></button>
+                </div>
+            </div>
+            <div class="col-sm-3 input-group">
+                <span class="mt-2 mr-2">วันที่เริ่มต้น :</span> <input type="text" class="form-control" id="date_start2"
+                    name="date_start2">
+            </div>
+            <div class="col-sm-3 input-group">
+                <span class="mt-2 mr-2">วันที่สิ้นสุด :</span> <input type="text" class="form-control" id="date_end2"
+                    name="date_end2">
+            </div>
+
+            <button class="btn btn-success mb-2 ml-3" id="excel"><i class="far fa-file-excel"></i> Export to
+                Excel</button>
+        </div>
+        <!--end search -->
+
+        <thead>
+            <tr>
+                <th>ลำดับ</th>
+                <th>ชื่อ User</th>
+                <th>นามสกุล User</th>
+                <th>Username</th>
+                <th>Password</th>
+                <th>วันที่สร้าง</th>
+                <th>วันที่แก้ไข</th>
+                <th>ผู้สร้าง</th>
+                <th>ผู้แก้ไข</th>
+            </tr>
+        </thead>
+        
+        <tbody>
+            {% for row in datas2 %}
+            <tr>
+                <td>{{row.0}}</td>
+                <td>{{row.1}}</td>
+                <td>{{row.2}}</td>
+                <td>{{row.3}}</td>
+                <td>{{row.4}}</td>
+                <td>{{row.5}}</td>
+                <td>{{row.6}}</td>
+                <td>{{row.7}}</td>
+                <td>{{row.8}}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+       
+    </table>
+
+
+</body>
+
+<script>
+    $(document).ready(function () {
+        $('#userprofile').DataTable({
+            "dom": 'Btip',
+            "processing": true,
+            "pageLength": 10,
+            "scrollY": 400,
+            "scrollX": true,
+            "oLanguage": {
+                "sLengthMenu": "แสดง _MENU_ ลำดับ ต่อหน้า",
+                "sZeroRecords": "ไม่พบข้อมูลที่ค้นหา",
+                "sInfo": "แสดง _START_ ถึง _END_ ของ _TOTAL_ ลำดับ",
+                "sInfoEmpty": "แสดง 0 ถึง 0 ของ 0 ลำดับ",
+                "sInfoFiltered": "(แสดงค้นหาทั้งหมด _MAX_ รายการ)",
+                "oPaginate": {
+                    "sFirst": "หน้าแรก",
+                    "sLast": "หน้าสุดท้าย",
+                    "sNext": "ถัดไป",
+                    "sPrevious": "ก่อนหน้า"
+                }
+            }
+        });
+
+        oTable2 = $('#userprofile').DataTable();
+        oTable2.buttons('.buttons-csv').nodes().css("display", "none");
+        oTable2.buttons('.buttons-excel').nodes().css("display", "none");
+        oTable2.buttons('.buttons-print').nodes().css("display", "none");
+        oTable2.buttons('.buttons-pdf').nodes().css("display", "none");
+        oTable2.buttons('.buttons-copy').nodes().css("display", "none");
+        $('#taguser').keyup(function () {
+            oTable.search($(this).val()).draw();
+        });
+        $('#excel').on('click', function () {
+            oTable.button('.buttons-excel').trigger();
+        });
+
+        $.fn.dataTable.ext.search.push(
+            function (settings, data, dataIndex) {
+                var min = $('#date_start2').datepicker("getDate");
+                var max = $('#date_end2').datepicker("getDate");
+                var startDate = new Date(data[5]);
+                if (min == null && max == null) { return true; }
+                if (min == null && startDate <= max) { return true; }
+                if (max == null && startDate >= min) { return true; }
+                if (startDate <= max && startDate >= min) { return true; }
+                return false;
+            }
+        );
+
+        // $('#parkingselect').on('change', function () {
+        //     oTable.columns(3).search(this.value).draw()
+        // });
+
+        $("#date_start2").datepicker({ onSelect: function () { table.draw(); }, changeMonth: true, changeYear: true, dateFormat: 'yy-mm-dd' });
+        $("#date_end2").datepicker({ onSelect: function () { table.draw(); }, changeMonth: true, changeYear: true, dateFormat: 'yy-mm-dd' });
+        var table2 = $('#userprofile').DataTable();
+        // Event listener to the two range filtering inputs to redraw on input
+        $('#date_start2, #date_end2').change(function () {
+            table2.draw();
+        });
+    });
+</script>

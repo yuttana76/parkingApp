@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  {% include "include/manage-css.html" %}
+  {% include "include/manage-js.html" %}
+  <title>MRTA จัดการข่าวสาร</title>
+  <link href="//cdn.datatables.net/1.10.20/css/jquery.dataTables.min.css" rel="stylesheet" />
+  <link href="//cdn.datatables.net/buttons/1.6.2/css/buttons.dataTables.min.css" rel="stylesheet" />
+
+  <script src="//code.jquery.com/jquery-3.5.1.js"></script>
+  <script src="//cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script>
+  <script src="//cdn.datatables.net/buttons/1.6.2/js/dataTables.buttons.min.js"></script>
+  <script src="//cdn.datatables.net/buttons/1.6.2/js/buttons.flash.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
+  <script src="//cdn.datatables.net/buttons/1.6.2/js/buttons.html5.min.js"></script>
+  <script src="//cdn.datatables.net/buttons/1.6.2/js/buttons.print.min.js"></script>
+</head>
+
+<style>
+  .dataTables_wrapper .dataTables_scroll div.dataTables_scrollBody>table>thead>tr>th,
+  .dataTables_wrapper .dataTables_scroll div.dataTables_scrollBody>table>thead>tr>td,
+  .dataTables_wrapper .dataTables_scroll div.dataTables_scrollBody>table>tbody>tr>th,
+  .dataTables_wrapper .dataTables_scroll div.dataTables_scrollBody>table>tbody>tr>td {
+    vertical-align: baseline;
+  }
+</style>
+
+<body class="hold-transition sidebar-mini layout-fixed">
+  <div class="wrapper">
+    {% include "manage/comps/header.html" %}
+    {% include "manage/comps/sidebar.html" %}
+
+    <!-- Messenger ปลั๊กอินแชท Code -->
+    <div id="fb-root"></div>
+
+    <!-- Your ปลั๊กอินแชท code -->
+    <div id="fb-customer-chat" class="fb-customerchat"></div>
+
+    <div class="content-wrapper">
+      <div class="content-header">
+        <div class="container-fluid">
+          <div class="row mb-3">
+            <div class="col-sm-12 mb-3">
+              <h1 class="m-0" style="color: #1a086e; font-size: 38px; font-weight: bold;">การจัดการข่าวสาร</h1>
+            </div>
+
+            <div class="col-sm-12">
+              <div class="card">
+                <div class="card-body">
+                  <table id="parking-list1" class="table table-bordered table-striped" style="width:100%">
+
+                    <!--Start select type_news -->
+                    <span class="h6">ประเภทข่าวสาร : </span>
+                    <select name="status" id="status-select" style=" width: 15%;">
+                      <option value="">--ทั้งหมด--</option>
+                      <option>private</option>
+                      <option>public</option>
+                    </select>
+
+
+                    <!--end type_news -->
+                    <!--Start search -->
+                    <div class="wrap">
+                      <div class="input-group row">
+
+                        <div class="col-sm-4 input-group">
+                          <input type="text" id="newssearch" class="form-control" placeholder="ค้นหา" name="search" />
+                          <div class="input-group-btn">
+                            <button class="btn btn-primary" type="submit">
+                              <i class="fas fa-search"></i></button>
+                          </div>
+                        </div>
+
+                        <button class="btn btn-success mb-2 ml-3" type="button" id="excel"><i
+                            class="far fa-file-excel"></i> Export to
+                          Excel</button>
+
+                        <button class="btn btn-primary mb-2" data-toggle="modal" data-target="#exampleModal-add"
+                          style="margin-left: auto;">
+                          <i class="fas fa-plus"></i> เพิ่มข้อมูล
+                        </button>
+                        <!--button add -->
+                      </div>
+                    </div>
+                </div>
+                <!--end search -->
+
+                <thead>
+                  <tr style="font-size: 14px;">
+                    <th>NO.</th>
+                    <!--Topic No-->
+                    <th>รูปภาพ</th>
+                    <!--Topic image-->
+                    <th>ชื่อข่าว</th>
+                    <!--Topic news-->
+                    <th>รายละเอียด</th>
+                    <!--Topic detail-->
+                    <th>รายละเอียด eng</th>
+                    <!--Topic detail-->
+                    <th>ประเภทข่าว</th>
+                    <!--Topic new_type -->
+                    <th>สถานะข่าว</th>
+                    <!--Topic news_status-->
+                    <th>วันที่สร้าง</th>
+                    <!--Topic date create-->
+                    <th>วันที่แก้ไข</th>
+                    <!--Topic date edit-->
+                    <!-- <th>User สร้าง</th> -->
+                    <!--Topic date create-->
+                    <!-- <th>User แก้ไข</th> -->
+                    <!--Topic date edit-->
+                    <th class="textbox" colspan="1">การจัดการ</th>
+                    <!--Topic manage edit and delete-->
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for row in data %}
+                  <tr>
+                    <td>{{row.Id}}</td>
+                    <!--Detail No-->
+                    <td>{{row.news_image}}</td>
+                    <!--Detail image-->
+                    <td>{{row.news_name}}</td>
+                    <!--Detail news's name-->
+                    <td>{{row.news_des}}</td>
+                    <!--Detail news-->
+                    <td>{{row.news_des_eng}}</td>
+                    <!--Detail news eng-->
+                    {% if row.news_type == '1' %}
+                    <td>public</td>
+                    {% else %}
+                    <td>private</td>
+                    {% endif %}
+                    <!--end detai; news type-->
+                    <td>{{row.news_status}}</td>
+                    <!--end detai; news status-->
+                    <td>{{row.user_create_date}}</td>
+                    <!--Detail in date create table-->
+                    <td>{{row.user_edit_date}}</td>
+                    <!--Detail in date edit table-->
+                    <!-- <td>{{row.8}}</td> -->
+                    <!--Detail user create-->
+                    <!-- <td>{{row.9}}</td> -->
+                    <!--Detail user edit-->
+
+                    <td class="textbox">
+                    {{row.button|safe}}
+                    </td>
+                  </tr>
+                  {% endfor %}
+                  <div class="modal fade bd-example-modal-lg" id="Modaledit" tabindex="-1" role="dialog"
+                    aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-lg">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                          <h5 class="modal-title " id="exampleModalLabel">อัปเดตข้อมูล</h5>
+                          <button type="button" class="close" onclick="document.getElementById('updatemodal').reset();" data-dismiss="modal">&times;</button>
+                        </div>
+                        <div class="modal-body">
+                          <form action="{{ url_for('update_news') }}" method="POST" id="updatemodal" enctype="multipart/form-data">                            
+                            <div class="form-group row mt-2">
+                              <div class="col-sm-6 mt-2">
+                                <label for="">รูปภาพ: <small>ขนาดรูปภาพ(730px X 400px)</small> </label>
+                                <input type="hidden" name="id" id="id_update" value="">
+                                <input type="file" name="news_image" id="news_image2" onchange='validateSize2(this);'><br>
+                              </div>
+        
+                              <div class="col-sm-6 mt-2">
+                                <button type="button" id="showimg2" onclick="switchimg2();" style="display: none;">ดูรูปภาพ</button>
+                              </div>
+                            </div>
+                            <img id="output2" width="500" height="600" style="display: none;"/>
+
+                            <div class="form-group row mt-2">
+                              <div class="col-sm-12 mt-2">
+                                <label>ชื่อข่าว:</label>
+                                <input type="text" class="form-control" name="news_name" id="news_name2" value="">
+                              </div>
+
+                              <div class="col-sm-12 mt-2">
+                                <label>รายละเอียด:</label>
+                                <textarea type="text" class="form-control" rows="5" name="news_des" id="news_des2" value="" maxlength="5000"></textarea>
+                              </div>
+                            </div>
+
+                            <div class="form-group row mt-2">
+                              <div class="col-sm-12 mt-2">
+                                <label for="news_name">ชื่อข่าว (ENG): </label>
+                                <input class="form-control" type="text" id="news_name_eng2" name="news_name_eng" >
+                              </div>
+        
+                              <div class="col-sm-12 mt-2">
+                                <label for="news_des">รายละเอียดข่าวสาร (ENG): </label>
+                                <textarea class="form-control" type="text" id="news_des_eng2" name="news_des_eng"  maxlength="5000"></textarea>
+                              </div>
+                            </div>
+
+                            <div class="form-group row mt-2">
+                              <div class="col-sm-6 mt-2">
+                                <label>ประเภทข่าวสาร</label>
+                                <select class="form-control" name="news_type" id="news_type2" >
+                                                              
+                                </select>
+                              </div>
+
+                              <div class="col-sm-6 mt-2">
+                                <label>สถานะข่าว:</label>
+                                <select class="form-control" name="news_status" id="news_status2" value="">                                  
+                                </select>
+                              </div>
+
+                            </div>
+                            <div class="form-group row mt-2">
+                              <div class="col-sm-6 mt-2">
+                                <label>วันที่เผยแพร่ข่าว:</label>
+                                <input type="date" class="form-control" name="news_date" id="news_date2" value=""
+                                  >
+                              </div>
+                              <div class="col-sm-6 mt-2">
+                                <label>วันที่สิ้นสุดการเผยแพร่:</label>
+                                <input type="date" class="form-control" name="end_date" id="end_date2" value=""
+                                  >
+                              </div>
+                            </div>
+                            <div class="form-group row mt-2">
+                              <div class="col-sm-6 mt-2">
+                                <label>วันที่สร้าง:</label>
+                                <input type="text" class="form-control" name="user_create_date" id="user_create_date2" value=""
+                                  readonly>
+                              </div>
+                              <div class="col-sm-6 mt-2">
+                                <label>วันที่แก้ไข:</label>
+                                <input type="text" class="form-control" name="user_edit_date" id="user_edit_date2" value=""
+                                  readonly>
+                              </div>
+                            </div>
+
+                            
+                            <button class="btn btn-primary" type="submit">อัปเดต</button>
+                          </form>
+                        </div>
+                        <div class="modal-footer">
+
+                          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+          
+                </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!--modal Add-->
+    <div class="card-body">
+      <div class="modal fade bd-example-modal-lg" id="exampleModal-add" tabindex="-1" role="dialog"
+        aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">เพิ่มข้อมูล</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+
+            <div class="container py-5">
+              <div class="row">
+                <div class="col-md-10 mx-auto">
+                  <form action="{{ url_for('insert_new_manage') }}" method="post" enctype="multipart/form-data">
+                    
+                    <div class="form-group row mt-2">
+                      <div class="col-sm-6 mt-2">
+                        <label for="">รูปภาพ: <small>ขนาดรูปภาพ(730px X 400px)</small>  </label>
+                        <input type="file" name="news_image" onchange='validateSize(this);'  required><br>
+                      </div>
+
+                      <div class="col-sm-6 mt-2">
+                        <br>
+                        <button type="button" id="showimg" onclick="switchimg();"style="display: none;">ดูรูปภาพ</button>
+                      </div>
+                    </div>
+                    <img id="output" width="500" height="600"style="display: none;"/>
+                    <div class="form-group row mt-2">
+                      <div class="col-sm-12 mt-2">
+                        <label for="news_name">ชื่อข่าว: </label>
+                        <input class="form-control" type="text" id="news_name" name="news_name" required>
+                      </div>
+
+                      <div class="col-sm-12 mt-2">
+                        <label for="news_des">รายละเอียดข่าวสาร: </label>
+                        <textarea class="form-control" type="text" id="news_des" name="news_des" maxlength="5000" ></textarea>
+                      </div>
+                    </div>
+
+                    <div class="form-group row mt-2">
+                      <div class="col-sm-12 mt-2">
+                        <label for="news_name">ชื่อข่าว (ENG): </label>
+                        <input class="form-control" type="text" id="news_name_eng" name="news_name_eng" required>
+                      </div>
+
+                      <div class="col-sm-12 mt-2">
+                        <label for="news_des">รายละเอียดข่าวสาร (ENG): </label>
+                        <textarea class="form-control" type="text" id="news_des_eng" name="news_des_eng" maxlength="5000" ></textarea>
+                      </div>
+                    </div>
+
+                    <div class="form-group row mt-2">
+                      <div class="col-sm-6 mt-2">
+                        <label>ประเภทข่าวสาร</label>
+                        <select class="form-control" name="news_type" id="news_type" required>
+                          <option value="">--ประเภทข่าว--</option>
+                          <option value="1">public</option>
+                          <option value="2">private</option>
+                        </select>
+                      </div>
+
+                      <div class="col-sm-6 mt-2">
+                        <label>สถานะ</label>
+                        <select class="form-control" id="news_status" name="news_status" required>
+                          <option value="">--ประเภทสถานะ--</option>
+                          <option value="active">Active</option>
+                          <option value="inactvie">Inactive</option>
+                        </select>
+                      </div>
+                    </div>
+
+                    <div class="form-group row mt-2">
+                      <div class="col-sm-6 mt-2">
+                        <label for="news_date">วันที่เผยแพร่ข่าว: </label>
+                        <input class="form-control" type="date" id="news_date" name="news_date" required>
+                      </div>
+
+                      <div class="col-sm-6 mt-2">
+                        <label for="user_create_date">วันที่สิ้นสุดการเผยแพร่: </label>
+                        <input class="form-control" type="date" id="end_date" name="end_date" required>
+                      </div>
+                    </div>
+                    <div class="form-group row mt-2">
+                      <div class="col-sm-6 mt-2">
+                        <label for="user_create_date">วันที่สร้าง: </label>
+                        <input class="form-control" type="date" id="user_create_date" name="user_create_date" required>
+                      </div>
+                    </div>
+
+                    
+
+                    <button type="button" class="btn btn-secondary float-right ml-2 mt-4"
+                      data-dismiss="modal">ยกเลิก</button>
+                    <button type="submit" value="Submit" class="btn btn-primary float-right mt-4"
+                      class="fas fa-save">บันทึกข้อมูล</button>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    {% include "manage/comps/footer.html" %}
+  </div>
+</body>
+<!-- <script>
+  function sortTable(n) {
+    var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
+    table = document.getElementById("myTable2");
+    switching = true;
+    // Set the sorting direction to ascending:
+    dir = "asc";
+    /* Make a loop that will continue until
+    no switching has been done: */
+    while (switching) {
+      // Start by saying: no switching is done:
+      switching = false;
+      rows = table.rows;
+      /* Loop through all table rows (except the
+      first, which contains table headers): */
+      for (i = 1; i < (rows.length - 1); i++) {
+        // Start by saying there should be no switching:
+        shouldSwitch = false;
+        /* Get the two elements you want to compare,
+        one from current row and one from the next: */
+        x = rows[i].getElementsByTagName("TD")[n];
+        y = rows[i + 1].getElementsByTagName("TD")[n];
+        /* Check if the two rows should switch place,
+        based on the direction, asc or desc: */
+        if (dir == "asc") {
+          if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
+            // If so, mark as a switch and break the loop:
+            shouldSwitch = true;
+            break;
+          }
+        } else if (dir == "desc") {
+          if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
+            // If so, mark as a switch and break the loop:
+            shouldSwitch = true;
+            break;
+          }
+        }
+      }
+      if (shouldSwitch) {
+        /* If a switch has been marked, make the switch
+        and mark that a switch has been done: */
+        rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+        switching = true;
+        // Each time a switch is done, increase this count by 1:
+        switchcount++;
+      } else {
+        /* If no switching has been done AND the direction is "asc",
+        set the direction to "desc" and run the while loop again. */
+        if (switchcount == 0 && dir == "asc") {
+          dir = "desc";
+          switching = true;
+        }
+      }
+    }
+  }
+</script> -->
+<script>
+  $(document).ready(function () {
+    $('#parking-list1').DataTable({
+      "dom": 'Btip',
+      "processing": true,
+      "pageLength": 10,
+      "scrollY": 300,
+      "scrollX": true,
+      "order": [[ 0, "desc" ]],
+      "oLanguage": {
+        "sLengthMenu": "แสดง _MENU_ ลำดับ ต่อหน้า",
+        "sZeroRecords": "ไม่พบข้อมูลที่ค้นหา",
+        "sInfo": "แสดง _START_ ถึง _END_ ของ _TOTAL_ ลำดับ",
+        "sInfoEmpty": "แสดง 0 ถึง 0 ของ 0 ลำดับ",
+        "sInfoFiltered": "(แสดงค้นหาทั้งหมด _MAX_ รายการ)",
+        "oPaginate": {
+          "sFirst": "หน้าแรก",
+          "sLast": "หน้าสุดท้าย",
+          "sNext": "ถัดไป",
+          "sPrevious": "ก่อนหน้า"
+        }
+      }
+    });
+
+    oTable = $('#parking-list1').DataTable();
+    oTable.buttons('.buttons-csv').nodes().css("display", "none");
+    oTable.buttons('.buttons-excel').nodes().css("display", "none");
+    oTable.buttons('.buttons-print').nodes().css("display", "none");
+    oTable.buttons('.buttons-pdf').nodes().css("display", "none");
+    oTable.buttons('.buttons-copy').nodes().css("display", "none");
+    $('#newssearch').keyup(function () {
+      oTable.search($(this).val()).draw();
+    });
+
+    $('#status-select').on('change', function () {
+      console.log('adfasdf')
+      oTable.columns(4).search(this.value).draw()
+    });
+    $('#excel').on('click', function () {
+      oTable.button('.buttons-excel').trigger();
+    })
+
+  });
+
+
+</script>
+<script>
+  function validateSize(input) {
+    const fileSize = input.files[0].size / 1024 / 1024;
+    const shbutton = document.getElementById('showimg');
+    const eximg = document.getElementById('output');
+    console.log('asdfsdf')
+    if (fileSize > 2) {
+      alert('File size exceeds 2 MB');
+      input.value = null
+      shbutton.style.display = 'none';
+      console.log('success')
+    } else {
+      eximg.style.display = 'none'
+      eximg.src = URL.createObjectURL(input.files[0]);
+      shbutton.style.display = 'block';
+    }
+  }
+  function validateSize2(input2) {
+    const fileSize2 = input2.files[0].size / 1024 / 1024;
+    const shbutton2 = document.getElementById('showimg2');
+    const eximg2 = document.getElementById('output2');
+    console.log('asdfsdf')
+    if (fileSize2 > 2) {
+      alert('File size exceeds 2 MB');
+      input2.value = null
+      shbutton2.style.display = 'none';
+      console.log('success')
+    } else {
+      eximg2.style.display = 'none'
+      eximg2.src = URL.createObjectURL(input2.files[0]);
+      shbutton2.style.display = 'block';
+      console.log('pass')
+    }
+  }
+  function switchimg (){
+    const img_ex = document.getElementById('output');
+    if (img_ex.style.display === 'none'){
+      img_ex.style.display = 'block';
+    }else{
+      img_ex.style.display = 'none';
+    }
+  }
+  function switchimg2 (){
+    const img_ex2 = document.getElementById('output2');
+    if (img_ex2.style.display === 'none'){
+      img_ex2.style.display = 'block';
+    }else{
+      img_ex2.style.display = 'none';
+    }
+  }
+</script>
+<script>
+  function showdataupdate(index){
+    $.ajax({
+      url:'/manage/modal_news',
+      method:'POST',
+      data:{id:index},
+      success:function(data){
+        $('#news_image2').val(null)
+        $('#showimg2').css("display", "none")
+        $('#output2').css('display','none')
+        $('#id_update').val(data[0].Id)
+        $('#news_name2').val(data[0].news_name)
+        $('#news_des2').val(data[0].news_des)
+        if (data[0].news_type == '1'){
+          document.getElementById('news_type2').innerHTML = '<option value="1">public</option>'
+          document.getElementById('news_type2').innerHTML +='<option value="2">private</option>'
+        }else{
+          document.getElementById('news_type2').innerHTML = '<option value="2">private</option>'
+          document.getElementById('news_type2').innerHTML +='<option value="1">public</option>'
+        }
+        if (data[0].news_status == 'active'){
+          document.getElementById('news_status2').innerHTML = '<option value="active">active</option>'
+          document.getElementById('news_status2').innerHTML += '<option value="inactive">inactvie</option>'
+        }else{
+          document.getElementById('news_status2').innerHTML = '<option value="inactive">inactvie</option>'
+          document.getElementById('news_status2').innerHTML += '<option value="active">active</option>'
+        }
+        $('#user_create_date2').val(data[0].user_create_date)
+        $('#user_edit_date2').val(data[0].user_edit_date)
+        $('#news_name_eng2').val(data[0].news_name_eng)
+        $('#news_des_eng2').val(data[0].news_des_eng)
+        $('#news_date2').val(data[0].news_date)
+        $('#end_date2').val(data[0].end_date)
+      }
+    })
+  }
+  
+</script>
+
+<script>
+  var chatbox = document.getElementById('fb-customer-chat');
+  chatbox.setAttribute("page_id", "106927381737911");
+  chatbox.setAttribute("attribution", "biz_inbox");
+
+  window.fbAsyncInit = function() {
+    FB.init({
+      xfbml            : true,
+      version          : 'v11.0'
+    });
+  };
+
+  (function(d, s, id) {
+    var js, fjs = d.getElementsByTagName(s)[0];
+    if (d.getElementById(id)) return;
+    js = d.createElement(s); js.id = id;
+    js.src = 'https://connect.facebook.net/th_TH/sdk/xfbml.customerchat.js';
+    fjs.parentNode.insertBefore(js, fjs);
+  }(document, 'script', 'facebook-jssdk'));
+</script>
+
+
+</html>

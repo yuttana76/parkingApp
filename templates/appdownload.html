@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    {% include "include/customer-css.html" %}
+
+    <title>ช่องทางการดาวน์โหลดแอปพลิเคชัน</title>
+</head>
+<style>
+    body{
+        background-color: lightskyblue;
+    }
+
+
+    @media (min-width: 280px) and (max-width: 810px) {
+        .text{
+           font-size: 30px;
+        }       
+    }
+</style>
+<body>
+
+    <div class="download">
+            <div class="row">
+                <div class="col-lg-12 text-center p-5 h1 mx-auto text">ช่องทางการดาวน์โหลดแอปพลิเคชัน</div>
+                    <a class="logo-mrta-ios text-center col-lg-12 p-3" href="https://apps.apple.com/th/app/mrta-parking/id1579312949?l=th">
+                    <img src="{{url_for('static', filename='image/ios app.png')}}" class="mr-2 mx-auto" width="400"  
+                   ></a>
+            </div>      
+        </div>
+        <div>
+            <div class="row">
+                    <a class="logo-mrta-android text-center col-lg-12 p-3" href="https://play.google.com/store/apps/details?id=com.mrta.mrtaparking">
+                    <img src="{{url_for('static', filename='image/android1.png')}}" class="mr-2 mx-auto mr-sm-auto" width="400" 
+                   ></a> 
+            </div>             
+        </div>
+        <div>
+            <div class="row">
+            <a class="logo-mrta-blue text-center col-lg-12" href="https://parking.mrta.co.th/">
+            <img src="{{url_for('static', filename='image/logo-blue.png')}}" class="mr-2" width="200"></a>              
+        </div>
+        </div>
+    </div>
+    
+</body>
+</html>

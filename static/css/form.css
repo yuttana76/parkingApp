@@ -1,0 +1,155 @@
+*:focus {
+  outline: none;
+}
+
+.form-mrta {
+  width: 100%;
+  background: #ffffff;
+  border-radius: 40px;
+  padding: 30px 40px 30px 40px;
+}
+
+.form-input {
+  margin-bottom: 1.5rem;
+  position: relative;
+}
+
+.form-input + .form-input {
+  margin-top: 0.8rem;
+}
+
+.form-input .input {
+  width: 100%;
+  background: #ffffff;
+  border: 3px solid rgba(7, 1, 1, 0.1);
+  padding: 0.375rem 0.75rem;
+  font-size: 1rem;
+  width: 100%;
+  border-radius: 8px;
+}
+.form-input .input:focus {
+  background: #ffffff;
+  border: 3px solid #ee2d24;
+  border-radius: 8px;
+}
+
+.form-input .icon {
+  left: 0;
+  margin: 0.75rem;
+  position: absolute;
+  top: 0;
+}
+
+.form-input .icon ~ .input {
+  padding-left: 2rem;
+}
+
+.form-input .button {
+  background: none;
+  border: none;
+  margin: 0.75rem;
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+
+.form-input .button ~ .input {
+  padding-right: 2rem;
+}
+
+.card-header-mrta {
+  background: #172F54;
+  color: #fff;
+}
+
+/* Login */
+.form-login {
+  width: 100%;
+  /* background: #ffffff; */
+  border-radius: 10px;
+  padding: 30px 40px 30px 40px;
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: cover;
+  transform: scale(1);
+  transition: box-shadow 350ms;
+  /* box-shadow: 0 0 9px 0 rgba(0, 0, 0, 0.06); */
+  margin-bottom: 1.25rem;
+}
+
+.form-login:hover {
+  transform: scale(1.15);
+}
+
+/* Accordion (FAQ) */
+#main {
+  margin: 50px 0;
+}
+
+#main #faq .card {
+  margin-bottom: 30px;
+  border: 0;
+  border-radius: 12px;
+}
+
+#main #faq .card .card-header {
+  border: 0;
+  -webkit-box-shadow: 0 0 20px 0 rgba(213, 213, 213, 0.5);
+  box-shadow: 0 0 20px 0 rgba(213, 213, 213, 0.5);
+  border-radius: 2px;
+  padding: 0;
+}
+
+#main #faq .card .card-header .btn-header-link {
+  color: #fff;
+  display: block;
+  text-align: left;
+  background: #172F54;;
+  padding: 20px;
+  font-size: 1.15rem;
+}
+
+#main #faq .card .card-header .btn-header-link:after {
+  content: "\f146";
+  font-family: "Font Awesome 5 Free";
+  font-weight: 900;
+  float: right;
+}
+
+#main #faq .card .card-header .btn-header-link.collapsed {
+  background: #172F54;;
+  color: #fff;
+}
+
+#main #faq .card .card-header .btn-header-link.collapsed:after {
+  content: "\f0fe";
+}
+
+#main #faq .card .collapsing {
+  background: #172F54;;
+  color: #fff;
+  line-height: 30px;
+}
+
+#main #faq .card .collapse {
+  border: 0;
+}
+
+#main #faq .card .collapse.show {
+  background: #fff;
+  line-height: 30px;
+  color: #000;
+}
+
+.tab-sub {
+  background: #e1ecff;
+  padding: 0.75rem 1.25rem;
+  margin-left: -1.25rem;
+  margin-right: -1.25rem;
+}
+
+.tab-sub-2 {
+  background: #e1ecff;
+  padding: 0.75rem 1.25rem;
+  border-radius: 5px;
+}

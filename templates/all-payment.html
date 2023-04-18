@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>All-payment</title>
+    {% include "include/customer-css.html" %}
+    {% include "include/customer-js.html" %}
+</head>
+<style>
+    body {
+        background: #F5F5F5;
+    }
+</style>
+
+<body>
+    {% include "comps/navbar-2.html" %}
+    <div class="container">
+        <div class="mrta-section">
+            {%if typeCus == 'newCus'%}
+            <!--สมัครใหม่ AFC -->
+            {%if card_type == 'AFC'%}
+            <div class="row">
+                <div class="col-md-3"></div>
+                <div class="col-md-6">
+                    <div class="card text-center afc">
+                        <div class="card-body">
+                            <img src="{{url_for('static', filename='image/checked.svg')}}" class="my-2" width="125">
+                            <h3 class="py-3">ขอบคุณที่ใช้บริการ</h3>
+                            <h5 class="my-2">
+                                กรุณาเตรียมบัตร MRT ที่ลงทะเบียนไปชำระค่าบริการ
+                            </h5>
+                            <h5 class="my-2">
+                                {{parking_name}}  
+                                <span class="afc-card">{{limit_date}}</span>   
+                            </h5>
+                            <div class="my-4">
+                                <a type="button" href="/home-private"
+                                    class="btn btn-mrta-danger-2 col-lg-5 col-8">กลับหน้าแรก</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3"></div>
+            </div>
+           {%elif card_type == 'TAFF'%}
+            <!--TAFF-->
+            <div class="row">
+                <div class="col-md-3"></div>
+                <div class="col-md-6">
+                    <div class="card text-center taff">
+                        <div class="card-body">
+                            <img src="{{url_for('static', filename='image/checked.svg')}}" class="my-2" width="125">
+                            <h3 class="py-3">ขอบคุณที่ใช้บริการ</h3>
+                            <h5 class="my-2">
+                                กรุณาติดต่อชำระค่าบริการและรับบัตรจอดรถที่ห้องทำบัตรรายเดือน
+                            </h5>
+                            <h5 class="my-2">
+                                บริเวณอาคารจอดแล้วจรสถานีศูนย์วัฒนธรรมแห่งประเทศไทย 
+                                <span class="taff-card">{{limit_date}}</span>
+                            </h5>
+                            <div class="my-4">
+                                <a type="button" href="/home-private"
+                                    class="btn btn-mrta-danger-2 col-lg-5 col-8">กลับหน้าแรก</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3"></div>
+            </div>
+            {%elif card_type == 'JOWID'%}
+            <!--JOWID-->
+            <div class="row">
+                <div class="col-md-3"></div>
+                <div class="col-md-6">
+                    <div class="card text-center jowid">
+                        <div class="card-body">
+                            <img src="{{url_for('static', filename='image/checked.svg')}}" class="my-2" width="125">
+                            <h3 class="py-3">ขอบคุณที่ใช้บริการ</h3>
+                            <h5 class="my-2">
+                                กรุณาติดต่อชำระค่าบริการและรับบัตรจอดรถ
+                            </h5>
+                            <h5 class="my-2">
+                                ที่ห้องทำบัตรรายเดือนบริเวณลานจอดแล้วจรสถานีเคหะฯ
+                                <span class="jowid-card">{{limit_date}}</span> 
+                            </h5>
+                            <div class="my-4">
+                                <a type="button" href="/home-private"
+                                    class="btn btn-mrta-danger-2 col-lg-5 col-8">กลับหน้าแรก</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3"></div>
+            </div>
+
+            {%elif card_type == 'CIT'%}
+            <!--CIT-->
+            <div class="row">
+                <div class="col-md-3"></div>
+                <div class="col-md-6">
+                    <div class="card text-center cit">
+                        <div class="card-body">
+                            <img src="{{url_for('static', filename='image/checked.svg')}}" class="my-2" width="125">
+                            <h3 class="py-3">ขอบคุณที่ใช้บริการ</h3>
+                            <h5 class="my-2">
+                                กรุณาติดต่อชำระค่าบริการและรับบัตรจอดรถ
+                            </h5>
+                            <h5 class="my-2">
+                                ที่ห้องทำบัตรรายเดือนบริเวณอาคารจอดแล้วจรสถานีลาดพร้าว
+                                <span class="cit-card">{{limit_date}}</span> 
+                            </h5>
+                            <div class="my-4">
+                                <a type="button" href="/home-private"
+                                    class="btn btn-mrta-danger-2 col-lg-5 col-8">กลับหน้าแรก</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3"></div>
+            </div>
+            {%endif%}
+            <!--end-----------------------------สมัครใหม่ AFC TAFF JOWID CIT---------------------end--> 
+
+
+            <!--------------------------ต่ออายุ AFC TAFF JOWID CIT------------------------------------->
+        {%else%}
+        {%if card_type == 'AFC'%}
+             <!--AFC-->
+            <div class="row">
+                <div class="col-md-3"></div>
+                <div class="col-md-6">
+                    <div class="card text-center afc-renew">
+                        <div class="card-body">
+                            <img src="{{url_for('static', filename='image/checked.svg')}}" class="my-2" width="125">
+                            <h3 class="py-3">ขอบคุณที่ใช้บริการ</h3>
+                            <h5 class="my-2">
+                                กรุณาเตรียมบัตร MRT ที่ลงทะเบียนไปชำระค่าบริการ
+                            </h5>
+                            <h5 class="my-2">
+                                {{parking_name}}   
+                                <span class="afc_renew">{{limit_date}}</span> 
+                            </h5>
+                            <div class="my-4">
+                                <a type="button" href="/home-private"
+                                    class="btn btn-mrta-danger-2 col-lg-5 col-8">กลับหน้าแรก</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3"></div>
+            </div>
+            {%elif card_type == 'TAFF'%}
+            <!--TAFF-->
+            <div class="row">
+                <div class="col-md-3"></div>
+                <div class="col-md-6">
+                    <div class="card text-center taff-renew">
+                        <div class="card-body">
+                            <img src="{{url_for('static', filename='image/checked.svg')}}" class="my-2" width="125">
+                            <h3 class="py-3">ขอบคุณที่ใช้บริการ</h3>
+                            <h5 class="my-2">
+                                กรุณาติดต่อชำระค่าบริการและรับบัตรจอดรถที่ห้องทำบัตรรายเดือน
+                            </h5>
+                            <h5 class="my-2">
+                                บริเวณอาคารจอดแล้วจรสถานีศูนย์วัฒนธรรมแห่งประเทศไทย 
+                                <span class="taff_renew">{{limit_date}}</span> 
+                            </h5>
+                            <div class="my-4">
+                                <a type="button" href="/home-private"
+                                    class="btn btn-mrta-danger-2 col-lg-5 col-8">กลับหน้าแรก</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3"></div>
+            </div>
+            {%elif card_type == 'JOWID'%}
+            <!--JOWID-->
+            <div class="row">
+                <div class="col-md-3"></div>
+                <div class="col-md-6">
+                    <div class="card text-center jowid-renew">
+                        <div class="card-body">
+                            <img src="{{url_for('static', filename='image/checked.svg')}}" class="my-2" width="125">
+                            <h3 class="py-3">ขอบคุณที่ใช้บริการ</h3>
+                            <h5 class="my-2">
+                                กรุณาติดต่อชำระค่าบริการและรับบัตรจอดรถ
+                            </h5>
+                            <h5 class="my-2">
+                                ที่ห้องทำบัตรรายเดือนบริเวณลานจอดแล้วจรสถานีเคหะฯ
+                                <span class="jowid_renew">{{limit_date}}</span> 
+                            </h5>
+                            <div class="my-4">
+                                <a type="button" href="/home-private"
+                                    class="btn btn-mrta-danger-2 col-lg-5 col-8">กลับหน้าแรก</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3"></div>
+            </div>
+            {%elif card_type == 'CIT'%}
+            <!--CIT-->
+            <div class="row">
+                <div class="col-md-3"></div>
+                <div class="col-md-6">
+                    <div class="card text-center cit-renew">
+                        <div class="card-body">
+                            <img src="{{url_for('static', filename='image/checked.svg')}}" class="my-2" width="125">
+                            <h3 class="py-3">ขอบคุณที่ใช้บริการ</h3>
+                            <h5 class="my-2">
+                                กรุณาติดต่อชำระค่าบริการและรับบัตรจอดรถ
+                            </h5>
+                            <h5 class="my-2">
+                                ที่ห้องทำบัตรรายเดือนบริเวณอาคารจอดแล้วจรสถานีลาดพร้าว
+                                <span class="cit_renew">{{limit_date}}</span> 
+                            </h5>
+                            <div class="my-4">
+                                <a type="button" href="/home-private"
+                                    class="btn btn-mrta-danger-2 col-lg-5 col-8">กลับหน้าแรก</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3"></div>
+            </div>
+            {%endif%}
+        {%endif%}
+            <!--end------------------------ต่ออายุ AFC TAFF JOWID CIT--------------------------------end--->
+
+        </div>
+
+    </div>
+    {% include "comps/footer.html" %}
+</body>
+
+</html>

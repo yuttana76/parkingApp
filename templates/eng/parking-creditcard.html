@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage credit/debit cards</title>
+    {% include "include/customer-css.html" %}
+    {% include "include/customer-js.html" %}
+</head>
+<style>
+    body {
+        background: #F5F5F5;
+    }
+</style>
+
+<body>
+    {% include "eng/comps/navbar-2.html" %}
+    <div class="container">
+        <div class="mrta-section">
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-header card-header-mrta">
+                        <h5 class="mb-0 text-center">Credit/Debit Card Information</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="text-center">
+                            <button type="button" class="btn btn-primary" data-toggle="modal"
+                                data-target="#addPaymentModal"><i class="fas fa-plus-circle mr-2"></i>
+                                Add credit/debit card</button>
+                        </div>
+
+
+                        <!-- Modal -->
+                        <div class="modal fade" id="addPaymentModal" tabindex="-1"
+                            aria-labelledby="addPaymentModalLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="addPaymentModalLabel">add card</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <form>
+                                            <div class="form-row">
+                                                <div class="col-lg-12 mb-3">
+                                                    <label>credit/debit card number <i class="fab fa-cc-visa ml-2"></i>
+                                                        <i class="fab fa-cc-mastercard ml-2"></i> <i
+                                                            class="fab fa-cc-jcb ml-2"></i></label>
+                                                    <input type="text" class="form-control" id="credit_id"
+                                                        name="credit_id" placeholder="0000 0000 0000 0000">
+                                                </div>
+                                                <div class="col-lg-6 mb-3">
+                                                    <label>expiration date</label>
+                                                    <input type="text" class="form-control" id="credit_expire_date"
+                                                        name="credit_expire_date" placeholder="MM/YY">
+                                                </div>
+                                                <div class="col-lg-6 mb-3">
+                                                    <label>number CCV/CVV</label>
+                                                    <input type="text" class="form-control" id="credit_ccv"
+                                                        name="credit_ccv">
+                                                </div>
+                                                <div class="col-lg-12 mb-3">
+                                                    <label>name on card (ภาษาอังกฤษ)</label>
+                                                    <input type="text" class="form-control" id="credit_fullname"
+                                                        name="credit_fullname" placeholder="0000 0000 0000 0000">
+                                                </div>
+                                                <div class="col-lg-12 my-3">
+                                                    <div class="form-check">
+                                                        <input type="checkbox" class="form-check-input"
+                                                            id="payment1Check1">
+                                                        <label class="form-check-label"
+                                                            for="payment1Check1">I have read and agree to the terms and conditions.
+                                                            App service and privacy protection policy
+                                                            MRTA</label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="text-center mt-3">
+                                                <button type="submit"
+                                                    class="btn btn-primary">Add credit/debit card</button>
+                                            </div>
+                                        </form>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    {% include "eng/comps/footer.html" %}
+</body>
+
+</html>

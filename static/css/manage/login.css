@@ -1,0 +1,8 @@
+.login-page{
+	background-image: linear-gradient(to right,rgba(115, 115, 116, 0.37) 0%,rgba(179, 179, 179, 0.411) 20%),url(/static/image/manage/bg/bg112.jpg);
+	background-repeat: no-repeat;
+	background-size: cover;
+	background-blend-mode: darken;
+	
+	
+}

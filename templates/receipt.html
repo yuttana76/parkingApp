@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Receipt</title>
+
+</head>
+<style>
+    @font-face {
+        font-family: "VT323", monospace;
+        font-weight: normal;
+        /* src: url("/static/fonts/sukhumvit-set/SukhumvitSet-Text.ttf"); */
+    }
+
+    body {
+        font-family: "VT323", monospace;
+        margin: 0px;
+        padding: 0px;
+        color: #172F54;
+    }
+
+    .receipt {
+        padding: 3mm;
+        width: 80mm;
+        /* border: 1px solid black; */
+    }
+
+    .headerSubTitle {
+        /* font-family: 'Sukhumvit Text'; */
+        text-align: center;
+        font-size: 12pt;
+    }
+
+    .headerTitle {
+        /* font-family: 'Sukhumvit Text'; */
+        text-align: center;
+        font-size: 24pt;
+        font-weight: bold;
+    }
+
+    #date {
+        margin: 5pt 0px;
+        text-align: center;
+        font-size: 8pt;
+    }
+    /* .watermark {
+        position: absolute;
+        left: 7mm;
+        top: 60mm;
+        width: 75mm;
+        opacity: 0.1;
+    } */
+
+    .keepItBody {
+        text-align: justify;
+        font-size: 8pt;
+    }
+
+    .item {
+        margin-bottom: 1mm;
+    }
+
+    .itemRow {
+        display: flex;
+        font-size: 10pt;
+        align-items: baseline;
+    }
+
+    .itemRow>div {
+        align-items: baseline;
+    }
+
+    .itemName {
+        font-weight: bold;
+    }
+
+    .itemPrice {
+        text-align: right;
+        flex-grow: 1;
+    }
+
+    .itemData2 {
+        text-align: right;
+        flex-grow: 1;
+    }
+
+    .itemData3 {
+        margin-left: 10px;
+        text-align: right;
+    }
+
+    .flex {
+        display: flex;
+        justify-content: center;
+    }
+
+    .printType {
+        padding: 1mm 0px;
+        width: 100%;
+        background: grey;
+        color: white;
+        text-align: center;
+        font-weight: bold;
+        text-transform: uppercase;
+    }
+    .mt-10 {
+        margin-top: 10px;
+    }
+</style>
+
+<body>
+    <!-- START RECEIPT -->
+    <div class="receipt">
+        <!-- <div class="headerSubTitle">
+            Thank you for supporting the
+        </div> -->
+        <div class="headerTitle">
+            <img width="105" class="mb-2" src="{{url_for('static', filename='image/mrt-logo.svg')}}"><br>
+            MRTA
+        </div>
+        <div class="headerSubTitle mt-10">
+            Chalong Ratchadham
+        </div><br>
+
+        <div class="items" style="margin-top: -15px;">
+            <div class="item">
+                <div class="itemRow">
+                    <div class="itemData1">Location :</div>
+                    <div class="itemData2">P&R Yask Nonthaburi [1004]</div>
+                    <div class="itemData3"></div>
+                </div>
+                <div class="itemRow">
+                    <div class="itemData1">Telephone No :</div>
+                    <div class="itemData2"></div>
+                    <div class="itemData3"></div>
+                </div>
+                <div class="itemRow">
+                    <div class="itemData1">TAX ID/Branch No. :</div>
+                    <div class="itemData2">0994000165706/00019</div>
+                    <div class="itemData3"></div>
+                </div>
+                <div class="itemRow">
+                    <div class="itemData1">REG No. :</div>
+                    <div class="itemData2">E041200000204990</div>
+                    <div class="itemData3"></div>
+                </div>
+            </div>
+
+            <center><small class="mt-10">TAX INVOICE(ABB)/RECEIPT(VAT INCLUDED)</small></center>
+
+            <div class="item">
+                <div class="itemRow">
+                    <div class="itemData1">Invoice No.</div>
+                    <div class="itemData2"></div>
+                    <div class="itemData3">0001</div>
+                </div>
+                <div class="itemRow">
+                    <div class="itemData1">Device ID:</div>
+                    <div class="itemData2"></div>
+                    <div class="itemData3">0102</div>
+                </div>
+                <div class="itemRow">
+                    <div class="itemData1">Date/Time:</div>
+                    <div class="itemData2">06/05/2021</div>
+                    <div class="itemData3">10:43</div>
+                </div>
+                <div class="itemRow">
+                    <div class="itemData1">Operator:</div>
+                    <div class="itemData2">409012</div>
+                    <div class="itemData3">P5RPP09/0PE</div>
+                </div>
+                <div class="itemRow">
+                    <div class="itemData1">Ticket Type:</div>
+                    <div class="itemData2"></div>
+                    <div class="itemData3">MRT Aduit - A</div>
+                </div>
+                <div class="itemRow">
+                    <div class="itemData1">Ticket ID:</div>
+                    <div class="itemData2"></div>
+                    <div class="itemData3">99020129004</div>
+                </div>
+            </div>
+
+            <center><small class="mt-10">Add Pass</small></center>
+
+            <div class="item">
+                <div class="itemRow">
+                    <div class="itemData1">Add Pass Type:</div>
+                    <div class="itemData2"></div>
+                    <div class="itemData3">[047] P&R PP09 1M</div>
+                </div>
+                <div class="itemRow">
+                    <div class="itemData1">Transaction Amount(V):</div>
+                    <div class="itemData2"></div>
+                    <div class="itemData3">1,000 Baht</div>
+                </div>
+                <div class="itemRow">
+                    <div class="itemData1">Paid by cash:</div>
+                    <div class="itemData2"></div>
+                    <div class="itemData3">1,000 Baht</div>
+                </div>
+                <div class="itemRow">
+                    <div class="itemData1">Paid by credit card:</div>
+                    <div class="itemData2"></div>
+                    <div class="itemData3">0 Baht</div>
+                </div>
+                <div class="itemRow">
+                    <div class="itemData1">Paid by voucher</div>
+                    <div class="itemData2"></div>
+                    <div class="itemData3">0 Baht</div>
+                </div>
+                <div class="itemRow">
+                    <div class="itemData1">Change due:</div>
+                    <div class="itemData2"></div>
+                    <div class="itemData3">0 Baht</div>
+                </div>
+                <div class="itemRow">
+                    <div class="itemData1">Credit Card No:</div>
+                    <div class="itemData2"></div>
+                    <div class="itemData3"></div>
+                </div>
+                <div class="itemRow">
+                    <div class="itemData1">Voucher ID:</div>
+                    <div class="itemData2"></div>
+                    <div class="itemData3"></div>
+                </div>
+                <div class="itemRow">
+                    <div class="itemData1">V=VAT N=Non-VAT</div>
+                    <div class="itemData2"></div>
+                    <div class="itemData3"></div>
+                </div>
+            </div>
+
+            <center><small class="mt-10">Thank you.</small></center>
+        </div>
+
+    </div>
+
+</body>
+
+</html>

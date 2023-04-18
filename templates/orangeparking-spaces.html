@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>รายงานจำนวนที่จอดรถว่าง</title>
+    {% include "include/customer-css.html" %}
+    {% include "include/customer-js.html" %}
+</head>
+<style>
+
+    body{
+        background-color: #F0F0F0;
+    }
+
+    .card-parking-space{
+      position: relative;
+      display: -ms-flexbox;
+      display: flex;
+      -ms-flex-direction: column;
+      flex-direction: column;
+      min-width: 0;
+      word-wrap: break-word;
+      background-color: #F26722;
+      background-clip: border-box;
+      border: 1px solid rgba(0, 0, 0, 0.125);
+      border-radius: 0.25rem;
+      box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+      border-radius: 10px;
+    }
+</style>
+
+<body>
+    {% include "comps/navbar-1.html" %}
+
+    <div class="container pt-5">
+
+        <div class="mt-3">
+
+            <div class="col-12 header" style="color: #172F54;">
+                <h4 class="text-center">รายงานจำนวนที่จอดรถว่าง</h4>
+           </div>
+            </div>
+            
+      
+            <div class="card-parking-space my-3">
+                <div class="card-body"> 
+                    <div class="col-12 text-center">
+                        <img src="{{url_for('static', filename='image/train-white.svg')}}"
+                            width="50">
+                    </div>
+                    <div class="col-12 text-center">
+                        <h5 class="my-3" style="color: #FFFFFF;">สายสีส้ม 2 แห่ง</h5>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card-parking-space my-3">
+                <div class="card-body"> 
+                    <div class="row">
+                        <div class="col-7 pt-5" style="color: #FFFFFF;">
+                            <h5>สถานีคลองบ้านม้า</h5>
+                        </div>
+                        <div class="col-5 text-center">
+                            <div class="card-body">
+                                <h5 class="pt-3" style="background-color: #FFFFFF; border-radius: 10px;
+                                height: 60px;">1110</h5>
+                            </div>
+                        
+                        </div>
+                    </div>                      
+                </div>
+            </div>
+
+            <div class="card-parking-space my-3">
+                <div class="card-body"> 
+                    <div class="row">
+                        <div class="col-7 pt-5" style="color: #FFFFFF;">
+                            <h5>สถานี รฟม.</h5>
+                        </div>
+                        <div class="col-5 text-center">
+                            <div class="card-body">
+                                <h5 class="pt-3" style="background-color: #FFFFFF; border-radius: 10px;
+                                height: 60px;">1110</h5>
+                            </div>
+                        
+                        </div>
+                    </div>                      
+                </div>
+            </div>
+
+
+
+    </div>
+
+     
+    {% include "comps/popup-cookie.html" %}
+    {% include "comps/fivemenu.html" %}
+
+
+</body>
+
+</html>

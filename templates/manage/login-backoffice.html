@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>เข้าสู่ระบบ</title>
+  
+  {% include "include/manage-css.html" %}
+  {% include "include/manage-js.html" %}
+  
+</head>
+
+<body class="hold-transition login-page">  
+  <div class="login-box">
+    <div class="card">
+      <img src="{{ url_for('static', filename='image/manage/logo/logo_MRTA.png') }}">
+      <div class="card-body login-card-body">
+        <div class="login-logo">
+          <b>เข้าสู่ระบบ</b>
+        </div>
+
+        <form  method="post">
+          <div class="input-group mb-3">
+            <input type="text" class="form-control" placeholder="ชื่อผู้ใช้งาน" name="username" value="{{request.form.username}}" require>
+            <div class="input-group-append">
+              <div class="input-group-text">
+                <span class="fas fa-user"></span>
+              </div>
+            </div>
+          </div>
+          <div class="input-group mb-3">
+            <input type="password" class="form-control" placeholder="รหัสผ่าน" name="password" value="{{request.form.password}}" required>
+            <div class="input-group-append">
+              <div class="input-group-text">
+                <span class="fas fa-lock"></span>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <!-- <div class="col-8">
+                <div class="icheck-primary">
+                  <input type="checkbox" id="remember">
+                  <label for="remember">
+                    Remember Me
+                  </label>
+                </div>
+              </div> -->
+            <div class="col-12">
+              <button type="submit" class="btn btn-primary btn-block">เข้าสู่ระบบ</button>
+              <p class="py-2 text-center">สำหรับพนักงาน</p>
+            </div>
+            <div class=" text-center;" style="color: rgb(44, 43, 43); font-size: 13px; font-weight: bold;">
+              <p class="mb-10">
+              สงวนลิขสิทธิ์ ©
+                  <script>document.write(new Date().getFullYear());</script> การรถไฟฟ้าขนส่งมวลชนแห่งประเทศไทย
+              </p>
+          </div>
+          </div>
+        </form>
+
+        <!-- <p class="mb-1 mt-2">
+            <a>ลืมรหัสผ่าน</a>
+          </p>
+          <p class="mb-0">
+            ยังไม่ได้เป็นสมาชิก?<a href="register">ลงทะเบียน</a>
+          </p> -->
+
+      </div>
+    </div>
+    
+    <div class="col-lg-4"></div>
+            {% if error %}  
+                <p class="error" ><strong  style="display: none" id="error">{{ error }}</strong>
+            {% endif %}
+  </div>
+    
+</body>
+<script>
+  var error = document.getElementById('error')
+  if(error != null){
+   alert(error.innerHTML)
+  }
+
+</script>
+
+</html>

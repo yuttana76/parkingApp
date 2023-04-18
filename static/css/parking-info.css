@@ -1,0 +1,402 @@
+.bottom-right {
+  position: absolute;
+  bottom: 8px;
+  right: 16px;
+}
+.bg-data {
+  /* position: relative;
+  margin: 0 auto;
+  background-position: center;
+  width: 100%;
+  background-size: 300px 100px, cover; */
+  /* background-color: #cccccc; */
+  height: 500px;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  position: relative;
+  width: 100%;
+}
+
+.bg-detail-footer {
+  padding: 30px;
+  text-align: center;
+}
+
+.bg-detail-card {
+  display: flex;
+  align-items: center;
+  position: relative;
+  background: #fff;
+  padding: 40px 50px;
+  margin-top: -40px;
+  width: 100%;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  height: 530px;
+}
+
+.bg-detail-card2 {
+  display: flex;
+  align-items: center;
+  position: relative;
+  background: #fff;
+  padding: 40px 60px;
+  margin-top: -38px;
+  width: 100%;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  height: 530px;
+}
+
+.bg-card {
+  background-image: url("/static/image/สถานีแยกนนทบุรี 1.png");
+  /* background-color: #cccccc; */
+  height: 600px;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  position: relative;
+  padding: 25px 0;
+}
+
+
+.img-fluid-portrait { 
+  width: 75%;
+  height: 100%;
+  margin: 0 auto;
+}
+
+/* ------------------------------------------------------------------ */
+/* Update 08/04/2022 */
+.button-blue-line {
+  background-color: #053273;
+  border-radius: 10px;
+  margin-top: -100px;
+  width: 100%;
+  min-width: 130px;
+  border: 1px solid #053273;
+  margin-left: -15px;
+}
+.circle-1-blue-line {
+  background-color: #fff;
+  border-radius: 50%;
+  border: solid 5px #053273;
+  width: 100px;
+  height: 100px;
+  margin-top: -460px;
+}
+.circle-4-blue-line {
+  background-color: #fff;
+  border-radius: 50%;
+  border: solid 5px #053273;
+  width: 100px;
+  height: 100px;
+  margin-top: -355px;
+}
+.circle-2-blue-line {
+  background-color: #fff;
+  border-radius: 50%;
+  border: solid 5px #053273;
+  width: 100px;
+  height: 100px;
+  margin-top: -270px;
+}
+.circle-3-blue-line {
+  background-color: #fff;
+  border-radius: 50%;
+  border: solid 5px #053273;
+  width: 100px;
+  height: 100px;
+  margin-top: -185px;
+}
+.button-purple-line {
+  background-color: #812991;
+  border-radius: 10px;
+  margin-top: -100px;
+  width: 100%;
+  min-width: 130px;
+  border: 1px solid #812991;
+  margin-left: -15px;
+}
+.circle-1-purple-line {
+  background-color: #fff;
+  border-radius: 50%;
+  border: solid 5px #812991;
+  width: 100px;
+  height: 100px;
+  margin-top: -460px;
+}
+.circle-4-purple-line {
+  background-color: #fff;
+  border-radius: 50%;
+  border: solid 5px #812991;
+  width: 100px;
+  height: 100px;
+  margin-top: -355px;
+}
+.circle-2-purple-line {
+  background-color: #fff;
+  border-radius: 50%;
+  border: solid 5px #812991;
+  width: 100px;
+  height: 100px;
+  margin-top: -270px;
+}
+.circle-3-purple-line {
+  background-color: #fff;
+  border-radius: 50%;
+  border: solid 5px #812991;
+  width: 100px;
+  height: 100px;
+  margin-top: -185px;
+}
+.button-green-line {
+  background-color: #71bf45;
+  border-radius: 10px;
+  margin-top: -100px;
+  width: 100%;
+  min-width: 130px;
+  border: 1px solid #71bf45;
+  margin-left: -15px;
+}
+.circle-1-green-line {
+  background-color: #fff;
+  border-radius: 50%;
+  border: solid 5px #71bf45;
+  width: 100px;
+  height: 100px;
+  margin-top: -460px;
+}
+.circle-4-green-line {
+  background-color: #fff;
+  border-radius: 50%;
+  border: solid 5px #71bf45;
+  width: 100px;
+  height: 100px;
+  margin-top: -355px;
+}
+.circle-2-green-line {
+  background-color: #fff;
+  border-radius: 50%;
+  border: solid 5px #71bf45;
+  width: 100px;
+  height: 100px;
+  margin-top: -270px;
+}
+.circle-3-green-line {
+  background-color: #fff;
+  border-radius: 50%;
+  border: solid 5px #71bf45;
+  width: 100px;
+  height: 100px;
+  margin-top: -185px;
+}
+.button-orange-line {
+  background-color: #f26722;
+  border-radius: 10px;
+  margin-top: -100px;
+  width: 100%;
+  min-width: 130px;
+  border: 1px solid #f26722;
+  margin-left: -15px;
+}
+.circle-1-orange-line {
+  background-color: #fff;
+  border-radius: 50%;
+  border: solid 5px #f26722;
+  width: 100px;
+  height: 100px;
+  margin-top: -460px;
+}
+.circle-4-orange-line {
+  background-color: #fff;
+  border-radius: 50%;
+  border: solid 5px #f26722;
+  width: 100px;
+  height: 100px;
+  margin-top: -355px;
+}
+.circle-2-orange-line {
+  background-color: #fff;
+  border-radius: 50%;
+  border: solid 5px #f26722;
+  width: 100px;
+  height: 100px;
+  margin-top: -270px;
+}
+.circle-3-orange-line {
+  background-color: #fff;
+  border-radius: 50%;
+  border: solid 5px #f26722;
+  width: 100px;
+  height: 100px;
+  margin-top: -185px;
+}
+/* ------------------------------------------------------------------- */
+/* Icon 1 2 3 4 top parking-info */
+/* ---------------------------------------------------- */
+.circle-1 {
+  background-color: #fff;
+  border-radius: 50%;
+  border: solid 5px rgb(243, 239, 0);
+  width: 100px;
+  height: 100px;
+  margin-top: -460px;
+}
+.number-1 {
+  padding: 0;
+}
+.button1 {
+  background-color: rgb(243, 239, 0);
+  border-radius: 10px;
+  margin-top: -100px;
+  width: 100%;
+  min-width: 130px;
+  border: solid rgb(243, 239, 0);
+  margin-left: -15px;
+}
+.button2 {
+  background-color: rgb(243, 239, 0);
+  border-radius: 10px;
+  margin-top: -100px;
+  width: 100%;
+  min-width: 130px;
+  border: solid rgb(243, 239, 0);
+  margin-left: -15px;
+}
+
+.button3 {
+  background-color: rgb(243, 239, 0);
+  border-radius: 10px;
+  margin-top: -100px;
+  width: 100%;
+  min-width: 130px;
+  border: solid rgb(243, 239, 0);
+  margin-left: -15px;
+}
+
+.button4 {
+  background-color: rgb(243, 239, 0);
+  border-radius: 10px;
+  margin-top: -100px;
+  width: 100%;
+  min-width: 130px;
+  border: solid rgb(243, 239, 0);
+  margin-left: -15px;
+}
+
+.circle-4 {
+  background-color: #fff;
+  border-radius: 50%;
+  border: solid 5px rgb(243, 239, 0);
+  width: 100px;
+  height: 100px;
+  margin-top: -355px;
+}
+
+.number-4 {
+  padding: 30px 10px 5px 10px;
+}
+
+.circle-2 {
+  background-color: #fff;
+  border-radius: 50%;
+  border: solid 5px rgb(243, 239, 0);
+  width: 100px;
+  height: 100px;
+  margin-top: -350px;
+}
+
+.number-2 {
+  padding: 30px 10px 5px 10px;
+}
+
+.circle-3 {
+  background-color: #fff;
+  border-radius: 50%;
+  border: solid 5px rgb(243, 239, 0);
+  width: 100px;
+  height: 100px;
+  margin-top: -225px;
+}
+
+.number-3 {
+  padding: 30px 10px 5px 10px;
+}
+
+.number-3 img {
+  width: 50px;
+  height: 50px;
+  margin-top: -15px;
+  background: #fff;
+}
+
+/* --------------------------------------------------- */
+.bg-detail-line {
+  background: #ee2d24;
+  width: 100%;
+  height: 14px;
+}
+.bg-detail-mrta {
+  background: #172f54;
+  width: 100%;
+  padding: 30px 10px;
+}
+.bg-detail-blue-line {
+  background: #053273;
+  width: 100%;
+  height: 14px;
+}
+.bg-detail-mrta-blue {
+  background: #053273;
+  width: 100%;
+  padding: 30px 10px;
+}
+.bg-detail-purple-line {
+  background: #812991;
+  width: 100%;
+  height: 14px;
+}
+.bg-detail-mrta-purple {
+  background: #812991;
+  width: 100%;
+  padding: 30px 10px;
+}
+.bg-detail-green-line {
+  background: #71BF45;
+  width: 100%;
+  height: 14px;
+}
+.bg-detail-mrta-green {
+  background: #71BF45;
+  width: 100%;
+  padding: 30px 10px;
+}
+.bg-detail-orange-line {
+  background: #F26722;
+  width: 100%;
+  height: 14px;
+}
+.bg-detail-mrta-orange {
+  background: #F26722;
+  width: 100%;
+  padding: 30px 10px;
+}
+
+
+/* --------------------------------------------------- */
+
+/* -------------------------------------------------------------- */
+@media (min-width: 320px) and (max-width: 575.98px) {
+  .img-fluid-portrait {
+    width: 50%;
+    height: 100%;
+    margin: 0 auto;
+  }
+  .scroll-mobile {
+    overflow-y: auto;
+    height: 130px;
+  }
+  .col-md-8 h5 {
+    font-size: medium;
+  }
+}

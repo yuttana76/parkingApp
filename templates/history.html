@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>การทํารายการ</title>
+    {% include "include/customer-css.html" %}
+    {% include "include/customer-js.html" %}
+</head>
+
+<body>
+    <!-- แถบเมนู -->
+    {% include "comps/navbar-2.html" %}
+
+    <div class="container">
+        <div class="mrta-section">
+            <h3 class="text-center mb-4">การทํารายการ</h3>
+
+            <section class="accordion">
+                <section class="accordion-tabs">
+                    <button class="accordion-tab accordion-active" data-actab-group="0"
+                        data-actab-id="3">ทั้งหมด</button>
+                </section>
+                <section class="accordion-content">
+
+
+
+                    <article class="accordion-item accordion-active" data-actab-group="0" data-actab-id="3">
+                        <h5 class="accordion-item__label">ทั้งหมด</h5>
+                        <div class="accordion-item__container">
+                            <div class="table-responsive">
+                                <table class="table">
+                                    <thead class="text-center">
+                                        <tr>
+                                            <th>วันที่ทำรายการ</th>
+                                            <th>อาคาร/ลานจอดรถ</th>
+                                            <th>จำนวนเดือน</th>
+                                            <th>ค่าใช้บริการ</th>
+                                            <th>สถานะ</th>
+                                            <th>ช่องทางการชำระ</th>
+                                            <th>ชำระเงิน</th>                       
+                                        </tr>
+                                    </thead>
+    
+                                    <tbody>
+                                        {% for history in history_log%}
+                                        <tr>
+                                            {% if history.service_start_date %}
+                                            <td class="text-center" rowspan="2">
+                                                {{history.service_start_date.strftime('%d/%m/%Y')}}</td>
+                                            {% elif history.transaction_type == '4' %}
+                                            <td class="text-center" rowspan="2">{{history.parking_reserve_date.strftime('%d/%m/%Y')}}</td>
+                                            {% else %}
+                                            <td class="text-center" rowspan="2">{{history.service_start_date}}</td>
+                                            {% endif %}
+                                            <td>{{history.parking_name}}</td>
+                                            {% if history.month != none %}
+                                            <td class="text-center" rowspan="2">{{history.month}}</td>
+                                            {% else %}
+                                            <td class="text-center" rowspan="2">-</td>
+                                            {% endif %}
+                                            {%if history.total != none and  history.transaction_type != '4'%}
+                                            <td class="text-right">{{history.total - history.deposit_amount}}</td>
+                                            {%else%}
+                                            <td class="text-right">{{history.total}}</td>
+                                            {%endif%}
+                                            {%if history.payment_status == '0' %}
+                                            <td class="text-center" rowspan="2" id='status'>ยังไม่ชำระเงิน</td>
+                                            {%elif history.payment_status == '1' %}
+                                            <td class="text-center" rowspan="2" id='status'>ชำระเงินแล้ว</td>
+                                            {%else%}
+                                            <!-- <td class="text-center" rowspan="2">รอดำเนินการ</td>  -->
+                                            <td class="text-center" rowspan="2"></td>
+                                            {%endif%}
+                                            {%if history.payment_name == '1'%}
+                                            <td class="text-center" rowspan="2">เงินสด</td>
+                                            {%elif history.payment_name == '2'%}
+                                            <td class="text-center" rowspan="2">บัตรเครดิต</td>
+                                            {%elif history.payment_name == '3'%}
+                                            <td class="text-center" rowspan="2">QR Code</td>
+                                            {%elif history.payment_name == '4'%}
+                                            <td class="text-center" rowspan="2">True</td>
+                                            {%else%}
+                                            <td class="text-center" rowspan="2">ยังไม่ชำระเงิน</td>
+                                            {%endif%}
+                                            <!-- <td class="text-center" rowspan="2">ยังไม่เปิดใช้งาน</td> -->
+                                            {%if history.payment_status == '0' %}
+                                            <td class="btn btn-info">
+                                                <i class="fa fa-edit" data-tran-id={{history.Id}} onclick="edit($(this))"
+                                                    id='edit'> แก้ไข</i>
+                                            </td>
+                                            {%else%}
+                                            <td class="text-center"></td>
+                                            {%endif%}
+                                        </tr>
+                                        <tr>
+                                            {%if history.transaction_type != '4'%}
+                                            <td>ค่ามัดจำบัตร</td>
+                                            <td class="text-right">{{history.deposit_amount}}</td>
+                                            <td></td>
+                                            {%endif%}
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </article>
+                </section>
+            </section>
+        </div>
+    </div>
+    {% include "comps/scroll-top.html" %}
+    {% include "comps/popup-cookie.html" %}
+
+
+    {% include "comps/footer.html" %}
+</body>
+<script>
+    const labels = document.querySelectorAll(".accordion-item__label");
+    const tabs = document.querySelectorAll(".accordion-tab");
+
+    function toggleShow() {
+        const target = this;
+        const item = target.classList.contains("accordion-tab")
+            ? target
+            : target.parentElement;
+        const group = item.dataset.actabGroup;
+        const id = item.dataset.actabId;
+
+        tabs.forEach(function (tab) {
+            if (tab.dataset.actabGroup === group) {
+                if (tab.dataset.actabId === id) {
+                    tab.classList.add("accordion-active");
+                } else {
+                    tab.classList.remove("accordion-active");
+                }
+            }
+        });
+
+        labels.forEach(function (label) {
+            const tabItem = label.parentElement;
+
+            if (tabItem.dataset.actabGroup === group) {
+                if (tabItem.dataset.actabId === id) {
+                    tabItem.classList.add("accordion-active");
+                } else {
+                    tabItem.classList.remove("accordion-active");
+                }
+            }
+        });
+    }
+
+    labels.forEach(function (label) {
+        label.addEventListener("click", toggleShow);
+    });
+
+    tabs.forEach(function (tab) {
+        tab.addEventListener("click", toggleShow);
+    });
+
+    function edit($this){
+        window.location.href = '/payment-methods'
+    }
+</script>
+</html>

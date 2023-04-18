@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FAQ</title>
+    {% include "include/customer-css.html" %}
+    {% include "include/customer-js.html" %}
+</head>
+<style>
+    .faq-section {
+        background: #fdfdfd;
+        min-height: 100vh;
+        padding: 10vh 0 0;
+    }
+
+    .faq-title h2 {
+        position: relative;
+        margin-bottom: 45px;
+        display: inline-block;
+        font-weight: 600;
+        line-height: 1.5;
+    }
+
+    /* .faq-title h2::before {
+        content: "";
+        position: absolute;
+        left: 50%;
+        width: 60px;
+        height: 2px;
+        background: #E91E63;
+        bottom: -25px;
+        margin-left: -30px;
+    } */
+
+    .faq-title p {
+        padding: 0 190px;
+        margin-bottom: 10px;
+    }
+
+    .faq {
+        background: #FFFFFF;
+        box-shadow: 0 2px 48px 0 rgba(0, 0, 0, 0.06);
+        border-radius: 4px;
+        margin-bottom: 4rem;
+    }
+
+    .faq .card {
+        border: none;
+        background: none;
+        border-bottom: 1px dashed #CEE1F8;
+    }
+
+    .faq .card .card-header {
+        padding: 0px;
+        border: none;
+        background: none;
+        -webkit-transition: all 0.3s ease 0s;
+        -moz-transition: all 0.3s ease 0s;
+        -o-transition: all 0.3s ease 0s;
+        transition: all 0.3s ease 0s;
+    }
+
+    .faq .card .card-header:hover {
+        background: rgba(23, 47, 84, 0.1);
+        padding-left: 10px;
+    }
+
+    .faq .card .card-header .faq-title {
+        width: 100%;
+        text-align: left;
+        padding: 0px;
+        padding-left: 30px;
+        padding-right: 30px;
+        font-weight: 400;
+        font-size: 16px;
+        letter-spacing: 1px;
+        color: #3B566E;
+        text-decoration: none !important;
+        -webkit-transition: all 0.3s ease 0s;
+        -moz-transition: all 0.3s ease 0s;
+        -o-transition: all 0.3s ease 0s;
+        transition: all 0.3s ease 0s;
+        cursor: pointer;
+        padding-top: 20px;
+        padding-bottom: 20px;
+    }
+
+    .faq .card .card-header .faq-title .badge {
+        display: inline-block;
+        width: 20px;
+        height: 20px;
+        line-height: 14px;
+        float: left;
+        -webkit-border-radius: 100px;
+        -moz-border-radius: 100px;
+        border-radius: 100px;
+        text-align: center;
+        background: #172f54;
+        color: #fff;
+        font-size: 12px;
+        margin-right: 20px;
+    }
+
+    .faq .card .card-body {
+        padding: 30px;
+        padding-left: 35px;
+        padding-bottom: 16px;
+        font-weight: 400;
+        font-size: 16px;
+        color: #6F8BA4;
+        line-height: 28px;
+        letter-spacing: 1px;
+        border-top: 1px solid #F3F8FF;
+    }
+
+    .faq .card .card-body p {
+        margin-bottom: 14px;
+    }
+
+    @media (max-width: 991px) {
+        .faq {
+            margin-bottom: 30px;
+        }
+
+        .faq .card .card-header .faq-title {
+            line-height: 26px;
+            margin-top: 10px;
+        }
+    }
+
+    li {
+        /* styles all li elements*/
+        list-style-type: none;
+    }
+</style>
+
+<body>
+    {% include "comps/navbar.html" %}
+    <section class="faq-section">
+        <div class="container">
+            <div class="row">
+                <!-- ***** FAQ Start ***** -->
+                <div class="col-md-12">
+
+                    <div class="faq-title text-center pb-3">
+                        <h2>คำถาม - คำตอบ ที่พบบ่อยครั้ง (FAQ) เกี่ยวกับ MRTA PARKING รฟม.</h2>
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <div class="faq" id="accordion">
+                        <div class="card">
+                            <div class="card-header" id="faqHeading-1">
+                                <div class="mb-0">
+                                    <h5 class="faq-title" data-toggle="collapse" data-target="#faqCollapse-1"
+                                        data-aria-expanded="true" data-aria-controls="faqCollapse-1">
+                                        <span class="badge">1</span>การสมัครใช้บริการ Application MRTA PARKING
+                                    </h5>
+                                </div>
+                            </div>
+                            <div id="faqCollapse-1" class="collapse" aria-labelledby="faqHeading-1"
+                                data-parent="#accordion">
+                                <div class="card-body">
+                                    <ul>
+                                        <li>Q : ฉันสามารถสมัครใช้บริการได้อย่างไร ? <br> A : ลูกค้าสามารถคลิกเข้าไป
+                                            "หน้าแรก" และมองหาเมนู "สร้างบัญชีที่นี้" เพื่อกรอกข้อมูลสมัคร สมาชิกระบบ
+                                            จากนั่นระบบจะส่ง link เพื่อยืนยันตัวตนผ่านทาง e-mail
+                                            โดยมีระยะเวลาในการกดยืนยันที่ e-mail เป็นระยะเวลา 1 ชั่วโมง
+                                            เมื่อทำการกดยืนยัน link ที่ e-mail แล้ว ลูกค้าสามารถนำ e-mail และรหัสผ่าน
+                                            login เพื่อเข้าสู่ระบบ</li><br>
+
+                                        <li>Q : กรณีที่ฉันลืมรหัสผ่าน สามารถ reset รหัสผ่านได้อย่างไร ? <br> A :
+                                            ลูกค้าสามารถคลิกเข้าไป "หน้าแรก" และมองหาเมนู "ลืมรหัสผ่าน?" กรอก e-mail
+                                            ที่เคยสมัครสมาชิกกับระบบ และทำการตั้งรหัสผ่านใหม่ จากนั่นระบบจะส่ง
+                                            link เพื่อยืนยันตัวตนผ่านทาง e-mail ที่ได้สมัครไว้
+                                            โดยมีระยะเวลาในการกดยืนยันที่ e-mail เป็นระยะเวลา 1 ชั่วโมง
+                                            เมื่อทำการกดยืนยัน link ที่ e-mail แล้ว ลูกค้าสามารถนำรหัสผ่านใหม่ login
+                                            เพื่อเข้าสู่ระบบ</li><br>
+                                        <li>Q : ฉันจะได้รับ e-mail ที่ส่งจากระบบหาฉันด้วย e-mail ใด ?<br> A :
+                                            ระบบจะส่งข้อมูลหาลูกค้าด้วย e-mail "parkandride@mrta.co.th"
+                                            เพื่อให้ลูกค้าตรวจสอบและเชื่อถือว่าเป็น e-mail
+                                            จากระบบ MRTA PARKING</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <div class="card-header" id="faqHeading-2">
+                                <div class="mb-0">
+                                    <h5 class="faq-title" data-toggle="collapse" data-target="#faqCollapse-2"
+                                        data-aria-expanded="false" data-aria-controls="faqCollapse-2">
+                                        <span class="badge">2</span> การแก้ไขข้อมูลส่วนตัว
+                                    </h5>
+                                </div>
+                            </div>
+                            <div id="faqCollapse-2" class="collapse" aria-labelledby="faqHeading-2"
+                                data-parent="#accordion">
+                                <div class="card-body">
+                                    <ul>
+                                        <li>Q : ฉันสามารถแก้ไขข้อมูลส่วนตัวได้อย่างไรบ้าง ?<br> A :
+                                            ลูกค้าสามารถแก้ไขข้อมูลส่วนตัวได้ที่เมนู "ข้อมูลผู้ใช้งาน"
+                                            โดยลูกค้าจะสามารถแก้ไขข้อมูลได้ดังนี้
+                                            ชื่อ-นามสกุล, รหัสผ่าน, เบอร์โทรติดต่อ, ที่อยู่, ข้อมูลเลขทะเบียนรถ
+                                            ข้อมูลนอกเหนือจากนี้หากลูกค้าต้องการแก้ไขรบกวนแจ้ง
+                                            เจ้าหน้าที่หรือแจ้งผ่านทาง Line OA</li><br>
+
+                                        <li>Q : หากฉันต้องการยกเลิกบัญชีผู้ใช้งานฉันจะทำได้อย่างไร ? <br> A :
+                                            กรณีที่ลูกค้าต้องการยกเลิกบัญชีผู้ใช้งาน ลูกค้าสามารถเข้าไปที่เมนู
+                                            "ข้อมูลผู้ใช้งาน" และคลิกที่เมนู "ยกเลิกบัญชีผู้ใช้"
+                                            โดยระบบจะมีเวลาให้ลูกค้าสามารถกลับมาใช้งานได้อีกภายใน 30 วัน หากครบกำหนด 30
+                                            วัน ระบบจะทำการยกเลิกบัญชีลูกค้าอัตโนมัติ และลูกค้าจะไม่สามารถกลับมา
+                                            ใช้งานได้อีก จนกว่าลูกค้าจะลงทะเบียนสมัครสมาชิก Application ใหม่</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <div class="card-header" id="faqHeading-3">
+                                <div class="mb-0">
+                                    <h5 class="faq-title" data-toggle="collapse" data-target="#faqCollapse-3"
+                                        data-aria-expanded="false" data-aria-controls="faqCollapse-3">
+                                        <span class="badge">3</span> การสมัครสมาชิกใหม่
+                                        เพื่อใช้บริการอาคารลานจอดรถรายเดือน รฟม.
+                                    </h5>
+                                </div>
+                            </div>
+                            <div id="faqCollapse-3" class="collapse" aria-labelledby="faqHeading-3"
+                                data-parent="#accordion">
+                                <div class="card-body">
+                                    <ul>
+                                        <li>Q : การสมัครสมาชิกใหม่ เพื่อใช้บริการอาคารลานจอดรถรายเดือน รฟม. ?<br> A :
+                                            ลูกค้าต้อง login เข้าสู่ระบบก่อนเพื่อทำการสมัครสมาชิก อาคารลานจอดรถรายเดือน
+                                            รฟม. จากนั่นมองหาเมนู "บริการรายเดือน" และเลือกเมนูย่อย
+                                            "สมัครสมาชิกรายเดือน"
+                                        </li><br>
+                                        <li>Q : ฉันอยากทราบว่า การสมัครสมาชิกใช้บริการอาคารลานจอดรถรายเดือน รฟม.
+                                            มีทั้งหมดกี่ขั้นตอน ? <br> A :
+                                            กการสมัครสมาชิกใช้บริการอาคารลานจอดรถรายเดือน รฟม. มีทั้งหมดกี่ขั้นตอน
+                                            มีทั้งหมด 4 ขั้นตอน
+                                            ขั้นตอนที่ 1 เลือกอาคารลานจอดรถ, ขั้นตอนที่ 2 ตรวจสอบยอมรับเงื่อนไข,
+                                            ขั้นตอนที่ 3 กรอกรายละเอียด, ขั้นตอนที่ 4 ตรวจสอบยืนยันการสมัคร
+                                        </li><br>
+                                        <li>Q : เมื่อฉันสมัครสมาชิกใช้บริการอาคารลานจอดรถรายเดือน รฟม. เรียบร้อยแล้ว
+                                            ฉันจะต้องรอตรวจสอบข้อมูลจากเจ้าหน้าที่พนักงาน นานแค่ไหน ? <br>
+                                            A : พนักงานใช้เวลาตรวจสอบผลการสมัคร สมาชิกใช้บริการอาคารลานจอดรถรายเดือน
+                                            รฟม. 1 ชั่วโมง จนถึง 1 วันทำการ หลังจากพนักงานตรวจสอบผลการสมัครเสร็จ
+                                            ระบบจะส่งข้อความแจ้งไปยัง e-mail ของท่านที่ได้เคยสมัครเป็นสมาชิกไว้กับระบบ
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <div class="card-header" id="faqHeading-4">
+                                <div class="mb-0">
+                                    <h5 class="faq-title" data-toggle="collapse" data-target="#faqCollapse-4"
+                                        data-aria-expanded="false" data-aria-controls="faqCollapse-4">
+                                        <span class="badge">4</span> การต่ออายุ อาคารลานจอดรถรายเดือน รฟม.
+                                    </h5>
+                                </div>
+                            </div>
+                            <div id="faqCollapse-4" class="collapse" aria-labelledby="faqHeading-4"
+                                data-parent="#accordion">
+                                <div class="card-body">
+                                    <ul>
+                                        <li>Q : ฉันจะสามารถนำบัตรจอดรถ มาต่ออายุที่ระบบได้อย่างไร ? <br> A :
+                                            กรณีลูกค้าต้องการต่ออายุบัตรจอดรถรายเดือน รฟม. ลูกค้าสามารถเข้าไปที่เมนู
+                                            "บริการรายเดือน" และเลือกเมนูย่อย "ข้อมูลสมาชิกจอดรายเดือน"
+                                            จากนั่นลูกค้าเลือกที่ปุ่ม "ชำระเงิน" เพื่อต่ออายุค่าบริการจอดรถรายเดือน รฟม.
+                                        </li><br>
+                                        <li>Q : ถ้าบัตรของฉันแสดงสถานะยกเลิกหมายความว่าอย่างไร ?<br>
+                                            A : กรณีบัตรแสดงสถานะ "ยกเลิก"
+                                            หมายความว่าลูกค้าไม่ได้ชำระค่าบริการที่จอดรถรายเดือน ภายในระยะ 7 วัน
+                                            นับจากวันที่บัตรหมดอายุ
+                                            หากลูกค้าต้องการกลับมาใช้บริการ ลูกค้าสามารถเข้าไปที่เมนู "บริการรายเดือน"
+                                            และเลือกเมนูย่อย "สมัครสมาชิกรายเดือน" และดำเนินการตาม step 1 - step 4
+                                            เพื่อส่่งข้อมูลให้เจ้าหน้าที่พนักงานตรวจสอบ อีกครั้ง
+                                            ถ้าผ่านการตรวจสอบจึงจะสามารถชำระค่าบริการที่จอดรถ
+                                            เพื่อต่ออายุและเลือกวันเริ่มต้นเข้าใช้บริการได้ใหม่อีกครั้ง
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <div class="card-header" id="faqHeading-5">
+                                <div class="mb-0">
+                                    <h5 class="faq-title" data-toggle="collapse" data-target="#faqCollapse-5"
+                                        data-aria-expanded="false" data-aria-controls="faqCollapse-5">
+                                        <span class="badge">5</span> การจองคิว
+                                    </h5>
+                                </div>
+                            </div>
+                            <div id="faqCollapse-5" class="collapse" aria-labelledby="faqHeading-5"
+                                data-parent="#accordion">
+                                <div class="card-body">
+                                    <ul>
+                                        <li>Q : ฉันจะสามารถจองคิวที่จอดรถ กรณีพื้นที่จอดรถเต็มได้อย่างไร ? <br> A :
+                                            กรณีลูกค้าทำการสมัครบริการ อาคารลานจอดรถรายเดือน รฟม.
+                                            เข้ามาแล้วมีพื้นที่เต็ม ลูกค้าสามารถตรวจสสอบสิทธิได้ที่เมนู "บริการรายเดือน"
+                                            และเลือกเมนูย่อย "ข้อมูลสมาชิกจอดรายเดือน"
+                                            โดยสถานะบัตรของลูกค้าจะแสดง สถานะ "รอจองคิว" ลูกค้าจึงจะสามารถกดที่ปุ่ม
+                                            "จองคิว" เพื่อเข้าไปยังหน้าข้อมูลการจองคิว และทำการกดปุ่ม "จองคิว" อีกครั้ง
+                                            ระบบจะทำการ run ลำดับคิวให้ลูกค้าอัตโนมัติ
+                                            เมื่อคิวลูกค้าถึงคิวที่ 0 ลูกค้าจึงจะสามารถชำระค่าบริการ
+                                            เพื่อใช้บริการที่จอดรถ รฟม. ได้ต่อไป
+                                        </li><br>
+                                        <li>Q : ฉันจะสามารถยกเลิกคิวได้อย่างไร ?<br>
+                                            A : ลูกค้าสามารถกดที่ปุ่ม "ยกเลิกคิว" ได้เมื่อลูกค้าไม่ต้องการจองคิว
+                                            ใช้บริการอาคารลานจอดรถ รฟม. แล้ว
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <div class="card-header" id="faqHeading-6">
+                                <div class="mb-0">
+                                    <h5 class="faq-title" data-toggle="collapse" data-target="#faqCollapse-6"
+                                        data-aria-expanded="false" data-aria-controls="faqCollapse-6">
+                                        <span class="badge">6</span> การชำระค่าบริการ
+                                    </h5>
+                                </div>
+                            </div>
+                            <div id="faqCollapse-6" class="collapse" aria-labelledby="faqHeading-6"
+                                data-parent="#accordion">
+                                <div class="card-body">
+                                    <ul>
+                                        <li>Q :ฉันจะสามารถชำระค่าบริการอาคารลานจอดรถ รฟม. ได้อย่างไร ? <br> A :
+                                            ลูกค้าสามารถชำระค่าบริการได้ที่ เมนู "บริการรายเดือน" และเลือกเมนูย่อย
+                                            "ข้อมูลสมาชิกจอดรายเดือน" คลิกที่ปุ่ม "ชำระเงิน"
+                                            ระบบจะให้ดำเนินการ 3 ขั้นตอน ได้แก่
+                                            ขั้นตอนที่ 1 เลือกรายการชำระค่าบริการ
+                                            ขั้นตอนที่ 2 ยืนยันการชำระค่าบริการ
+                                            ขั้นตอนที่ 3 เลือกช่องทางชำระบริการ
+                                        </li><br>
+                                        <li>Q : ฉันจะสามารถชำระค่าบริการที่จอดรถรายเดือน ล่วงหน้าได้กี่วัน ?<br>
+                                            A : ลูกค้าสามารถชำระค่าบริการล่วงหน้าได้ 7 วัน นับจากวันหมดอายุ
+                                        </li><br>
+                                        <li>Q : ฉันจะสามารถชำระค่าบริการที่จอดรถรายเดือน ล่าช้าได้กี่วัน ?<br>
+                                            A : ลูกค้าสามารถชำระค่าบริการล่าช้าได้ 7 วัน นับจากวันหมดอายุ
+                                        </li><br>
+                                        <li>Q : ฉันอยากทราบว่า ระบบ MRTA PARKING สามารถชำระค่าบริการที่จอดรถรายเดือน
+                                            รฟม. ได้ด้วยวิธีใดบ้าง ?<br>
+                                            A : ระบบ MRTA PRKING สามารถชำระค่าบริการที่จอดรถรายเดือน รฟม. ได้ 4 วิธี
+                                            1. ชำระด้วยเงินสด ณ สำนักงานอาคารลานจอด
+                                            2. ชำระด้วยบัตรเครดิต / บัตรเดบิต
+                                            3. ชำระด้วยการ Scan QR Code พร้อมเพย์
+                                            4. ชำระด้วยการผูกบัญชีออมทรัพย์กับธนาคารกรุงไทย
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <div class="card-header" id="faqHeading-7">
+                                <div class="mb-0">
+                                    <h5 class="faq-title" data-toggle="collapse" data-target="#faqCollapse-7"
+                                        data-aria-expanded="false" data-aria-controls="faqCollapse-7">
+                                        <span class="badge">7</span> การนำบัตรที่จอดรถมาบันทึกข้อมูลให้ Update
+                                        วันหมดอายุบัตรจอดรถ
+                                    </h5>
+                                </div>
+                            </div>
+                            <div id="faqCollapse-7" class="collapse" aria-labelledby="faqHeading-7"
+                                data-parent="#accordion">
+                                <div class="card-body">
+                                    <ul>
+                                        <li>Q : ฉันจะสามารถนำบัตรมาบันทึกข้อมูลให้ update ได้เมื่อไหร่ ? <br> A :
+                                            หลังจากที่ลูกค้าชำระค่าบริการผ่านระบบเรียบร้อย ภายใน 7 วัน
+                                            นับจากวันที่ชำระค่าบริการ /
+                                            กรณีชำระเป็นเงินสดสามารถชำระค่าบริการเป็นเงินที่
+                                            สำนักงานบริการอาคารและลานจอดรถ รฟม.
+                                        </li><br>
+                                        <li>Q : หากฉันชำระค่าบริการเรียบร้อย แต่ยังไม่ได้นำบัตรเข้ามาบันทึกข้อมูลภายใน 7
+                                            วัน ฉันจะต้องทำอย่างไร ?<br>
+                                            A : หลังจากที่ลูกค้าเข้ามาใช้บริการที่จอดรถแล้ว
+                                            ให้นำบัตรจอดรถติดต่อเจ้าหน้าที่เพื่อพิจารณาตรวจสอบ และแก้ไขข้อมูลอีกครั้ง
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    {% include "comps/popup-cookie.html" %}
+    {% include "comps/footer.html" %}
+</body>
+
+</html>

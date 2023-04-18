@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    {% include "include/manage-css.html" %}
+    {% include "include/manage-js.html" %}
+    <title>รายงาน</title>
+    <link href="//cdn.datatables.net/1.10.20/css/jquery.dataTables.min.css" rel="stylesheet" />
+    <link href="//cdn.datatables.net/buttons/1.6.2/css/buttons.dataTables.min.css" rel="stylesheet" />
+
+    <script src="//code.jquery.com/jquery-3.5.1.js"></script>
+    <script src="//cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script>
+
+    <script src="//cdn.datatables.net/buttons/1.6.2/js/dataTables.buttons.min.js"></script>
+    <script src="//cdn.datatables.net/buttons/1.6.2/js/buttons.flash.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
+    <script src="//cdn.datatables.net/buttons/1.6.2/js/buttons.html5.min.js"></script>
+    <script src="//cdn.datatables.net/buttons/1.6.2/js/buttons.print.min.js"></script>
+    <script type="text/javascript"
+        src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+</head>
+<style>
+    .datas {
+        display: none;
+    }
+</style>
+
+<body class="hold-transition sidebar-mini layout-fixed">
+    <div class="wrapper">
+        {% include "manage/comps/header.html" %}
+        {% include "manage/comps/sidebar.html" %}
+
+
+        <div class="content-wrapper">
+            <div class="content-header">
+                <div class="container-fluid">
+                    <div class="">
+                        <div class="card-body" style="overflow: hidden;">
+                            <div class="row mb-3">
+
+                                <div class="col-lg-4">
+                                    <div class="row">
+                                        <div class="col-sm-12">
+                                            <select id="parkingselect" class="form-select">
+                                                <option value="">----- เลือกอาคารลานจอด -----</option>
+                                                <option>สถานีลาดพร้าว 9 ชั้น</option>
+                                                <option>สถานีรัชดาภิเษก</option>
+                                                <option>สถานีศูนย์วัฒนธรรม (ลาน 1)</option>
+                                                <option>สถานีศูนย์วัฒนธรรม (รัชดาภิเษกซอย 6)</option>
+                                                <option>สถานีพระราม 9</option>
+                                                <option>สถานีสุขุมวิท</option>
+                                                <option>สถานีศูนย์การประชุมแห่งชาติสิริกิติ์</option>
+                                                <option>ฝั่งตรงข้ามศูนย์การประชุมแห่งชาติสิริกิติ์</option>
+                                                <option>สถานีสามย่าน</option>
+                                                <option>สถานีหลักสอง</option>
+                                                <option>สถานีคลองบางไผ่</option>
+                                                <option>สถานีสามแยกบางใหญ่</option>
+                                                <option>สถานีบางรักน้อยท่าอิฐ</option>
+                                                <option>สถานีแยกนนทบุรี 1</option>
+                                                <option>สถานีเคหะฯ</option>
+                                                <option>สถานีแยก คปอ.</option>
+                                                <option>สถานีคูคต</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-8">
+                                    <div class="row">
+                                        <div class="col-sm-4 text-right mt-2">
+                                            เลือกรายงาน :
+                                        </div>
+                                        <div class="col-sm-8">
+                                            <select id="reportselector" class="form-select">
+                                                <option selected>----- กรุณาเลือกรายงาน -----</option>
+                                                <option value="report1">รายงานสรุปรายได้จากระบบ</option>
+                                                <!-- <option value="report2">รายงานสรุปรายได้จากธนาคาร</option> -->
+                                                <option value="report2">รายงานประวัติการสร้าง User</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-12 mt-2">
+                        <div class="output">
+                            <div id="report1" class="datas report1">{% include "manage/report1.html" %}</div>
+                            <div id="report2" class="datas report2">{% include "manage/report2.html" %}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+
+    {% include "manage/comps/footer.html" %}
+</body>
+
+<script>
+    $(function () {
+        $('#reportselector').change(function () {
+            $('.datas').hide();
+            $('#' + $(this).val()).show();
+        });
+    });
+</script>
+
+</html>

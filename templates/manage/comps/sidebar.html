@@ -1,0 +1,178 @@
+<aside class="main-sidebar elevation-4 sidebar-collapse" style="background-color: #1a086e;">
+    <a href="#" class="brand-link">
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/manage/adminlte.css') }}">
+        <img src="{{ url_for('static', filename='image/manage/logo/logo.png') }}">
+        <!--<span class="brand-text font-weight-light text-white">รฟม.</span>-->
+    </a>
+  
+    <div class="sidebar">
+        <!-- Sidebar Menu -->
+    
+    {% for col in session['per_page'] %}
+        {% if col == 'all' %} 
+        <nav class="mt-2">
+            <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+                <li class="nav-item">
+                   <a href="{{ url_for('dashboard')}}" 
+                        class="nav-link {% if request.endpoint=='dashboard' %}active{%endif %}">
+                        <i class="nav-icon fas fa-tachometer-alt"></i>
+                        <p>
+                            Dashboard
+                        </p>
+                    </a> <!-- link to Dashboard page-->
+                </li>
+
+
+                
+                <li class="nav-item">
+                     <a href="{{ url_for('news_manage')}}" class="nav-link {% if request.endpoint=='news_manage' %}active{%endif %}"> <!--add news manage page in sidebar  -->
+                        <p>
+                            <i class="fas fa-newspaper"></i> การจัดการข่าวสาร
+                        </p>
+                    </a> <!-- link to news page-->
+                </li>
+
+                <li class="nav-item">
+                    <a href="{{ url_for('activity_manage')}}" class="nav-link {% if request.endpoint=='activity_manage' %}active{%endif %}"> <!--add news manage page in sidebar  -->
+                       <p>
+                        <i class="fas fa-cogs"></i> การจัดการกิจกรรม
+                       </p>
+                   </a> <!-- link to activity page-->
+               </li>
+
+                               
+               <li class="nav-item">
+                <a href="{{ url_for('parking_manage')}}" class="nav-link {% if request.endpoint=='parking_manage' %}active{%endif %}"> <!--add news manage page in sidebar  -->
+                   <p>
+                    <i class="fas fa-car"></i> การจัดการลานจอด
+                   </p>
+               </a> <!-- link to activity page-->
+           </li>
+
+                <li class="nav-item">
+                    <a href="{{ url_for('user_manage')}}" 
+                        class="nav-link {% if request.endpoint=='user_manage' %}active{%endif %}"> <!--add parking page in sidebar  -->
+                        <!-- <i class="nav-icon fas fa-parking"></i> -->
+                        <p>
+                            <i class="fas fa-user-cog"></i> การจัดการ User Mapping Site
+                        </p>
+                    </a> <!-- link to User operation page-->
+                </li>
+
+                 <li class="nav-item">
+                    <a href="{{ url_for('customer_manage')}}" 
+                        class="nav-link {% if request.endpoint=='customer_manage' %}active{%endif %}"> <!--add parking page in sidebar  -->
+                        <!-- <i class="nav-icon fas fa-parking"></i> -->
+                        <p>
+                            <i class="fas fa-user-tie"></i> การจัดการข้อมูล Customer
+                        </p>
+                    </a> <!-- link to User operation page-->
+                </li>
+
+                <li class="nav-item">
+                    <a href="{{ url_for('capacity_member')}}"
+                        class="nav-link {% if request.endpoint=='capacity_member' %}active{%endif %}"> <!--add Customer page in sidebar  -->
+                        <!-- <i class="nav-icon fas fa-user-cog"></i> -->
+                        <p>
+                            <i class="fas fa-users"></i>  การจัดการ Capacity Member
+                        </p>
+                    </a> <!-- link to Capacity Member-->
+                </li>
+                
+                
+                <!-- <li class="nav-item">
+                    <a href="{{ url_for('income_summary_report')}}" class="nav-link {% if request.endpoint=='income_summary_report' %}active{%endif %}">
+                         <i class="nav-icon fas fa-file"></i> -->
+                      <!--   <p>
+                            <i class="fab fa-bitcoin"></i>  รายงานสรุปรายได้
+                        </p>
+                    </a> link to income page
+                </li> -->
+
+               <!-- <li class="nav-item">
+                    <a href="{{ url_for('permission')}}" class="nav-link {% if request.endpoint=='permission' %}active{%endif %}">
+                        <i class="nav-icon fas fa-user-lock"></i> 
+                        <p>
+                            <i class="fas fa-sign-in-alt"></i>  กำหนดการเข้าถึง
+                        </p>
+                    </a>  
+                </li>-->
+
+                <!--<li class="nav-item">
+                    <a href="{{ url_for('user_profile')}}" class="nav-link {% if request.endpoint=='user_profile' %}active{%endif %}">
+                       <i class="nav-icon fas fa-user-lock"></i> 
+                        <p>
+                            <i class="fas fa-user"></i>   User Profile
+                        </p>
+                    </a> link to User profile
+                </li>-->
+
+                <!--jirapas 04/08/64-->
+                <!-- <li class="nav-item">
+                    <a href="{{ url_for('extend_card')}}" class="nav-link {% if request.endpoint=='extend_card' %}active{%endif %}">
+                        <i class="nav-icon fas fa-user-lock"></i>
+                        <p>
+                            <i class="fas fa-id-card"></i>  บันทึกข้อมูลบัตรต่ออายุ/เงินสด
+                        </p>
+                    </a>
+                </li> -->
+
+                <li class="nav-item">
+                    <a href="{{ url_for('manage_report')}}" class="nav-link {% if request.endpoint=='manage_report' %}active{%endif %}">
+                        <!-- <i class="nav-icon fas fa-user-lock"></i> -->
+                        <p>
+                            <i class="far fa-file-alt"></i> รายงาน
+                        </p>
+                    </a> <!-- link to User profile-->
+                </li>
+                {% endif %}
+                {% if col == 'dashboard' %} 
+                <nav class="mt-2">
+                    <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+                        <li class="nav-item">
+                           <a href="{{ url_for('dashboard')}}" 
+                                class="nav-link {% if request.endpoint=='dashboard' %}active{%endif %}">
+                                <i class="nav-icon fas fa-tachometer-alt"></i>
+                                <p>
+                                    Dashboard
+                                </p>
+                            </a> 
+                        </li>
+                {% endif %}
+                {% if col == 'manageCustomer' %} 
+                <li class="nav-item">
+                    <a href="{{ url_for('customer_manage')}}" 
+                        class="nav-link {% if request.endpoint=='customer_manage' %}active{%endif %}"> <!--add parking page in sidebar  -->
+                        <!-- <i class="nav-icon fas fa-parking"></i> -->
+                        <p>
+                            <i class="fas fa-user-tie"></i> การจัดการข้อมูล Customer
+                        </p>
+                    </a> <!-- link to User operation page-->
+                </li>
+                {% endif %}
+                {% if col == 'capacityMember' %} 
+                <li class="nav-item">
+                    <a href="{{ url_for('capacity_member')}}"
+                        class="nav-link {% if request.endpoint=='capacity_member' %}active{%endif %}"> <!--add Customer page in sidebar  -->
+                        <!-- <i class="nav-icon fas fa-user-cog"></i> -->
+                        <p>
+                            <i class="fas fa-users"></i>  การจัดการ Capacity Member
+                        </p>
+                    </a> <!-- link to Capacity Member-->
+                </li>
+                {% endif %}
+                {% if col == 'report' %} 
+                <li class="nav-item">
+                    <a href="{{ url_for('manage_report')}}" class="nav-link {% if request.endpoint=='manage_report' %}active{%endif %}">
+                        <!-- <i class="nav-icon fas fa-user-lock"></i> -->
+                        <p>
+                            <i class="far fa-file-alt"></i> รายงาน
+                        </p>
+                    </a> <!-- link to User profile-->
+                </li>
+                {% endif %}
+                {% endfor %}
+            </ul>
+        </nav>
+    </div>
+</aside>

@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewporut" content="width=device-width, initial-scale=1.0">
+    <title>Payment confirmation</title>
+    {% include "include/customer-css.html" %}
+    {% include "include/customer-js.html" %}
+</head>
+<style>
+    body {
+        background: #F5F5F5;
+    }
+    .scrollme{
+        overflow-y: auto;
+    }
+</style>
+
+<body>
+    <!-- แถบเมนู -->
+    {% include "eng/comps/navbar-2.html" %}
+
+    <div class="container">
+        <div class="mrta-section">
+            <h3 class="text-center mb-4">Confirm payment</h3>
+            <div class="row">
+                <div class="col-md-8">
+                    <div class="scrollme">
+                    <table class="table table-resposive">
+                        <thead>
+                            <tr>
+                                <th>card code</th>    
+                                <th>Building/Parking lot</th>
+                                <th>number of months</th>
+                                <th>price</th>
+                                <th>start date</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td> {{card_id}}</td>
+                                <td>{{parkname}}</td>
+                                <td rowspan="2">{{month}}</td>
+                                <td>{{total2}}</td>
+                                <td>{{service_start_date}}</td>
+                                <!-- <td rowspan="2"><button type="button" class="btn btn-primary btn-sm"><i
+                                            class="far fa-file-alt mr-2"></i>
+                                        เรียกดู</button></td> -->
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td>card deposit</td>
+                                    <td>{{deposit_amount}}</td>
+                                <td></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    </div><!---->
+                </div>
+                <div class="col-md-4">
+                    <div class="card mb-2">
+                        <div class="card-header header-mrta-1">
+                            <h5 class="mb-0">Address on the tax invoice</h5>
+                        </div>
+                        <div class="card-body py-2">
+                            <div class="row">
+                                <div class="col-6 mt-1">
+                                    {%if address_type == 'home'%}
+                                    <img src="{{url_for('static', filename='image/home.svg')}}" class="mr-2" width="20">
+                                    Current Address
+                                    <input type="hidden" id="address_type" value="{{address_type}}">
+                                    <input type="hidden" id="id_" value="{{id_}}">
+                                    {%else%}
+                                    <img src="{{url_for('static', filename='image/home.svg')}}" class="mr-2" width="20">
+                                    Work Address
+                                    <input type="hidden" id="address_type" value="{{address_type}}">
+                                    <input type="hidden" id="id_" value="{{id_}}">
+                                    {%endif%}
+                                </div>
+                                <div class="col-6 text-right">
+                                    <a type="button" onclick="address_info()" class="btn btn-primary btn-sm"
+                                        data-toggle="modal" data-target="#viewaddressModal">
+                                        <i class="far fa-file-alt mr-2"></i>
+                                        browse</a>
+                                </div>
+                                <!-- Modal -->
+                                <div class="modal fade" id="viewaddressModal" tabindex="-1"
+                                    aria-labelledby="viewaddressModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="viewaddressModalLabel">Address</h5>
+                                                <button type="button" class="close" data-dismiss="modal"
+                                                    aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div id="info" class="modal-body">                                                
+                                                
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card my-2">
+                        <div class="card-header header-mrta-1">
+                            <h5 class="mb-0">Service fee summary</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="form-group">
+                                <div class="row">
+                                    <div class="col-7">Service Charge</div>
+                                    <div class="col-5 text-right">{{total2}}</div>
+                                </div>
+                            </div>
+                            <!-- <div class="form-group">
+                                <div class="row">
+                                    <div class="col-6">VAT 7%</div>
+                                    <div class="col-6 text-right">0</div>
+                                </div>
+                            </div> -->
+                            <div class="form-group">
+                                <div class="row">
+                                    <div class="col-7 h5">Total service charge</div>
+                                    <div class="col-5 text-right h5 mb-0">{{total3}}</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card my-2">
+                        <div class="card-header header-mrta-1">
+                            <h5 class="mb-0">Choose a payment method</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-6">
+                                    <div class="choose form-group">
+                                        <input type="radio" name="payment_method" id="cash" onclick="submitCash()">
+                                        <label for="cash">
+                                            <img src="{{url_for('static', filename='image/money.svg')}}" class="mb-1"
+                                                width="40"><br>
+                                            <span>cash</span>
+                                        </label>
+                                    </div>
+                                </div>
+                                
+                                
+                                <div class="col-6">
+                                    <div class="choose form-group">
+                                        <input type="radio" name="payment_method" id="krungthai" data-toggle="modal" data-target="#payModal">
+                                        <!--ผูกบัญชี-->
+                                        <label for="krungthai">
+                                            <img src="{{url_for('static', filename='image/krungthai.svg')}}"
+                                                class="mb-1" width="40"><br>
+                                            <span>{{ktb_ac}}</span>
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <div class="col-6">
+                                    <div class="choose form-group">
+                                        <input type="radio" name="payment_method" id="credit_card"onclick="submitDebit()">
+                                        <form name="payFormCcard" id="payFormCcard" method="post" action="https://ktbfastpay.ktb.co.th/KTB/eng/payment/payForm.jsp">  <!--  UAT ->>action="https://uatktbfastpay.ktb.co.th/SIT/eng/payment/payForm.jsp"-->
+                                            <input type="hidden" name="merchantId" value="900000303"> 
+                                            <input type="hidden" name="amount" value="{{total}}" >
+                                            <input type="hidden" name="orderRef" value="{{ref2}}">
+                                            <input type="hidden" name="currCode" value="764" >
+                                            <input type="hidden" name="successUrl" value="https://parking.mrta.co.th/payment/success">
+                                            <input type="hidden" name="failUrl" value="https://parking.mrta.co.th/payment/fail">
+                                            <input type="hidden" name="cancelUrl" value="https://parking.mrta.co.th/payment/cancel">
+                                            <input type="hidden" name="payType" value="N">
+                                            <input type="hidden" name="lang" value="E">
+                                            <input type="hidden" name="orderRef1" value={{ref1}}>
+                                            <input type="hidden" name="securityKey" value={{securityKey}}>                                                       
+                                            </form>
+                                        <label for="credit_card">
+                                            <img src="{{url_for('static', filename='image/credit-card.svg')}}"
+                                                class="mb-1" width="40"><br>
+                                            <span>Credit/Debit</span>
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="choose form-group">
+                                        <input type="radio" name="payment_method" id="promptpay"
+                                            onclick="window.open('/qr-code', '_blank')">
+                                        <label for="promptpay">
+                                            <img src="{{url_for('static', filename='image/qr-code.svg')}}" class="mb-1"
+                                                width="40"><br>
+                                            <span>QR Code</span>
+                                        </label>
+
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="row">
+                                    <div class="col-12 text-center">
+                                        <button class="accept col-7 mb-3" onclick="checkCus()">pay</button><br>
+                                        <a class="a-link h6 ml-2" href="#">Cancel</a>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="modal fade" id="payModal" tabindex="-1" role="dialog" aria-labelledby="payModalLabel" aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="text-right px-3 py-2 bg-content" style="border-radius: 5px 5px 0px 0px;">
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body text-center bg-content">
+                                            <div class="row">
+                                                <div class="col-5"><img src="{{url_for('static', filename='image/employee.svg')}}"
+                                                        class="my-2 img-fluid" width="100"></div>
+                                                <div class="col-7 align-self-center text-left">Confirm your payment</div>
+                                            </div>
+                                        </div>
+                                        <div class="justify-content-center">
+                                            <div class="row m-3">
+                                                <div class="col-6 text-right">
+                                                    <button type="button" class="btn btn-success w-75" data-toggle="modal"
+                                                        data-target="#comfirmpayModal" onclick="paymentcgp()">confirm</button>
+                                                </div>
+                                                <div class="col-6 text-left">
+                                                    <button type="button" class="btn btn-danger w-75" data-dismiss="modal">cancle</button>
+                                                </div>
+                                            </div>
+                                         </div>
+                                        </div>
+                                    </div>
+                                </div>
+                          </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+
+    {% include "eng/comps/scroll-top.html" %}
+    {% include "eng/comps/popup-cookie.html" %}
+
+    {% include "eng/comps/footer.html" %}
+</body>
+<script>
+    function checkCus(){
+       
+       window.location.href = '/en/methodCash'
+     
+   }
+
+   function submitCash(){
+   
+       $.ajax({
+           url:'/update_paymentName_cash',
+           type:'POST',
+           data:'update',
+           success:function(response){
+               console.log("Customers select cash")
+           }
+       })
+
+   }
+   function submitDebit(){
+      
+       $.ajax({
+           url:'/update_paymentName_debit',
+           type:'POST',
+           data:'update',
+           success:function(response){
+               console.log("Customers select Debit")
+           }
+       })
+    document.getElementById("payFormCcard").submit();
+   }
+   function paymentcgp(){
+      
+       $.ajax({
+           url: '/cgp-KTBPayment',
+           type: 'POST',
+           success: function (response) {
+               window.location.href = '/en'+response
+           }
+       });
+
+
+   }
+</script>
+<script>
+    function address_info(){
+        id = $('#id_').val()
+        address_type = $('#address_type').val()
+        fetch('address_info/'+id+'/'+address_type).then(function(response){
+            response.json().then(function(data){
+                document.getElementById('info').innerHTML = data.address
+            })
+        })
+    }
+</script>
+</html>

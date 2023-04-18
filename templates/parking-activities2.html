@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>กิจกรรม</title>
+    {% include "include/customer-css.html" %}
+    {% include "include/customer-js.html" %}
+</head>
+<style>
+    body {
+        background: #F5F5F5;
+    }
+</style>
+
+<body>
+    <!-- แถบเมนู -->
+    {% include "comps/navbar-2.html" %}
+
+    <div class="mrta-parking-area-02">
+        <div class="container">
+            <div class="mrta-section">
+                <!------------------------------->
+                <div class="row">
+                    <div class="col-lg-8 col-md-12">
+                        <h3 class="text-left mb-4"><span>{{activity.activity_date.strftime('%d/%m/%Y')}}</span>
+                            {{activity.activity_name}}</h3>
+
+                        <div class="card-news__img-wrapper-wall mb-3">
+                            <div class="card-news__img-wall"
+                                style="background-image:url(/static/image/allnews/activities/{{activity.activity_image}})">
+                            </div>
+                        </div>
+
+
+                        <div class="d-flex flex-column">
+                            <p style="word-wrap:break-word; word-break: break-all;">{{activity.activity_des}}
+                            </p>
+                        </div>
+                    </div>
+
+
+                    <div class="col-lg-4 col-md-12">
+                        <a href="parking-all-activities2">
+                            <h5 class="text-right mb-4"> ดูทั้งหมด</h5>
+                        </a>
+                        {%for i in activities %}
+                        <form method="POST">
+                        <div class="d-flex align-items-stretch">
+                            <button class="card-news">
+                                <input type="hidden" name="activity_id" value="{{i.Id}}" readonly>
+                                <div class="row" style="width: 100%;">
+                                    <div class="col-6">
+                                        <div class="card-news__img-wrapper">
+                                            <div class="card-news__img"
+                                                style="background-image:url(/static/image/allnews/activities/{{i.activity_image}})">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-6">
+                                        <div class="card-body-3 d-flex flex-column">
+                                            <p class="card-news__text"><span>{{i.activity_date.strftime('%d/%m/%Y')
+                                                }}</span>
+                                                {{i.activity_name}}
+                                            </p>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                            </button>
+                        </div>
+                        </form>
+                        {%endfor%}
+                    </div>
+                </div>
+                <!---------------------------->
+
+                {% include "comps/scroll-top.html" %}
+                {% include "comps/popup-cookie.html" %}
+
+            </div>
+        </div>
+    </div>
+
+
+    {% include "comps/footer.html" %}
+</body>
+</html>

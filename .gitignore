@@ -2,10 +2,13 @@
 __pycache__/
 *.py[cod]
 *$py.class
-
+static/image/manage/profile/**
+!static/image/manage/profile/.gitkeep
+static/image-manage/document/**
+!static/image-manage/document/.gitkeep
 # C extensions
 *.so
-
+ncarrem.json
 # Distribution / packaging
 .Python
 build/

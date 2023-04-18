@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>กิจกรรม</title>
+    {% include "include/customer-css.html" %}
+    {% include "include/customer-js.html" %}
+</head>
+<style>
+    body {
+        background: #F5F5F5;
+    }
+</style>
+
+<body>
+    <!-- แถบเมนู -->
+    {% include "comps/navbar-1.html" %}
+
+    <div class="container">
+        <div class="mrta-section">
+            <h3 class="text-center mb-4">กิจกรรม</h3>
+
+
+            <div class="row">
+                <div class="col-lg-12 text-center">
+                    <div class="mrta-parking-activities">
+                    <!-------------------------------------------------------------------->
+                        {%for i in activities%}}
+                        <div class="row">
+                            <form method="POST">
+                            <div class="d-flex align-items-stretch">
+                                <button class="card-news" type="submit">
+                                    <input type="hidden" name="activity_id" value="{{i[0].Id}}" readonly>
+                                    <div class="card-news__img-wrapper">
+                                        <div class="card-news__img"
+                                            style="background-image:url(/static/image/allnews/activities/{{i[0].activity_image}})">
+                                        </div>
+                                    </div>
+                                    <div class="card-body-2 d-flex flex-column">
+                                        <p class="card-news__text"><span>{{i[0].activity_date.strftime('%d/%m/%Y')}}</span>
+                                            {{i[0].activity_name}}
+                                        </p>
+                                    </div>
+                                </button>
+                            </div>
+                            </form>    
+
+                            <form method="POST">
+                            <div class="d-flex align-items-stretch">
+                                <button class="card-news" type="submit">
+                                    <input type="hidden" name="activity_id" value="{{i[1].Id}}" readonly>
+                                    <div class="card-news__img-wrapper">
+                                        <div class="card-news__img"
+                                            style="background-image: url('/static/image/allnews/activities/{{i[1].activity_image}}')">
+                                        </div>
+                                    </div>
+                                    <div class="card-body-2 d-flex flex-column">
+                                        <p class="card-news__text"><span>{{i[1].activity_date.strftime('%d/%m/%Y')}}</span> {{i[1].activity_name}}</p>
+                                    </div>
+                                </button>
+                            </div>
+                            </form>
+                            <form method="POST">
+                            <div class="d-flex align-items-stretch">
+                                <button class="card-news" type="submit">
+                                    <input type="hidden" name="activity_id" value="{{i[2].Id}}" readonly>
+                                    <div class="card-news__img-wrapper">
+                                        <div class="card-news__img"
+                                            style="background-image: url('/static/image/allnews/activities/{{i[2].activity_image}}')">
+                                        </div>
+                                    </div>
+                                    <div class="card-body-2 d-flex flex-column">
+                                        <p class="card-news__text"><span>{{i[2].activity_date.strftime('%d/%m/%Y')}}</span> {{i[2].activity_name}}
+                                        </p>
+                                    </div>
+                                </button>
+                            </div>
+                            </form>
+                        </div>
+                        {%endfor%}
+                        <div class="row">
+                            {%for i in last_row_activities%} 
+                            <form method="POST">
+                            <div class="d-flex align-items-stretch">
+                                <button class="card-news" type="submit" >
+                                    <input type="hidden" name="activity_id" value="{{i.Id}}" readonly>
+                                    <div class="card-news__img-wrapper">
+                                        <div class="card-news__img"
+                                            style="background-image:url(/static/image/allnews/activities/{{i.activity_image}})">
+                                        </div>
+                                    </div>
+                                    <div class="card-body-2 d-flex flex-column">
+                                        <p class="card-news__text"><span>{{i.activity_date.strftime('%d/%m/%Y')}}</span>
+                                            {{i.activity_name}}
+                                        </p>
+                                    </div>
+                                </button>
+                            </div>
+                            </form>
+                            {%endfor%}
+                        </div>
+                    
+                    </div>
+                    <div class="pagination2"></div>
+                </div>
+                
+            </div>
+
+        </div>
+
+        {% include "comps/scroll-top.html" %}
+        {% include "comps/popup-cookie.html" %}
+
+    </div>
+
+    {% include "comps/footer.html" %}
+</body>
+
+<script>
+
+    $('.mrta-parking-activities').slick({
+        slidesToShow: 3,
+        slidesToScroll: 3,
+        dots: false,
+        centerMode: false,
+        arrows: true,
+        loop: false,
+        infinite: false,
+        appendArrows: $('.pagination2'),
+        prevArrow: '<div class="pagination__button"><i class="fas fa-arrow-left"></i></div>',
+        nextArrow: '<div class="pagination__button"><i class="fas fa-arrow-right"></i></div>',
+        responsive: [
+            {
+                breakpoint: 1024,
+                settings: {
+                    slidesToShow: 2,
+                    slidesToScroll: 1,
+                }
+            },
+            {
+                breakpoint: 600,
+                settings: {
+                    slidesToShow: 2,
+                    slidesToScroll: 1
+                }
+            },
+            {
+                breakpoint: 480,
+                settings: {
+                    slidesToShow: 2,
+                    slidesToScroll: 1
+                }
+            }
+        ]
+    });
+
+</script>
+
+<script>
+    // ****************scroll start************// 
+    //Get the button:
+    mybutton = document.getElementById("myBtn");
+
+    //When the user scrolls down 20px from the top of the document, show  the button
+    window.onscroll = function () { scrollFunciton() };
+
+    function scrollFunciton() {
+        if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+            mybutton.style.display = "block";
+        } else {
+            mybutton.style.display = "none";
+        }
+    }
+
+    // when the use clicks on the button, scroll to the top  of the document
+    function topFunction() {
+        document.body.scrollTop = 0; //for safari
+        document.documentElement.scrollTop = 0; //for chome, firefox, IE and Opera
+    }
+
+     // ****************scroll end************//   
+</script>
+</html>

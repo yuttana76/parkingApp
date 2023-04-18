@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>การแจ้งเตือน</title>
+    {% include "include/customer-css.html" %}
+    {% include "include/customer-js.html" %}
+</head>
+
+<style>
+    .dot-red{
+        float: right;
+        background-color: red;
+        height: 20px;
+        width: 20px;
+        border-radius: 20px;
+        background: #FF3636;
+    }
+</style>
+
+<body>
+    {% include "comps/navbar-1.html" %}
+    
+    <div class="container pt-5 pb-5">
+        <div class="card-reserve my-3 mt-5">
+            <div class="card-body">
+                <div class="row mb-0 ">
+                    <div class="text-body">
+                        <p class="text-weight-bold text-primary h5">ระบบ</p> 
+                        <p class="text-weight-bold ">ทำรายการจองสำเร็จ</p> 
+                        <p class="text-weight-bold ">ส่งเมื่อ 01/03/2021</p> 
+                    </div>        
+                </div>   
+            </div>
+        </div>  
+        <div class="card-reserve my-3 mt-5">
+            <div class="card-body">
+                <div class="row mb-0 ">
+                    <div class="text-body">
+                        <p class="text-weight-bold text-primary h5">ระบบ</p> 
+                        <p class="text-weight-bold ">ทำรายการจองสำเร็จ</p> 
+                        <p class="text-weight-bold ">ส่งเมื่อ 01/03/2021</p> 
+                    </div>        
+                </div>   
+            </div>
+        </div>  
+
+        <div class="card-reserve my-3 mt-5" style="background: rgba(176, 217, 255, 0.41);">
+            <div class="card-body">
+                <div class="row mb-0 ">                  
+                        <div class="col-11 text-weight-bold text-primary h5">ข่าว</div> 
+                        <div class=" h5 text-right dot-red"></div>
+                    <div class="text-body">    
+                        <div class="text-weight-bold h6">โปรโมชั่นพิเศษสำหรับผู้ใช้บริการจอด</div> 
+                        <div class="text-weight-bold ">ส่งเมื่อ 01/03/2021</div> 
+                    </div>        
+                </div>   
+            </div>
+        </div>  
+        <div class="card-reserve my-3 mt-5" style="background: rgba(176, 217, 255, 0.41);">
+            <div class="card-body">
+                <div class="row mb-0 ">                  
+                        <div class="col-11 text-weight-bold text-primary h5">ข่าว</div> 
+                        <div class=" h5 text-right dot-red"></div>
+                    <div class="text-body">    
+                        <div class="text-weight-bold h6">ยินดีต้อนรับเข้าสู่ลานจอด ตรวจค่าบริการที่นี่</div> 
+                        <div class="text-weight-bold ">ส่งเมื่อ 01/03/2021</div> 
+                    </div>        
+                </div>   
+            </div>
+        </div>  
+        <div class="card-reserve my-3 mt-5" style="background: rgba(176, 217, 255, 0.41);">
+            <div class="card-body">
+                <div class="row mb-0 ">                  
+                        <div class="col-11 text-weight-bold text-primary h5">ข่าว</div> 
+                        <div class=" h5 text-right dot-red"></div>
+                    <div class="text-body">    
+                        <div class="text-weight-bold h6">เลยเวลาการจอง 1 ชั่วโมง  กรุณาทำรายการใหม่</div> 
+                        <div class="text-weight-bold ">ส่งเมื่อ 01/03/2021</div> 
+                    </div>        
+                </div>   
+            </div>
+        </div>
+
+
+    </div>
+
+
+
+
+
+    {% include "comps/popup-cookie.html" %}
+    {% include "comps/fivemenu.html" %}
+</body>
+<script>
+
+    $(document).ready(function () {
+        var table = $('#notification').DataTable({
+            "order": [[1, 'asc']],
+            "oLanguage": {
+                "sSearch": "ค้นหา",
+                "sLengthMenu": "แสดง _MENU_ ลำดับ ต่อหน้า",
+                "sZeroRecords": "ไม่พบข้อมูลที่ค้นหา",
+                "sInfo": "แสดง _START_ ถึง _END_ ของ _TOTAL_ ลำดับ",
+                "sInfoEmpty": "แสดง 0 ถึง 0 ของ 0 ลำดับ",
+                "sInfoFiltered": "(แสดงค้นหาทั้งหมด _MAX_ รายการ)",
+                "oPaginate": {
+                    "sFirst": "หน้าแรก",
+                    "sLast": "หน้าสุดท้าย",
+                    "sNext": "ถัดไป",
+                    "sPrevious": "ก่อนหน้า"
+                }
+            }
+        });
+
+        // Add event listener for opening and closing details
+        $('#example tbody').on('click', 'td.details-control', function () {
+            var tr = $(this).closest('tr');
+            var row = table.row(tr);
+
+            if (row.child.isShown()) {
+                // This row is already open - close it
+                row.child.hide();
+                tr.removeClass('shown');
+            } else {
+                // Open this row
+                row.child(format(row.data())).show();
+                tr.addClass('shown')
+            }
+        })
+    });
+    function Toggledetail(obj) {
+        if (obj.hidden === true) {
+            obj.hidden = false
+        } else if (obj.hidden === false) {
+            obj.hidden = true
+        }
+    }
+</script>
+
+</html>

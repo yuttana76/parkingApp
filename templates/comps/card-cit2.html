@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <link href="https://fonts.googleapis.com/css?family=Raleway|Rock+Salt|Source+Code+Pro:300,400,600" rel="stylesheet">
+
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/card.css') }}">
+  <!-- <script src="{{ url_for('static', filename='js/card.js') }}"></script> -->
+</head>
+
+<body>
+
+  {%if station_name in ['สถานีแยก คปอ.','สถานีคูคต']%}
+  <!-- ระบบ CIT -->
+  <div class="card_part" onclick="flip(event)">
+    <div class="card__front card_part_n23_n24">
+    </div>
+    <div class="card__back__n2324 card_back">
+      
+      <img class="card__front-square card__square" src="{{url_for('static', filename='image/mrta_white.svg')}}">
+      <!-- <div class="card__front-logo card__logo"><button class="btn btn-light btn-sm"><i class="fas fa-search"></i>
+          ดูเงื่อนไขการเข้าใช้บริการ</button>
+      </div> -->
+      <div class="padding-content">
+        <h6 class="mb-2 text-white" name="parking_name">{{station_name}}</h6>
+        <h5 class="mb-2 card_number" name="id_card">{{card_id}}</h5>
+        <h6 class="mb-2 text-white" name="status">{{card_name}} {{card_last_name}}</h6>
+      </div>
+
+      <div class="row">
+        <div class="col-12">
+          <h6 class="card__info">Exp. <span name="">{{exp}}</span></h6>
+        </div>
+        <div class="col-12">
+          <h6 class="card__info">สถานะ : <span name="">{{status}}</span></h6>
+        </div>
+      </div>
+    </div>
+  </div>
+  {%else%} 
+  <!-- ระบบ CIT -->
+  <div class="card_part_vertical" onclick="flip_vertical(event)">
+    <div class="card__front card_part_cit">
+    </div>
+    <div class="card__back card_back_vertical">
+      
+      <img class="card__front-square card__square" src="{{url_for('static', filename='image/mrta_white.svg')}}">
+      <!-- <div class="card__front-logo card__logo"><button class="btn btn-light btn-sm"><i class="fas fa-search"></i>
+          ดูเงื่อนไขการเข้าใช้บริการ</button>
+      </div> -->
+      <div class="padding-content">
+        <h6 class="mb-2 text-white" name="parking_name">{{station_name}}</h6>
+        <h5 class="mb-2 card_number" name="id_card">{{card_id}}</h5>
+        <h6 class="mb-2 text-white" name="status">{{card_name}} {{card_last_name}}</h6>
+      </div>
+
+      <div class="row">
+        <div class="col-12">
+          <h6 class="card__info">Exp. <span name="">{{exp}}</span></h6>
+        </div>
+        <div class="col-12">
+          <h6 class="card__info">สถานะ : <span name="">{{status}}</span></h6>
+        </div>
+      </div>
+    </div>
+  </div>
+  {%endif%}
+
+</body>
+<script>
+  function flip_vertical(event){
+	var element = event.currentTarget;
+	if (element.className === "card_part_vertical") {
+    if(element.style.transform == "rotateY(-180deg)") {
+      element.style.transform = "rotateY(0deg)";
+    }
+    else {
+      element.style.transform = "rotateY(-180deg)";
+    }
+  }
+};
+function flip(event){
+	var element = event.currentTarget;
+	if (element.className === "card_part") {
+    if(element.style.transform == "rotateY(-180deg)") {
+      element.style.transform = "rotateY(0deg)";
+    }
+    else {
+      element.style.transform = "rotateY(-180deg)";
+    }
+  }
+};
+</script>
+</html>

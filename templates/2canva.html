@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.4.1/html2canvas.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.2.0.min.js"></script>
+    <script src="https://raw.githubusercontent.com/taylorhakes/promise-polyfill/master/dist/polyfill.js"></script>
+    <title>Document</title>
+    {% include "include/customer-css.html" %}
+    {% include "include/customer-js.html" %}
+</head>
+
+
+<body>
+    <a href="javascript:genScreenshot()"> Get Screenshot</a>
+    <a id="test"></a>
+    <div id="text">
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras in enim metus. Mauris lobortis non sem eu porta.
+        Etiam ante lacus, viverra euismod neque ut, pretium volutpat lacus. Aenean ipsum elit, feugiat quis metus vitae,
+        vehicula sodales arcu. Suspendisse id neque vitae erat pellentesque viverra in in eros. Nam sagittis vitae enim
+        ut laoreet. Aliquam erat volutpat. Etiam rhoncus, elit id efficitur convallis, mi nisl blandit ipsum, sed
+        scelerisque odio elit vel est. Nunc velit urna, dignissim at varius non, luctus vel libero. Fusce cursus
+        pharetra laoreet. Curabitur placerat neque sed justo fringilla, sit amet semper dui accumsan. Nam posuere quam
+        sit amet nunc porttitor consequat. Nulla facilisi. Quisque viverra massa eget dolor finibus maximus.
+        <img src="https://th.hellomagazine.com/wp-content/uploads/2011/11/ferrari-sf90-stradale.jpg" alt="">
+    </div>
+    <!-- <br>
+    <div id="box1">
+    </div> -->
+
+    <script>
+        function genScreenshot() {
+            html2canvas(document.body, {
+                "logging": true, //Enable log (use Web Console for get Errors and Warings)
+                useCORS: true,
+                taintTest: false,
+                onrendered: function (canvas) {
+                    $('#box1').html("");
+                    $('#box1').append(canvas);
+
+                    if (navigator.userAgent.indexOf("MSIE|Android|webOS|iPhone|iPad|iPod") > 0 ||
+                        navigator.userAgent.match(/Trident.*rv\:11\./)) {
+                        var blob = canvas.msToBlob();
+                        window.navigator.msSaveBlob(blob, 'file.png');
+                    }
+                    else {
+                        $('#test').attr('href', canvas.toDataURL("image/png"));
+                        $('#test').attr('download', 'file.png');
+                        $('#test')[0].click();
+                    }
+
+
+                }
+            });
+        }
+    </script>
+</body>
+
+</html>

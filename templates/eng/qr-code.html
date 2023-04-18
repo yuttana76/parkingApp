@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QR Code</title>
+    {% include "include/customer-css.html" %}
+    {% include "include/customer-js.html" %}
+</head>
+<style>
+    body {
+        background: #F5F5F5;
+    }
+</style>
+
+<body>
+    {% include "eng/comps/navbar.html" %}
+
+    <div class="container">
+        <div class="mrta-section">
+            <div class="row">
+                <div class="col-md-2"></div>
+                <div class="col-md-8">
+                    <div class="card text-center">
+                        <div class="card-header card-header-mrta py-3">
+                            <h5 class="mb-0 text-center">Please scan the QR Code to pay.</h5>
+                        </div>
+                        <div class="card-body">
+                            <div id="label-qrcode">
+                                <div id="qrcode">
+                                    <input type="hidden" id="textQr" value="{{qrcode}}">
+                                    <img id='barcode'  width="300"/>  
+                                </div>
+                            </div>
+                            <div class="my-4"> <!--btn-mrta-warning classสีเก่า-->
+                                <a type="button" class="btn btn-success col-lg-5 col-8 btn-lg">
+                                    save picture</a>
+                            </div>
+                            <div class="my-4">
+                                <a type="button" href="/home-private"
+                                    class="btn btn-mrta-info col-lg-5 col-8">back to home page</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-2"></div>
+            </div>
+
+        </div>
+
+
+    </div>
+    {% include "eng/comps/footer.html" %}
+    {% include "eng/comps/popup-cookie.html" %}
+</body>
+<script>
+    var textqr = document.getElementById('textQr').value;
+    var url = 'https://api.qrserver.com/v1/create-qr-code/?data='+textqr;
+    var imgQr = document.getElementById('barcode')
+    imgQr.src = url;
+
+</script>
+</html>

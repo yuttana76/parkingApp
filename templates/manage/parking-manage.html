@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  {% include "include/manage-css.html" %}
+  {% include "include/manage-js.html" %}
+  <title>MRTA จัดการลานจอด</title>
+  <link href="//cdn.datatables.net/1.10.20/css/jquery.dataTables.min.css" rel="stylesheet" />
+  <link href="//cdn.datatables.net/buttons/1.6.2/css/buttons.dataTables.min.css" rel="stylesheet" />
+
+  <script src="//code.jquery.com/jquery-3.5.1.js"></script>
+  <script src="//cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script>
+
+  <script src="//cdn.datatables.net/buttons/1.6.2/js/dataTables.buttons.min.js"></script>
+  <script src="//cdn.datatables.net/buttons/1.6.2/js/buttons.flash.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
+  <script src="//cdn.datatables.net/buttons/1.6.2/js/buttons.html5.min.js"></script>
+  <script src="//cdn.datatables.net/buttons/1.6.2/js/buttons.print.min.js"></script>
+
+</head>
+
+<body class="hold-transition sidebar-mini layout-fixed">
+  <div class="wrapper">
+    {% include "manage/comps/header.html" %}
+    {% include "manage/comps/sidebar.html" %}
+
+    <!-- Messenger ปลั๊กอินแชท Code -->
+    <div id="fb-root"></div>
+
+    <!-- Your ปลั๊กอินแชท code -->
+    <div id="fb-customer-chat" class="fb-customerchat"></div>
+
+    <div class="content-wrapper">
+      <div class="content-header">
+        <div class="container-fluid">
+          <div class="row mb-3">
+            <div class="col-sm-12 mb-3">
+              <h1 class="m-0" style="color: #1a086e; font-size: 38px; font-weight: bold;">การจัดการลานจอดรถ</h1>
+            </div>
+            <div class="col-sm 24">
+              <div class="card">
+                <div class="card-body">
+                  <table id="parking-list1" class="table table-bordered table-striped" style="width:100%">
+                    <!--Start search -->
+                    <div class="wrap">
+                      <div class="input-group row">
+                        <div class="col-sm-4 input-group">
+                          <input type="text" id="parking" class="form-control" 
+                          placeholder="ค้นหา" name="search"/>
+                          <div class="input-group-btn">
+                            <button class="btn btn-primary "type="submit">
+                              <i class="fas fa-search"></i></button>
+                            </div>
+                          </div>
+
+                          <button class="btn btn-success mb-2 ml-3" id="excel"><i class="far fa-file-excel"></i> Export to Excel</button>
+                               
+                                <button class="btn btn-primary mb-2" data-toggle="modal" data-target="#exampleModal-add"
+                                  style="margin-left: auto; ">
+                                  <i class="fas fa-plus"></i> เพิ่มข้อมูล
+                                </button>
+                                <!--button add -->
+                              </div>
+                            </div>
+                          </div><!--end search -->
+                    
+                    <thead>
+                      <tr>
+                        <th>NO.</th>
+                        <th>รูปภาพลานจอด</th>
+                        <th>ชื่อลานจอด</th>
+                        <th>อัตราค่าบริการ</th>
+                        <th>ส่วนลด (บาท)</th>
+                        <th>สายลานจอด (line)</th>
+                        <th>ประเภทลานจอด</th>
+                        <th>เงื่อนไขลานจอด</th>
+                        <th>สถานะลานจอด</th>
+                        <th>Line token (group)</th>
+                        <th>วันที่สร้าง</th>
+                        <th>วันที่แก้ไข</th>
+                        <!-- <th>user สร้าง</th>
+                        <th>user แก้ไข</th> -->
+                        <th class="textbox" colspan="1">การจัดการ</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {% for row in data %}
+                      <tr>
+                        <td>{{row.Id}}</td>
+                        <td>{{row.parking_image}}</td>
+                        <td>{{row.parking_name}}</td>
+                        <td>{{row.parking_price}}</td>
+                        <td>{{row.parking_discount}}</td>
+                        <td>{{row.line_name}}</td>
+                        <td>{{row.parking_type_name}}</td>
+                        <td>{{row.policy_des}}</td>
+                        <td>{{row.parking_status}}</td>
+                        <td>{{row.line_token}}</td>
+                        <td>{{row.user_create_date}}</td>
+                        <td>{{row.user_edit_date}}</td>
+                        <!-- <td>{{row.12}}</td>
+                        <td>{{row.13}}</td> -->
+                        <td class="textbox">
+                          <!--Button edit and delete in table-->
+                          {{row.button|safe}}
+                        </td>
+                        <!--end button edit and delete in table-->
+                      </tr>
+                      {% endfor %}
+                      <div class="modal fade " id="Modaledit" tabindex="-1" role="dialog"
+                        aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog ">
+                          <div class="modal-content">
+                            <div class="modal-header">
+                              
+                              <h5 class="modal-title">อัปเดตข้อมูล</h5>
+                              <button type="button" class="close" data-dismiss="modal">&times;</button>
+                            </div>
+                           
+                            <div class="modal-body">
+                              <form action="{{url_for('update_parking_manage')}}" method="POST" enctype="multipart/form-data">
+                                <div class="form-group row mt-2">
+                                  <div class="col-sm-6 mt-2">
+                                    <label>รูปภาพลานจอด <span class="text-valid">*</span></label>
+                                    <input type="hidden" name="id" id="id2" value="">
+                                    <input type="file" name="file" id="file2"  onchange="validateSize2(this)" >
+                                  </div>
+
+                                  <div class="col-sm-6 mt-2">
+                                    <br>
+                                    <button type="button" id="showimg2" onclick="switchimg2();"style="display: none;">ดูรูปภาพ</button>
+                                  </div>
+                                </div>
+                                <img id="output2" width="300" height="400"style="display: none;"/>
+                                <div class="form-group">
+                                  <label>ชื่อลานจอด: <span
+                                    class="text-valid">*</span></label>
+                                  <input type="text" class="form-control" id="parking_name2" name="parking_name" value="">
+                                </div>
+                                <div class="form-group">
+                                  <label>อัตราค่าบริการ: <span
+                                    class="text-valid">*</span></label>
+                                  <input type="text" class="form-control" id="parking_price2" name="parking_price" value="">
+                                </div>
+                                <div class="form-group">
+                                  <label>ส่วนลด (บาท):</label>
+                                  <input type="text" class="form-control" id="parking_discount2" name="parking_discount" value="">
+                                </div>
+                                <div class="form-group">
+                                  <label>สายลานจอด (line): <span
+                                    class="text-valid">*</span></label>
+                                  <select class="form-control" id="line_name2"  name="line_name" required>
+                                    
+                                    <option value="สายสีเขียว">สายสีเขียว</option>
+                                 
+                                    <option value="สายสีม่วง">สายสีม่วง</option>
+                                    <option value="สายสีน้ำเงิน">สายสีน้ำเงิน</option>
+                                   
+                                </select>
+                                </div>
+                                <div class="form-group">
+                                  <label>รหัสสถานี <span
+                                    class="text-valid">*</span></label>
+                                  <input type="text" class="form-control" id="parking_code2" name="parking_code" value="">
+                                </div>
+                                <div class="form-group">
+                                  <label>ประเภทลานจอด: <span
+                                    class="text-valid">*</span></label>
+                                  <select class="form-control" id="vcard_type2"
+                                     name="vcard_type" required>
+                                     
+                              
+                                   </select>
+                                </div>
+                                <div class="form-group">
+                                  <label>เงื่อนไขลานจอด: <span
+                                    class="text-valid">*</span></label>
+                                  <input type="text" class="form-control" id="policy_des2" name="policy_des" value="">
+                                </div>
+                                <div class="form-group">
+                                  <label>สถานะลานจอด: <span
+                                    class="text-valid">*</span></label>
+                                  <select class="form-control" id="parking_status2" name="parking_status">
+                                  </select>
+                                </div>
+                                <div class="form-group">
+                                  <label>วันที่สร้าง: </label>
+                                  <input type="text" class="form-control" id="user_create_date2" name="user_create_date" value="" readonly>
+                                </div>
+
+                                <div class="form-group">
+                                  <label>วันที่สร้าง: </label>
+                                  <input type="text" class="form-control" id="user_edit_date2" name="user_edit_date" value="" readonly>
+                                </div>
+                                <div class="form-group">
+                                  <button class="btn btn-primary" type="submit">อัปเดต</button>
+                                </div>
+                              </form>
+                            </div>
+                            <div class="modal-footer">
+                              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!--modal Add-->
+  <div class="card-body">
+    <table id="example" class="table table-bordered table-striped" style="width:100%">
+      <div class="modal fade bd-example-modal-lg" id="exampleModal-add" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">เพิ่มข้อมูล</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+
+            <div class="container py-5">
+              <div class="row">
+                  <div class="col-md-10 mx-auto">
+              <form action="{{url_for('insert_parking_manage2')}}" method="post" enctype="multipart/form-data">
+                <input class="form-control" type="hidden" id="" name="" placeholder="">
+
+                <div class="form-group row mt-2">
+                  <div class="col-sm-6 mt-2">
+                    <label for="">รูปภาพลานจอด: <span
+                      class="text-valid">*</span> </label>
+                    <input type="file" name="parking_image" onchange="validateSize(this)" required>
+                  </div>
+
+                  <div class="col-sm-6 mt-2">
+                    <br>
+                    <button type="button" id="showimg" onclick="switchimg();"style="display: none;">ดูรูปภาพ</button>
+                  </div>
+                </div>
+                <img id="output" width="500" height="600"style="display: none;"/>
+                <div class="col-sm-12 mt-4"> 
+                  <label for="parking_name">ชื่อลานจอด: <span
+                    class="text-valid">*</span> </label>
+                  <input class="form-control" type="text" id="parking_name" name="parking_name" required>
+                </div>
+
+                <div class="col-sm-12 mt-4"> 
+                  <label for="parking_name">ชื่อลานจอด (ภาษาอังกฤษ): <span
+                    class="text-valid">*</span> </label>
+                  <input class="form-control" type="text" id="parking_name_en" name="parking_name_en" required>
+                </div>
+
+                <div class="col-sm-4 mt-4"> 
+                  <label for="parking_price">รหัสสถานี: <span
+                    class="text-valid">*</span> </label>
+                  <input class="form-control" type="text" id="parking_code" name="parking_code" required>
+                </div>
+
+              <div class="form-group row">
+                <div class="col-sm-4 mt-4"> 
+                  <label for="parking_price">อัตราค่าบริการ: <span
+                    class="text-valid">*</span></label>
+                  <input class="form-control" type="text" id="parking_price" name="parking_price" required>
+                </div>
+              
+                <div class="col-sm-4 mt-4">
+                  <label for="parking_discount">ส่วนลด (บาท): </label>
+                  <input class="form-control" type="text" id="parking_discount" name="parking_discount"required>
+                </div>
+
+                <div class="col-sm-4 mt-4">
+                  <label for="line_name">สายลานจอด (line): <span
+                    class="text-valid">*</span></label>
+                  <select class="form-control" id="line_name"  name="line_name" required>
+                    <option value=''>--กรุณาเลือกสาย--</option>
+                    <option value="สายสีน้ำเงิน">สายสีน้ำเงิน</option>
+                    <option value="สายสีม่วง">สายสีม่วง</option>
+                    <option value="สายสีเขียว">สายสีเขียว</option>
+                </select>
+                </div>
+              </div> 
+              <div class="form-group row">
+                <div class="col-sm-4 mt-4"> 
+                  <label for="parking_price">ค่ามัดจำ <span
+                    class="text-valid">*</span></label>
+                  <input class="form-control" type="text" id="deposit" name="deposit">
+                </div>
+              
+                <div class="col-sm-4 mt-4">
+                  <label for="parking_discount">ค่าบริการกรณีจอดค้างคืน <span
+                    class="text-valid">*</span> </label>
+                  <input class="form-control" type="text" id="over_night" name="over_night" required>
+                </div>
+
+              </div> 
+
+              <div class="form-group row"> 
+              <div class="col-sm-4 mt-4">
+                  <label for="parking_type_name">ประเภทลานจอด: <span
+                    class="text-valid">*</span> </label>
+                  <select class="form-control" id="parking_type_name"
+                    name="parking_type_name" required>
+                    <option value=''>--ประเภทบัตร--</option>
+                    <option value='AFC'>AFC</option>
+                    <option value='CIT'>CIT</option>
+                    <option value='JOWIT'>JOWIT</option>
+                    <option value='TAFF'>TAFF</option>
+                  </select>
+                </div>
+
+                <div class="col-sm-4 mt-4">
+                  <label for="policy_des">เงื่อนไขลานจอด: <span
+                    class="text-valid">*</span> </label>
+                  <input class="form-control" type="text" id="policy_des" name="policy_des" required>
+                </div>
+                
+                <div class="col-sm-4 mt-4">
+                  <label for="parking_status">สถานะลานจอด: <span
+                    class="text-valid">*</span> </label>
+                  <select class="form-control" id="parking_status"
+                    name="parking_status" required>
+                    <option value="">--สถานะ--</option>
+                    <option value='active'>active</option>
+                    <option value='inactive'>inactive</option>
+                  </select>
+                </div>
+              </div> 
+
+                <div class="form-group row">
+                  <div class="col-sm-12 mt-4">
+                    <div class="form-group row"> 
+                      <div class="col-sm-6 mt-4">
+                          <label for="parking_type_name">latitude(ตามAPIของรฟม) <span
+                            class="text-valid">*</span> </label>
+                          <input class="form-control" type="text" id="latitude" name="latitude" required>
+                        </div>
+        
+                        <div class="col-sm-6 mt-4">
+                          <label for="policy_des">longitude(ตามAPIของรฟม) <span
+                            class="text-valid">*</span> </label>
+                          <input class="form-control" type="text" id="longitude" name="longitude" required>
+                        </div>
+                        
+                      </div> 
+                    <label for="user_create_date">วันที่สร้าง: <span
+                      class="text-valid">*</span> </label>
+                    <input class="form-control" type="date" id="user_create_date" name="user_create_date" required>
+                  </div>
+                  
+                </div>
+
+                <button type="button" class="btn btn-secondary float-right mt-4 ml-2" data-dismiss="modal">ยกเลิก</button>
+                <button type="submit" value="Submit" class="btn btn-primary float-right mt-4" class="fas fa-save">บันทึกข้อมูล</button>
+                
+              </form>
+            </div>
+           </div>
+           </div>
+          </div>
+        </div>
+      </div>
+    </table>
+  </div>
+  {% include "manage/comps/footer.html" %}
+</body>
+
+
+<script>
+  $(document).ready(function () {
+    $('#parking-list1').DataTable({
+      "dom": 'Btip',
+      "processing": true,
+      "pageLength": 10,
+      "scrollY": 300,
+      "scrollX": true,
+      "order": [[ 0, "desc" ]],
+      "oLanguage": {
+        "sLengthMenu": "แสดง _MENU_ ลำดับ ต่อหน้า",
+        "sZeroRecords": "ไม่พบข้อมูลที่ค้นหา",
+        "sInfo": "แสดง _START_ ถึง _END_ ของ _TOTAL_ ลำดับ",
+        "sInfoEmpty": "แสดง 0 ถึง 0 ของ 0 ลำดับ",
+        "sInfoFiltered": "(แสดงค้นหาทั้งหมด _MAX_ รายการ)",
+        "oPaginate": {
+          "sFirst": "หน้าแรก",
+          "sLast": "หน้าสุดท้าย",
+          "sNext": "ถัดไป",
+          "sPrevious": "ก่อนหน้า"
+        }
+      }
+    });
+
+    oTable = $('#parking-list1').DataTable();
+    oTable.buttons('.buttons-csv').nodes().css("display", "none");
+    oTable.buttons('.buttons-excel').nodes().css("display", "none");
+    oTable.buttons('.buttons-print').nodes().css("display", "none");
+    oTable.buttons('.buttons-pdf').nodes().css("display", "none");
+    oTable.buttons('.buttons-copy').nodes().css("display", "none");
+    $('#parking').keyup(function () {
+      oTable.search($(this).val()).draw();
+    });
+    $('#excel').on('click', function () {
+      oTable.button('.buttons-excel').trigger();
+    })
+  });
+</script>
+
+<script>
+  function validateSize(input) {
+    const fileSize = input.files[0].size / 1024 / 1024;
+    const shbutton = document.getElementById('showimg');
+    const eximg = document.getElementById('output');
+    console.log('asdfsdf')
+    if (fileSize > 2) {
+      alert('File size exceeds 2 MB');
+      input.value = null
+      shbutton.style.display = 'none';
+      console.log('success')
+    } else {
+      eximg.style.display = 'none'
+      eximg.src = URL.createObjectURL(input.files[0]);
+      shbutton.style.display = 'block';
+    }
+  }
+  function validateSize2(input2) {
+    const fileSize2 = input2.files[0].size / 1024 / 1024;
+    const shbutton2 = document.getElementById('showimg2');
+    const eximg2 = document.getElementById('output2');
+    console.log('asdfsdf')
+    if (fileSize2 > 2) {
+      alert('File size exceeds 2 MB');
+      input2.value = null
+      shbutton2.style.display = 'none';
+      console.log('success')
+    } else {
+      eximg2.style.display = 'none'
+      eximg2.src = URL.createObjectURL(input2.files[0]);
+      shbutton2.style.display = 'block';
+      console.log('pass')
+    }
+  }
+  function switchimg (){
+    const img_ex = document.getElementById('output');
+    if (img_ex.style.display === 'none'){
+      img_ex.style.display = 'block';
+    }else{
+      img_ex.style.display = 'none';
+    }
+  }
+  function switchimg2 (){
+    const img_ex2 = document.getElementById('output2');
+    if (img_ex2.style.display === 'none'){
+      img_ex2.style.display = 'block';
+    }else{
+      img_ex2.style.display = 'none';
+    }
+  }
+</script>
+<script>
+  function showdataupdate(index){
+    $.ajax({
+      url:'/manage/modal_parking',
+      method:'POST',
+      data:{id:index},
+      success:function(data){
+        const select_v = document.getElementById('vcard_type2')
+        const select_l = document.getElementById('line_name2')
+        const select_s = document.getElementById('parking_status2')
+        $('#id2').val(data[0].Id)
+        $('#showimg2').css("display", "none")
+        $('#file2').val(null)
+        $('#output2').css('display','none')
+        $('#parking_name2').val(data[0].parking_name)
+        $('#parking_price2').val(data[0].parking_price)
+        $('#parking_discount2').val(data[0].parking_discount)
+        $('#parking_code2').val(data[0].parking_code)
+        if (data[0].vcard_type == 'AFC'){
+          select_v.innerHTML = "<option value='AFC'>AFC</option>"
+          select_v.innerHTML += "<option value='TAFF'>TAFF</option>"
+          select_v.innerHTML += "<option value='JOWIT'>JOWIT</option>"
+          select_v.innerHTML += "<option value='CIT'>CIT</option>"
+        }else if (data[0].vcard_type == 'TAFF'){
+          select_v.innerHTML = "<option value='TAFF'>TAFF</option>"
+          select_v.innerHTML += "<option value='AFC'>AFC</option>"
+          select_v.innerHTML += "<option value='JOWIT'>JOWIT</option>"
+          select_v.innerHTML += "<option value='CIT'>CIT</option>"
+        }else if (data[0].vcard_type == 'JOWIT'){
+          select_v.innerHTML = "<option value='JOWIT'>JOWIT</option>"
+          select_v.innerHTML += "<option value='AFC'>AFC</option>"
+          select_v.innerHTML += "<option value='TAFF'>TAFF</option>"
+          select_v.innerHTML += "<option value='CIT'>CIT</option>"
+        }else{
+          select_v.innerHTML = "<option value='CIT'>CIT</option>"
+          select_v.innerHTML += "<option value='AFC'>AFC</option>"
+          select_v.innerHTML += "<option value='TAFF'>TAFF</option>"
+          select_v.innerHTML += "<option value='JOWIT'>JOWIT</option>"
+        }
+        if(data[0].line_name =='สายสีเขียว'){
+          select_l.innerHTML = '<option value="สายสีเขียว">สายสีเขียว</option>'
+          select_l.innerHTML += '<option value="สายสีม่วง">สายสีม่วง</option>'
+          select_l.innerHTML += '<option value="สายสีน้ำเงิน">สายสีน้ำเงิน</option>'
+        }else if (data[0].line_name == 'สายสีม่วง'){
+          select_l.innerHTML = '<option value="สายสีม่วง">สายสีม่วง</option>'
+          select_l.innerHTML += '<option value="สายสีเขียว">สายสีเขียว</option>'
+          select_l.innerHTML += '<option value="สายสีน้ำเงิน">สายสีน้ำเงิน</option>'
+        }else{
+          select_l.innerHTML = '<option value="สายสีน้ำเงิน">สายสีน้ำเงิน</option>'
+          select_l.innerHTML += '<option value="สายสีเขียว">สายสีเขียว</option>'
+          select_l.innerHTML += '<option value="สายสีม่วง">สายสีม่วง</option>'
+        }
+        $('#policy_des2').val(data[0].policy_des)
+        if (data[0].activity_status == 'active'){
+          select_s.innerHTML = '<option value="active">active</option>'
+          select_s.innerHTML += '<option value="inactive">inactive</option>'
+        }else{
+          select_s.innerHTML = '<option value="inactive">inactive</option>'
+          select_s.innerHTML += '<option value="active">active</option>'
+        }
+        $('#user_create_date2').val(data[0].user_create_date)
+        $('#user_edit_date2').val(data[0].user_edit_date)
+      }
+    })
+  }
+</script>
+
+<script>
+  var chatbox = document.getElementById('fb-customer-chat');
+  chatbox.setAttribute("page_id", "106927381737911");
+  chatbox.setAttribute("attribution", "biz_inbox");
+
+  window.fbAsyncInit = function() {
+    FB.init({
+      xfbml            : true,
+      version          : 'v11.0'
+    });
+  };
+
+  (function(d, s, id) {
+    var js, fjs = d.getElementsByTagName(s)[0];
+    if (d.getElementById(id)) return;
+    js = d.createElement(s); js.id = id;
+    js.src = 'https://connect.facebook.net/th_TH/sdk/xfbml.customerchat.js';
+    fjs.parentNode.insertBefore(js, fjs);
+  }(document, 'script', 'facebook-jssdk'));
+</script>
+
+</html>

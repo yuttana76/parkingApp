@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    {% include "include/manage-css.html" %}
+    {% include "include/manage-js.html" %}
+    <title>MRTA การจัดการข้อมูลลูกค้า</title>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.25/css/jquery.dataTables.min.css">
+    <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+    <script src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+</head>
+
+<body class="hold-transition sidebar-mini layout-fixed">
+    <div class="wrapper">
+        {% include "manage/comps/header.html" %}
+        {% include "manage/comps/sidebar.html" %}
+
+        <div class="content-wrapper">
+            <div class="content-header">
+                <div class="container-fluid">
+
+                    <div class="col-sm-6 mb-3">
+                        <h1 style="color: #1a086e; font-size: 38px; font-weight: bold;">การจัดการข้อมูลลูกค้า</h1>
+                    </div>
+
+                    <!--Search-->
+                    
+                    <div class="col-sm-4 mt-2 input-group">
+                        <input type="text" id="tagsearch" class="form-control" placeholder="ค้นหา" name="tag" />
+                        <div class="input-group-btn">
+                            <button class="btn btn-primary " type="button">
+                                <i class="fas fa-search"></i></button>
+                        </div>
+                </div>
+                <!--end Search-->
+
+                <div class="row mb-2 mt-4">
+                    <div class="col-sm-12">
+                        <div class="card card-primary card-tabs">
+                            <div class="card-body">
+                                <div class="tab-content" id="custom-tabs-one-tabContent">
+                                    <div class="tab-pane fade show active" id="custom-tabs-one-home" role="tabpanel"
+                                        aria-labelledby="custom-tabs-one-home-tab">
+                                        <table id="customer-manage" class="table table-bordered table-striped"
+                                            style="width:100%">
+                                            <thead>
+                                                <tr>
+                                                    <th>No</th>
+                                                    <th>ชื่อ</th>
+                                                    <th>นามสกุล</th>
+                                                    <th>บัตรประชาชน</th>
+                                                    <th>เลขที่ผู้เสียภาษี(บริษัท)</th>
+                                                    <th>เบอร์ลูกค้า</th>
+                                                    <th>ที่อยู่ลูกค้า</th>
+                                                    <th>ที่อยู่บริษัท</th>
+                                                    <th>ลานจอดรถ</th>
+                                                    <th>รหัสบัตร</th>
+                                                    <th>วันที่สมัคร</th>
+                                                    <th>วันที่ต่ออายุ</th>
+                                                    <th>วันที่หมดอายุ</th>
+                                                    <th>วันที่แก้ไข</th>
+                                                    <!-- <th>User แก้ไข</th> -->
+                                                    <th colspan="1">การจัดการ</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                
+                                                
+                                                <div class="modal fade" id="Modaledit" tabindex="-1"
+                                                    role="dialog" aria-labelledby="exampleModalLabel"
+                                                    aria-hidden="true">
+                                                    <div class="modal-dialog">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                                <h4 class="modal-title">อัปเดตข้อมูล</h4>
+                                                                <button type="button" class="close"
+                                                                    data-dismiss="modal">&times;</button>
+                                                            </div>
+                                                            <div class="modal-body">
+                                                                <form action="{{ url_for('update_customer_manage') }}"
+                                                                    method="POST" id="myFormId">
+                                                                    <div class="form-group" style="display:none;">
+                                                                        <input type="hidden" id="id" name="id"
+                                                                            >
+                                                                    </div>
+                                                                    <div class="form-group">
+                                                                        <label>รหัสบัตร:</label>
+                                                                        <input type="text" id="card_id" class="form-control"
+                                                                            name="card_id" 
+                                                                            >
+                                                                    </div>
+
+                                                                    <div class="form-group">
+                                                                        <label>วันที่หมดอายุ:</label>
+                                                                        <input type="date" id="card_expire_date" class="form-control"
+                                                                            name="card_expire_date" 
+                                                                            >
+                                                                    </div>
+
+
+                                                                    <div class="form-group">
+                                                                        <label>ชื่อ:</label>
+                                                                        <input type="text" id="first_name_th" class="form-control"
+                                                                            name="first_name_th"
+                                                                            >
+                                                                    </div>
+
+                                                                    <div class="form-group">
+                                                                        <label>นามสกุล:</label>
+                                                                        <input type="text" id="last_name_th" class="form-control"
+                                                                            name="last_name_th"
+                                                                            >
+                                                                    </div>
+
+                                                                    <div class="form-group">
+                                                                        <label>บัตรประชาชน:</label>
+                                                                        <input type="text" id="identity_card" class="form-control"
+                                                                             readonly>
+                                                                    </div>
+
+                                                                    <div class="form-group">
+                                                                        <label>เบอร์โทร:</label>
+                                                                        <input type="text" id="phone" class="form-control"
+                                                                            name="phone" 
+                                                                            maxlength="10">
+                                                                    </div>
+
+                                                                    <div class="form-group">
+                                                                        <label>เลขที่บ้าน:</label>
+                                                                        <input type="text" id="address_no" class="form-control"
+                                                                            name="address_no"
+                                                                            >
+                                                                    </div>
+                                                                    
+                                                                    <div class="form-group">
+                                                                        <label>อาคาร (บ้าน):</label>
+                                                                        <input type="text" id="unit_home" class="form-control"
+                                                                            name="unit_home" >
+                                                                    </div>
+
+                                                                    <div class="form-group">
+                                                                        <label>หมู่ (บ้าน):</label>
+                                                                        <input type="text" id="village" class="form-control"
+                                                                            name="village" >
+                                                                    </div>
+
+                                                                    <div class="form-group">
+                                                                        <label>ซอย (บ้าน):</label>
+                                                                        <input type="text" id="alley" class="form-control"
+                                                                            name="alley" >
+                                                                    </div>
+
+                                                                    <div class="form-group">
+                                                                        <label>ถนน (บ้าน):</label>
+                                                                        <input type="text" id="street" class="form-control"
+                                                                            name="street" >
+                                                                    </div>
+
+                                                                    <div class="form-group">
+                                                                        <label>จังหวัด (บ้าน):</label>
+                                                                        <select type="text" id="province" class="custom-select"
+                                                                            name="province" ></select>
+                                                                    </div>
+
+                                                                    <div class="form-group">
+                                                                        <label>เขต/อำเภอ (บ้าน):</label>
+                                                                        <select type="text" id="district" class="custom-select"
+                                                                            name="district" ></select>
+                                                                    </div>
+
+                                                                    <div class="form-group">
+                                                                        <label>แขวง/ตำบล (บ้าน):</label>
+                                                                        <select type="text" id="sub_district" class="custom-select"
+                                                                            name="sub_district"
+                                                                            ></select>
+                                                                    </div>
+
+                                                                    <div class="form-group">
+                                                                        <label>รหัสไปรษณีย์ (บ้าน):</label>
+                                                                        <select type="text" id="postal_code" class="custom-select"
+                                                                            name="postal_code"
+                                                                            ></select>
+                                                                    </div>
+                                                                    
+                                                                    <div class="form-group">
+                                                                        <label for="company_name" class="col-form-label">ชื่อบริษัท :</label>
+                                                                        <input type="text" class="form-control" name="company_name" id="company_name">
+                                                                    </div>
+
+                                                                    <div class="form-group">
+                                                                        <label for="company_no" class="col-form-label">เลขที่อยู่บริษัท :</label>
+                                                                        <input type="text" class="form-control" name="company_no" id="company_no">
+                                                                    </div>
+                                                                    
+                                                                    <div class="form-group">
+                                                                        <label for="company_no" class="col-form-label">เลขที่ผู้เสียภาษี :</label>
+                                                                        <input type="text" class="form-control" name="identity_com" id="identity_com">
+                                                                    </div>
+
+
+                                                                    <div class="form-group">
+                                                                        <label for="unit" class="col-form-label">อาคาร/หมู่บ้าน (ที่ทำงาน) :</label>
+                                                                        <input type="text" class="form-control" name="company_unit" id="company_unit">
+                                                                    </div>
+                                                                    
+                                                                    <div class="form-group">
+                                                                        <label for="village" class="col-form-label">หมู่ (ที่ทำงาน) :</label>
+                                                                        <input type="text" class="form-control" name="company_village" id="company_village">
+                                                                    </div>
+
+                                                                    <div class="form-group">
+                                                                        <label for="village" class="col-form-label">ซอย (ที่ทำงาน) :</label>
+                                                                        <input type="text" class="form-control" name="company_alley" id="company_alley">
+                                                                    </div>
+
+                                                                    <div class="form-group">
+                                                                        <label for="village" class="col-form-label">ถนน (ที่ทำงาน) :</label>
+                                                                        <input type="text" class="form-control" name="company_street" id="company_street">
+                                                                    </div>
+                                                                    
+                                                                    <div class="form-group">
+                                                                        <label for="province" class="col-form-label">จังหวัด (ที่ทำงาน) :</label>
+                                                                        <select  class="custom-select" name="company_province" id="company_province"></select>
+                                                                    </div>
+                                                                    
+                                                                    <div class="form-group">
+                                                                        <label for="province" class="col-form-label">เขต/อำเภอ (ที่ทำงาน) :</label>
+                                                                        <select  class="custom-select" name="company_district" id="company_district"></select>
+                                                                    </div>
+                                                                    
+                                                                    <div class="form-group">
+                                                                        <label for="sub_district" class="col-form-label">แขวง/ตำบล (ที่ทำงาน) :</label>
+                                                                        <select  class="custom-select" name="company_sub_district" id="company_sub_district"></select>
+                                                                    </div>
+                                                                    
+                                                                    <div class="form-group">
+                                                                        <label for="postal_code" class="col-form-label">รหัสไปรษณีย์ (ที่ทำงาน) :</label>
+                                                                        <select  class="custom-select" name="company_postal_code" id="company_postal_code"></select>
+                                                                    </div>
+                                                                    
+                                                                    <div class="form-group">
+                                                                        <label>หมายเหตุ:</label>
+                                                                        <input type="text" id="comment" class="form-control"
+                                                                            name="comment">
+                                                                    </div>
+
+                                                                    <div class="form-group">
+                                                                        <label>วันที่แก้ไข:</label>
+                                                                        <input type="text" id="user_edit_date" class="form-control"
+                                                                            name="user_edit_date"
+                                                                             readonly>
+                                                                    </div>
+
+                                                                    <div class="form-group">
+                                                                        <button class="btn btn-primary"
+                                                                            type="submit" >อัปเดต</button>
+                                                                    </div>
+                                                                </form>
+                                                            </div>
+                                                            <div class="modal-footer">
+                                                                <button type="button" class="btn btn-default"
+                                                                    data-dismiss="modal">Close</button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </tbody>
+                                        </table>
+                                        
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- /.card -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+    {% include "manage/comps/footer.html" %}
+</body>
+<script>
+    fetch('/manage/province').then((response)=>{
+        response.json().then((data) =>{
+            optionHTML = ''
+            for (province of data.province) {
+                 optionHTML += '<option value="' + province + '">' + province + '</option>'
+                }
+            document.getElementById('company_province').innerHTML = optionHTML
+            document.getElementById('province').innerHTML = optionHTML
+        })
+    })
+    //-----------------------------------------------------------------------company modal -----------------------------------
+    province_select = document.getElementById('company_province');
+    district_select = document.getElementById('company_district');
+    subdistrict_select = document.getElementById('company_sub_district');
+    postcode_select = document.getElementById('company_postal_code');
+
+    province_select.onchange = function(){
+     province = province_select.value;
+     fetch('district/' + province).then(function(response){
+      response.json().then(function(data){
+       optionHTML = '';
+       for (district of data.districtlist){
+        optionHTML += '<option value="' + district.name +'">' + district.name+ '</option>'
+       }
+       district_select.innerHTML = optionHTML;
+      });
+     });
+    }
+    district_select.onchange = function(){
+     district = district_select.value; 
+     province = province_select.value;
+     fetch('subdistrict/'+province +'/' + district).then(function(response){
+      response.json().then(function(data){
+       optionHTML = '';
+       for (sub of data.subdistrictlist){
+        optionHTML += '<option value="' + sub +'">' + sub + '</option>'
+       }
+       subdistrict_select.innerHTML = optionHTML;
+      });
+     });
+    }
+    subdistrict_select.onchange = function(){
+        subdistrict = subdistrict_select.value;
+        province = province_select.value;
+        district_ = district_select.value;
+        fetch('postcode/' +province+'/'+district_+'/'+ subdistrict).then(function(response){
+         response.json().then(function(data){
+          optionHTML = '';
+          for (post of data.postcodelist){
+           optionHTML += '<option value="' + post +'">' + post + '</option>'
+          }
+          postcode_select.innerHTML = optionHTML;
+         });
+        });
+       }
+
+    //---------------------------------------------------------------end company modal--------------------------------------
+    //---------------------------------------------------------------home modal-----------------------------------------------
+    province_select2 = document.getElementById('province');
+    district_select2 = document.getElementById('district');
+    subdistrict_select2 = document.getElementById('sub_district');
+    postcode_select2 = document.getElementById('postal_code');
+    
+    province_select2.onchange = function(){
+     province = province_select2.value;
+     fetch('district/' + province).then(function(response){
+      response.json().then(function(data){
+       optionHTML = '';
+       for (district of data.districtlist){
+        optionHTML += '<option value="' + district.name +'">' + district.name+ '</option>'
+       }
+       district_select2.innerHTML = optionHTML;
+      });
+     });
+    }
+    district_select2.onchange = function(){
+     district = district_select2.value; 
+     province = province_select2.value;
+     fetch('subdistrict/'+province+'/' + district).then(function(response){
+      response.json().then(function(data){
+       optionHTML = '';
+       for (sub of data.subdistrictlist){
+        optionHTML += '<option value="' + sub +'">' + sub + '</option>'
+       }
+       subdistrict_select2.innerHTML = optionHTML;
+      });
+     });
+    }
+    subdistrict_select2.onchange = function(){
+        subdistrict = subdistrict_select2.value;
+        district = district_select2.value; 
+        province = province_select2.value; 
+        fetch('postcode/'+province +'/'+district+'/' + subdistrict).then(function(response){
+         response.json().then(function(data){
+          optionHTML = '';
+          for (post of data.postcodelist){
+           optionHTML += '<option value="' + post +'">' + post + '</option>'
+          }
+          postcode_select2.innerHTML = optionHTML;
+         });
+        });
+       }
+
+    //-----------------------------------------------------------------------end home modal------------------------------------------------
+
+</script>
+<script>
+    $.ajax({
+        url:'/manage/datacustomer',
+        method:'GET',
+        dataType:'json',
+        success: function(obj){
+            $('#customer-manage').DataTable({
+                sDom:"ltipr",
+                order: [[ 0, "desc" ]],
+                //searching:true,
+                deferRender: true,
+                data:obj,
+                columns:[
+                {'data':'Id'},
+                {'data':'first_name_th'},
+                {'data':'last_name_th'},
+                {'data':'identity_card'},
+                {'data':'identity_com'},
+                {'data':'phone'},
+                {'data':'address_no'},
+                {'data':'address_com'},
+                {'data':'parking_code'},
+                {'data':'card_id'},
+                {'data':'parking_register_date'},
+                {'data':'card_last_read_date'},
+                {'data':'card_expire_date'},
+                {'data':'user_edit_date'},
+                {'data':'button'}
+                ]
+            })
+        }
+
+    })
+    $('#Modaledit').on('show.bs.modal',function(event){
+        var button = $(event.relatedTarget)
+        var id = button.data('whatever')
+        var modal = $(this)
+        console.log(id)
+
+        $('#user_id').val(id)
+        $.ajax({
+            url:'/manage/modal_customer',
+            method:'POST',
+            data:{id:id},
+            success:async function(data){
+                $('#id').val(data[0].Id)
+                $('#card_id').val(data[0].card_id);
+                $('#first_name_th').val(data[0].first_name_th);
+                $('#last_name_th').val(data[0].last_name_th);
+                $('#identity_card').val(data[0].identity_card);
+                $('#phone').val(data[0].phone);
+                $('#address_no').val(data[0].address_no);
+                $('#unit_home').val(data[0].unit_home);
+                $('#village').val(data[0].village);
+                $('#alley').val(data[0].alley);
+                $('#street').val(data[0].street);
+                $('#province').val(data[0].province);
+                $('#company_no').val(data[0].company_no);
+                $('#company_name').val(data[0].company_name);
+                $('#identity_com').val(data[0].identity_com);
+                $('#company_unit').val(data[0].company_unit);
+                $('#company_village').val(data[0].company_village);
+                $('#company_alley').val(data[0].company_alley);
+                $('#company_street').val(data[0].company_street);
+                $('#user_edit_date').val(data[0].user_edit_date);
+                $('#card_expire_date').val(data[0].card_expire_date);
+                // $('#comment').val(data[0].comment);
+                await fetch('district/' + data[0].province).then(async function(response){
+                    await response.json().then(function(data){
+                     optionHTML = '';
+                     for (district of data.districtlist){
+                      optionHTML += '<option value="' + district.name +'">' + district.name+ '</option>'
+                     }
+                     document.getElementById('district').innerHTML = optionHTML;
+                    });
+                   });
+                $('#district').val(data[0].district);
+                await fetch('subdistrict/'+data[0].province+'/' + data[0].district).then(async function(response){
+                    await response.json().then(function(data){
+                     optionHTML = '';
+                     for (sub of data.subdistrictlist){
+                      optionHTML += '<option value="' + sub +'">' + sub + '</option>'
+                     }
+                     document.getElementById('sub_district').innerHTML = optionHTML;
+                    });
+                   });
+                $('#sub_district').val(data[0].sub_district);
+                await fetch('postcode/'+data[0].province+'/' + data[0].district+'/' + data[0].sub_district).then(async function(response){
+                    await response.json().then(function(data){
+                     optionHTML = '';
+                     for (post of data.postcodelist){
+                      optionHTML += '<option value="' + post +'">' + post + '</option>'
+                     }
+                     document.getElementById('postal_code').innerHTML = optionHTML;
+                    });
+                   });
+                $('#postal_code').val(data[0].postal_code);
+                //---------------------------------------company----------------------------------
+                $('#company_province').val(data[0].company_province);
+                await fetch('district/' + data[0].company_province).then(async function(response){
+                    await response.json().then(function(data){
+                     optionHTML = '';
+                     for (district of data.districtlist){
+                      optionHTML += '<option value="' + district.name +'">' + district.name+ '</option>'
+                     }
+                     document.getElementById('company_district').innerHTML = optionHTML;
+                    });
+                   });
+                $('#company_district').val(data[0].company_district);
+                await fetch('subdistrict/'+data[0].company_province+'/' + data[0].company_district).then(async function(response){
+                    await response.json().then(function(data){
+                     optionHTML = '';
+                     for (sub of data.subdistrictlist){
+                      optionHTML += '<option value="' + sub +'">' + sub + '</option>'
+                     }
+                     document.getElementById('company_sub_district').innerHTML = optionHTML;
+                    });
+                   });
+                $('#company_sub_district').val(data[0].company_sub_district);
+                await fetch('postcode/'+data[0].company_province+'/' + data[0].company_district+'/' + data[0].company_sub_district).then(async function(response){
+                    await response.json().then(function(data){
+                     optionHTML = '';
+                     for (post of data.postcodelist){
+                      optionHTML += '<option value="' + post +'">' + post + '</option>'
+                     }
+                     document.getElementById('company_postal_code').innerHTML = optionHTML;
+                    });
+                   });
+                $('#company_postal_code').val(data[0].company_postal_code);
+                
+            }
+        })
+    })
+
+    $('#tagsearch').keyup(function () {
+        $('#customer-manage').DataTable().search($(this).val()).draw();
+      });
+    
+    document.getElementById('card_expire_date').onchange = ()=>{
+        document.getElementById('comment').required = true
+    }
+</script>
+<script>
+    $('#myFormId').submit(function () {
+        $.ajax({
+            url: $('#myFormId').attr('action'),
+            type: 'POST',
+            data: $('#myFormId').serialize(),
+            success: function (data) {
+                console.log(data);
+                if (data.status){
+                    alert(data.message)
+                    window.location.reload()
+                }else{
+                    alert(data.message)
+                }
+            }
+        });
+        return false;
+    });
+</script>
+</html>

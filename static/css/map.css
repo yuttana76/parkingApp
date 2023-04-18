@@ -1,0 +1,26 @@
+/* css กำหนดความกว้าง ความสูงของแผนที่ */
+#map_canvas {
+  position: relative;
+  width: 100%;
+  height: 400px;
+  margin: auto;
+}
+/* css สำหรับ div คลุม google map อีกที */
+#contain_map {
+  position: relative;
+  width: 100%;
+  height: 400px;
+  margin: auto;
+}
+/* css ของส่วนแสดงคำแนะนำเส้นทางการเดินทาง */
+#directionsPanel {
+  width: 100%;
+  margin: auto;
+  clear: both;
+}
+/* ส่วน css สำหรับตัวควบคุม  */
+#my_navigator {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+}

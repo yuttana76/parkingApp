@@ -1,0 +1,35 @@
+import multiprocessing as mp
+import time
+from app import Carpacity_manage,  Policy, Parking_log, db
+
+
+def job(orderNumber, station, sec):
+    payment_status = Parking_log.query.filter(orderNumber =orderNumber).order_by(
+        Parking_log.parking_reserve_date.desc()).first().payment_status
+    Carpacity = Carpacity_manage.query.filter_by(parking_name =station).first()
+    print('เริ่มทำงาน')
+    time.sleep(sec)
+    timeout = 1
+    print('งานเสร็จแล้ว')
+    if timeout == 1 and payment_status == 1:
+      print('เงื่อนไขตรง')
+      print('Carpacity.reserve_count' ,Carpacity.reserve_count)
+      reserve_count = Carpacity.reserve_count + 1
+      print('reserve_count', reserve_count)
+      Carpacity.reserve_count = reserve_count
+      db.session.commit()
+
+    else:
+        print("เงื่อนไขไม่ตรง")
+
+if(__name__=='__main__'):
+    orderNumber='1234'
+    station='สถานีแยก คปอ.'
+    sec=10
+    p = mp.Process(target=job, args=(orderNumber, station, sec,))
+    p.start()
+    print('สั่งงาน')
+    for i in range(5):
+        time.sleep(1)
+        print(i)
+

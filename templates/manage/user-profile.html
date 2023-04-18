@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  {% include "include/manage-css.html" %}
+  {% include "include/manage-js.html" %}
+  <title>MRTA จัดการข่าวสาร</title>
+</head>
+
+<body class="hold-transition sidebar-mini layout-fixed">
+  <div class="wrapper;">
+    {% include "manage/comps/header.html" %}
+    {% include "manage/comps/sidebar.html" %}
+
+      <!-- Messenger ปลั๊กอินแชท Code -->
+      <div id="fb-root"></div>
+
+      <!-- Your ปลั๊กอินแชท code -->
+      <div id="fb-customer-chat" class="fb-customerchat"></div>
+
+
+    <div class="content-wrapper">
+      <div class="content-header">
+        <div class="container-fluid">
+          <div class="row mb-3">
+            <div class="col-sm-12 mb-3">
+              <h1 class="m-0" style="color: #1a086e; font-size: 38px; font-weight: bold;">User Profile</h1>
+              <!-- <div class="account_select">
+                                    <select name="account" style="float: right; margin-top: -30px;">
+                                        <option value="Account">Account</option>
+                                        <option value="Account1">Account1</option>
+                                        <option value="Account2">Account2</option>
+                                        <option value="Account3">Account3</option>
+                                    </select>
+                                </div> -->
+
+            </div>
+
+            <div class="col-sm 6">
+              <div class="card">
+                <div class="card-body">
+                  <table id="parking-list1" class="table table-bordered table-striped" style="width:100%">
+                             <!--Start search -->
+                             <div class="wrap">
+                              <div class="input-group row">
+                                    <div class="col-sm-4 input-group">
+                                            <input type="text" id="form1" class="form-control" 
+                                            placeholder="ค้นหา" name="search"/>
+                                        <div class="input-group-btn" >               
+                                            <button class="btn btn-primary "type="submit">
+                                            <i class="fas fa-search"></i></button>   
+                                        </div>
+                                    </div>
+                               
+                                    <button class="btn btn-primary mb-2" data-toggle="modal" data-target="#exampleModal-add"
+                                  style="margin-left: auto; ">
+                                  <i class="fas fa-plus"></i> เพิ่มข้อมูล
+                                    </button>
+                                <!--button add -->
+                              </div>
+                            </div>
+                          </div><!--end search -->
+
+                    <thead>
+                      <tr style="font-size: 14px;">
+                        <th>NO.</th>
+                        <th>ชื่อ</th>
+                        <th>นามสกุล</th>
+                        <th>User</th>
+                        <th>Old password</th>
+                        <th>New password</th>
+                        <!-- <th>Confirm password</th> -->
+                        <th>Email</th>
+                        <th>เบอร์โทรศัพท์</th>
+                        <th>Line token (Group)</th>
+                        <td>จัดการ</td>
+
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {% for row in datas %}
+                      <tr>
+                        <td>{{row.0}}</td>
+                        <td>{{row.1}}</td>
+                        <td>{{row.2}}</td>
+                        <td>{{row.3}}</td>
+                        <td>{{row.4}}</td>
+                        <td>{{row.4}}</td>
+                        <td>{{row.4}}</td>
+                        <td></td>
+                        <td></td>
+                        <td>{{row.5}}</td>
+                        <td class="textbox">
+                          <!--Button edit and delete in table-->
+                          <button class="btn btn-warning-del" data-toggle="modal" data-target="#Modaledit{{row.0}}"><i
+                              class="fas fa-edit"></i>แก้ไข</button>
+                        </td>
+                        <!--end button edit and delete in table-->
+                      </tr>
+
+                      <div class="modal fade" id="Modaledit{{row.0}}" tabindex="-1" role="dialog"
+                        aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                          <div class="modal-content">
+                            <div class="modal-header">
+                              <button type="button" class="close" data-dismiss="modal">&times;</button>
+                              <h4 class="modal-title">อัปเดตข้อมูล</h4>
+                            </div>
+                            <div class="modal-body">
+                              <form action="" method="POST">
+                                <div class="form-group">
+                                  <label></label>
+                                  <input type="hidden" name="id" value="{{row.0}}">
+                                </div>
+                                <div class="form-group">
+                                  <label>ชื่อ:</label>
+                                  <input type="text" class="form-control" name="first_name" value="{{row.1}}">
+                                </div>
+                                <div class="form-group">
+                                  <label>นามสกุล:</label>
+                                  <input type="text" class="form-control" name="last_name" value="{{row.2}}">
+                                </div>
+                                <div class="form-group">
+                                  <label>User:</label>
+                                  <input type="text" class="form-control" name="username" value="{{row.3}}">
+                                </div>
+                                <div class="form-group">
+                                  <label>Password:</label>
+                                  <input type="text" class="form-control" name="password" value="{{row.4}}">
+                                </div>
+                                <div class="form-group">
+                                  <label>Line token (Group):</label>
+                                  <input type="text" class="form-control" name="dep_name" value="{{row.5}}">
+                                </div>
+                                <div class="form-group">
+                                  <button class="btn btn-primary" type="submit">อัปเดต</button>
+                                </div>
+                              </form>
+                            </div>
+                            <div class="modal-footer">
+                              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      {% endfor %}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!--modal Add-->
+  <div class="card-body">
+    <table id="example" class="table table-bordered table-striped" style="width:100%">
+      <div class="modal fade" id="exampleModal-add" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">เพิ่มข้อมูล</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+
+            <div class="modalb">
+              <form action="" method="post">
+                <!-- <label for="">No:  </label> -->
+
+                <input class="modalinput" type="hidden" id="" name="" placeholder="">
+
+                <label for="news_name">NO: </label>
+                <input class="modalinput" type="text" id="news_name" name="news_name">
+
+                <label for="news_des">ชื่อ: </label>
+                <input class="modalinput" type="text" id="news_des" name="news_des">
+
+                <label for="news_type">นามสกุล: </label>
+                <input class="modalinput" type="text" id="news_type" name="news_type">
+
+                <label for="news_status">User: </label>
+                <input class="modalinput" type="text" id="news_status" name="news_status">
+
+                <label for="user_create_date">password: </label>
+                <input class="modalinput" type="text" id="user_create_date" name="user_create_date">
+
+                <label for="user_edit_date">Email: </label>
+                <input class="modalinput" type="text" id="user_edit_date" name="user_edit_date">
+
+                <label for="user_create">เบอร์โทรศัพท์: </label>
+                <input class="modalinput" type="text" id="user_create" name="user_create">
+
+                <label for="user_edit">Line token (Group): </label>
+                <input class="modalinput" type="text" id="user_edit" name="user_edit">
+
+                <button type="submit" value="Submit" class="btn btn-primary" class="fas fa-save">บันทึกข้อมูล</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">ยกเลิก</button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </table>
+  </div>
+
+
+  <!--modal edit-->
+  <div class="card-body">
+    <table id="example" class="table table-bordered table-striped" style="width:100%">
+      <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">แก้ไขข้อมูล</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modalb">
+              <form action="/action_page.php">
+                <label for="">No: </label>
+                <input class="modalinput" type="text" id="" name="" placeholder="">
+
+                <label for="">รูปภาพ: </label>
+                <input class="modalinput" type="text" id="" name="" placeholder="">
+
+                <label for="">ชื่อข่าว: </label>
+                <input class="modalinput" type="text" id="" name="" placeholder="">
+
+                <label for="">รายละเอียดข่าวสาร: </label>
+                <input class="modalinput" type="text" id="" name="" placeholder="">
+
+                <label for="">ประเภทข่าวสาร: </label>
+                <input class="modalinput" type="text" id="" name="" placeholder="">
+
+                <label for="">สถานะ: </label>
+                <input class="modalinput" type="text" id="" name="" placeholder="">
+
+
+                <label for="">วันที่สร้าง: </label>
+                <input class="modalinput" type="text" id="" name="" placeholder="">
+
+                <label for="">วันที่แก้ไข: </label>
+                <input class="modalinput" type="text" id="" name="" placeholder="">
+
+                <label for="">User สร้าง: </label>
+                <input class="modalinput" type="text" id="" name="" placeholder="">
+
+                <label for="">User แก้ไข: </label>
+                <input class="modalinput" type="text" id="" name="" placeholder="">
+
+
+              </form>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-primary"><i class="fas fa-save"></i> บันทึกข้อมูล</button>
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">ยกเลิก</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </table>
+  </div>
+  {% include "manage/comps/footer.html" %}
+</body>
+
+
+<script>
+  $(document).ready(function () {
+    $.extend(true, $.fn.dataTable.defaults, {
+      "language": {
+        "sProcessing": "กำลังดำเนินการ...",
+        "sLengthMenu": "แสดง_MENU_ แถว",
+        "sZeroRecords": "ไม่พบข้อมูล",
+        "sInfo": "แสดง _START_ ถึง _END_ จาก _TOTAL_ แถว",
+        "sInfoEmpty": "แสดง 0 ถึง 0 จาก 0 แถว",
+        "sInfoFiltered": "(กรองข้อมูล _MAX_ ทุกแถว)",
+        "sInfoPostFix": "",
+        "sSearch": "ค้นหา:",
+        "sUrl": "",
+        "oPaginate": {
+          "sFirst": "เริ่มต้น",
+          "sPrevious": "ก่อนหน้า",
+          "sNext": "ถัดไป",
+          "sLast": "สุดท้าย"
+        }
+      }
+    });
+    $('#parking-list1').DataTable({
+      "paging": true,
+      "lengthChange": false,
+      "searching": false,
+      "ordering": true,
+      "info": true,
+      "autoWidth": true,
+      "responsive": true,
+    });
+  });
+</script>
+
+<script>
+  var chatbox = document.getElementById('fb-customer-chat');
+  chatbox.setAttribute("page_id", "106927381737911");
+  chatbox.setAttribute("attribution", "biz_inbox");
+
+  window.fbAsyncInit = function() {
+    FB.init({
+      xfbml            : true,
+      version          : 'v11.0'
+    });
+  };
+
+  (function(d, s, id) {
+    var js, fjs = d.getElementsByTagName(s)[0];
+    if (d.getElementById(id)) return;
+    js = d.createElement(s); js.id = id;
+    js.src = 'https://connect.facebook.net/th_TH/sdk/xfbml.customerchat.js';
+    fjs.parentNode.insertBefore(js, fjs);
+  }(document, 'script', 'facebook-jssdk'));
+</script>
+
+
+</html>

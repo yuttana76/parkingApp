@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FAQ</title>
+    {% include "include/customer-css.html" %}
+    {% include "include/customer-js.html" %}
+</head>
+<style>
+
+</style>
+
+<body>
+    {% include "comps/navbar.html" %}
+
+    <div class="container mb-5" style="margin-top: 80px;">
+        <h3 class="mb-3">VDO แนะนำการใช้งาน Application MRTA PARKING</h3>
+
+        <div class="embed-responsive embed-responsive-16by9">
+            <iframe class="embed-responsive-item" src="{{url_for('static', filename='video/parking.mp4')}}" type="video/mp4"
+                allowfullscreen></iframe>
+        </div>
+    </div>
+
+    {% include "comps/popup-cookie.html" %}
+    {% include "comps/footer.html" %}
+</body>
+</html>

@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>บริการการจองที่จอด</title>
+    {% include "include/customer-css.html" %}
+    {% include "include/customer-js.html" %}
+</head>
+<style>
+    body {
+        background-color: #f8fafb;
+    }
+
+    .overflow-policy{
+        width: auto;
+        padding: 20px 20px 10px 20px;
+        background-repeat: no-repeat;
+        background-size: cover;
+    }
+</style>
+
+<body>
+    {% include "comps/navbar-2.html" %}
+
+    <!-- Step 2 เงื่อนไขการสมัครสมาชิกรายเดือน -->
+    <div class="bg-shape">
+        <div class="container pt-5">
+            <div class="row mt-3">
+                <div class="col-lg-12 text-center">
+                    <div class="order-progress-stepper">
+                        <div class="step completed">เลือกอาคาร<br>ลานจอดรถ</div>
+                        <div class="step active">ตรวจสอบ<br>ยอมรับเงื่อนไข</div>
+                        <div class="step">ตรวจสอบ<br>ยืนยันการจอง</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row mt-3">
+                <div class="col-md-12">
+                    <div class="card my-3">
+                        <div class="card-header card-header-mrta text-center">
+                            <h4 class="my-2">เงื่อนไขการจองที่จอด</h4>
+                        </div>
+                        <div class="card-body">
+                            <div class="row px-sm-5 px-0 py-3">
+                                <div class="col-sm-2 col-1">
+                                    <div class="circle">
+                                        <div class="icon">
+                                            <img src="{{url_for('static', filename='image/money.svg')}}">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-10 col-10">
+                                    <div class="space">
+                                        <div class="p-list">
+                                            <span name="">ค่าบริการการจองที่จอด {{detail.reserve_price}} บาท</span>
+                                            <h5 style="color:#DF1C39;font-size:12px;">(ขอสงวนสิทธิ์ในการคืนเงินทุกกรณี)</h5>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row px-sm-5 px-0 py-3">
+                                <div class="col-sm-2 col-1">
+                                    <div class="circle">
+                                        <div class="icon">
+                                            <img src="{{url_for('static', filename='image/car-park.svg')}}">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-10 col-10">
+                                    <div class="space">
+                                        <div class="p-list">
+                                            <span>เวลาเปิดให้บริการ {{detail.office_time}}</span>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row px-sm-5 px-0 py-3">
+                                <div class="col-sm-2 col-1">
+                                    <div class="circle">
+                                        <div class="icon">
+                                            <img src="{{url_for('static', filename='image/time.png')}}">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-10 col-10">
+                                    <div class="space">
+                                        <div class="p-list">
+                                            <span>เข้าใช้บริการภายใน {{detail.checkin_period_hr}} ชั่วโมง หลังจากชำระเงิน </span>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="text-center my-3">
+                                <small>ข้าพเจ้ายอมรับ <a class="policylink" data-toggle="modal" data-target="#policyModal">เงื่อนไขการใช้บริการจองที่จอด</a>
+                                    ของการรถไฟฟ้าขนส่งมวลชนแห่งประเทศไทย เมื่อกด "ยอมรับเงื่อนไข"</small>
+
+                                   
+                                <div class="modal fade" id="policyModal" tabindex="-1"
+                                    aria-labelledby="policyLabel" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header card-header-mrta">
+                                                <h5 class="modal-title" id="policyLabel">เงื่อนไขการเข้าใช้บริการการจองที่จอด</h5>
+                                                <button type="button" class="close" data-dismiss="modal"
+                                                    aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+                                               <div class="card overflow-policy" id="style-policy" >
+                                                   {% for i in policy%} 
+                                                   {{i}}
+                                                   <br>
+                                                   {%endfor%} 
+                                               </div>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <div class="col-md-12 text-center">
+                                                    <button type="button" class="accept col-6" data-dismiss="modal" disabled>ยืนยัน</button>
+                                                </div>
+                                               
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="text-center mt-3">
+                                <button type="button" class="btn btn-accept-shadow col-lg-5 col-10 animate"
+                                    onclick="window.location.href='/reserve-step3'">ยอมรับเงื่อนไข</button>
+                                    
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div class="text-center mx-4">
+                        <a class="btn btn-secondary btn-cancel-big col-lg-5 col-10" href="reserve-step1">ยกเลิก</a>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <img src="{{url_for('static', filename='image/manager.svg')}}" class="img-fluid">
+                </div>
+            </div>
+        </div>
+
+    </div>
+    {% include "comps/scroll-top.html" %}
+    {% include "comps/popup-cookie.html" %}
+
+    {% include "comps/footer.html" %}
+</body>
+
+</html>
+
+
+<script>
+    document.getElementsByClassName("overflow-policy")[0].addEventListener("scroll", checkScrollHeight, false);
+
+    function checkScrollHeight() {
+        var agreementTextElement = document.getElementsByClassName("overflow-policy")[0];
+
+        if (agreementTextElement.clientHeight + agreementTextElement.scrollTop >= agreementTextElement.scrollHeight) {
+            document.getElementsByClassName("accept")[0].disabled = false;
+        }
+    }
+</script>

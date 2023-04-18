@@ -1,0 +1,809 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <title>ใบเสร็จรับเงิน/ใบกำกับภาษี</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/paper-css/0.3.0/paper.css">
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Sarabun:wght@300&display=swap');
+
+        @font-face {
+            font-family: 'Sarabun', sans-serif;
+        }
+
+        @page { size: A4 }
+
+        /* body { height:297mm; width:210mm; margin-left:auto; margin-right:auto; } */
+
+        .invoice-box {
+            max-width: 1000px;
+            margin: auto;
+            padding: 30px;
+            /* border: 1px solid #000; */
+            font-size: 16px;
+            line-height: 24px;
+            font-family: 'Sarabun' !important;
+        }
+
+        .invoice-box table {
+            width: 100%;
+            line-height: inherit;
+            text-align: left;
+        }
+
+        .invoice-box table td {
+            padding: 5px;
+            vertical-align: top;
+            font-size: 14px;
+        }
+
+        .invoice-box table tr.top table td.title {
+            font-size: 45px;
+            line-height: 45px;
+            color: #333;
+        }
+
+        .invoice-box table tr.heading td {
+            border: 1px solid #000;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .invoice-box table tr.details td {
+            padding-bottom: 20px;
+        }
+
+        tr.heading-02 td {
+            color: #000;
+            padding: 5px 8px;
+            border: 0;
+            border-bottom: 1px solid #eeeeee;
+        }
+
+        /** RTL **/
+        .invoice-box.rtl {
+            direction: rtl;
+            font-family: Tahoma, 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif;
+        }
+
+        .invoice-box.rtl table {
+            text-align: right;
+        }
+
+        .invoice-box.rtl table tr td:nth-child(2) {
+            text-align: left;
+        }
+
+        /* ------------------------------------------------------------------------------- */
+        .p-reg1 {
+            font-size: 16px;
+            font-weight: bold;
+            line-height: 25px;
+        }
+
+        .p-reg2 {
+            font-size: 18px;
+            font-weight: bold;
+            line-height: 10px;
+        }
+
+        .p-reg3 {
+            font-size: 12px;
+            line-height: 25px;
+        }
+
+        .p-reg4 {
+            font-size: 14px;
+            font-weight: bold;
+            line-height: 25px;
+        }
+
+        .invoice-no {
+            text-align: center;
+            border: 2px solid;
+            display: block;
+            font-weight: bold;
+            font-size: 15px;
+        }
+
+        .list-1 {
+            border: 1px #000 solid;
+        }
+
+        .title-center {
+            text-align: center;
+            font-weight: bold;
+            line-height: 15px;
+        }
+
+        .signature {
+            width: 40%;
+            text-align: center;
+            display: grid;
+        }
+    </style>
+</head>
+
+<!-- A5 = zoom 45%, A4 = zoom 60 %-->
+
+    <body class="A4">
+        <section class="sheet padding-10mm">
+    
+            <div style="zoom: 64%;">
+                <div class="invoice-box">
+                    <table cellpadding="0" cellspacing="0" style="margin-top: 15px">
+                        <tr class="top">
+                            <td colspan="3">
+                                <table>
+                                    <tr>
+                                        <td class="title" style="text-align: center;">
+                                            <img src="{{url_for('static', filename='image/mrt-logo.svg')}}"
+                                                style="width: 100%; max-width: 150px" />
+                                            <div class="p-reg1">เลขประจำตัวผู้เสียภาษีอากร</div>
+                                            <div class="p-reg3">Tax Register No.</div>
+                                            <div class="p-reg4">0994000165706</div> 
+                                        </td>
+        
+                                        <td style="text-align: left;
+                                        padding-top: 15px;">
+                                            <div class="p-reg2">การรถไฟฟ้าขนส่งมวลชนแห่งประเทศไทย</div><br />
+                                            <div class="p-reg2">MASS RAPID TRANSIT AUTHORITY OF THAILAND</div><br />
+                                            <div class="p-reg3">175 ถนนพระรามเก้า แขวงห้วยขวาง เขตห้วยขวาง กรุงเทพมหานคร 10310
+                                                โทร.0-2716-4000 โทรสาร.0-2716-4030</div>
+                                            <div class="p-reg3">175 Rama 9, Huai Khwang, Bangkok 10310, Thailand
+                                                Tel.(66)0-2716-4000
+                                                Fax.(66)0-2716-4030</div>
+                                            <div class="p-reg3">สาขาที่ {{branch}}</div>
+                                        </td>
+        
+                                        <td class="invoice-no">
+                                            เลขที่/NO.{{invoice}} 
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+        
+                        <tr>
+                            <td colspan="3">
+                                <table>
+                                    <tr>
+                                        <td style="width: 33%;"></td>
+        
+                                        <td class="title-center">
+                                            <u>ใบเสร็จรับเงิน / ใบกำกับภาษี</u>
+                                        </td>
+        
+                                        <td style="width: 33%;">
+        
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="width: 33%;"></td>
+                                        <td class="title-center">RECEIPT / TAX INVOICE</td>
+                                        {% if tax_log.transaction_type != '4' %}
+                                            {% if tax_log.receipt_no %} 
+                                            <td style="text-align: end;font-weight: bold    ;">เลขที่ใบกำกับภาษีอย่างย่อ
+                                                {{tax_log.receipt_no}}</td>
+                                            {% else %} 
+                                            <td style="text-align: end;font-weight: bold    ;">เลขที่ใบกำกับภาษีอย่างย่อ
+                                                </td>
+                                            {%endif%} 
+                                        {% endif %}
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                    </table>
+                    <table cellpadding="0" cellspacing="0">
+                        <tr class="heading-02">
+                            <td style="width: 16.6%;">ได้รับเงินจาก / Received from</td>
+                            {%if tax_log.transaction_type == '4' %} 
+                            <td style="width: 16.6%;">{{name}}</td>
+                            {%elif tax_log.address_type == 'home' and tax_log.transaction_type != '4' %} 
+                            <td style="width: 16.6%;">{{tax_mem.first_name_th}} {{tax_mem.last_name_th if tax_mem.last_name_th}}</td>
+                            {%else%} 
+                            <td style="width: 16.6%;">{{tax_mem.company_name | safe}}</td>
+                            {%endif%}
+                            <td style="width: 16.6%;">{{thaidate}}</td>
+                        </tr>
+                        <tr class="heading-02">
+                            <td style="width: 16.6%;">ที่อยู่ / Address</td>
+                            <td style="width: 35%;">{{address|safe}}</td>
+                            <td style="width: 16.6%;"></td>
+                        </tr>
+                        <tr class="heading-02">
+                            <td style="width: 33%;">เลขที่ประจำตัวผู้เสียภาษี</td>
+                            <td style="width: 33%;">{{identity_card}}</td>
+                            <td style="width: 33%;"></td>
+                        </tr>
+                    </table>
+        
+                    <table cellpadding="0" cellspacing="0" style="margin-top: 20px;">
+                        <tr class="heading">
+                            <td style="text-align: center;width: 80%;">รายการ / Description</td>
+                            <td style="text-align: center;">จำนวนเงิน / Amount</td>
+                        </tr>
+        
+                        <tr>
+                            {% if tax_log.transaction_type == '4' %}
+                                <td class="list-1">ค่าบริการการจองที่จอดรถ</td>
+                            {% else %}
+                                <td class="list-1">ค่าบริการที่จอดรถ</td>
+                            {% endif %}
+                            <td style="text-align: right;
+                            border: 1px #000 solid;">{{amount}}</td>
+                        </tr>
+        
+                        <!-- <tr>
+                            <td class="list-1">ค่ามัดจำ</td>
+                            <td style="text-align: right;
+                            border: 1px #000 solid;">{{deposit}}</td>
+                        </tr> -->
+        
+        
+                        <tr>
+                            <td style="text-align:center;border: 1px #000 solid;">{{thaibath}}</td>
+                            <td style="text-align: right;
+                            border: 1px #000 solid;"></td>
+                        </tr>
+        
+                        <tr>
+                            <td style="border: 1px #000 solid;display: flex;">
+                                <div style="width: 20%;">ชำระโดย</div>
+                                <div style="width: 30%;">{{payment_name}}</div>
+                                <div style="width: 50%;">อื่นๆ _____________________</div>
+                                <div style="width: 20%;text-align: end;">รวมเงิน / Total</div>
+                            </td>
+                            <td style="text-align: right;border: 1px #000 solid;">{{amount}}</td>
+                        </tr>
+                        <tr>
+                            <td style="border: 1px #000 solid;display: flex;">
+                                <div style="width: 17%;"></div>
+                                {%if payment_name != 'เช็ค'%} 
+                                <div style="width: 58%;">เช็คธนาคาร / สาขา___________________________</div>
+                                {%else%} 
+                                <div style="width: 58%;">เช็คธนาคาร / สาขา  {{' ธนาคาร ' +tax_log.bank_name}} {{'สาขา'+tax_log.bank_branch if tax_log.bank_branch}}</div>
+                                {%endif%} 
+                                <div style="width: 25%;text-align: end;">ภาษีมูลค่าเพิ่ม / VAT 7%</div>
+                            </td>
+                            <td style="text-align: right;border: 1px #000 solid;">{{vat}}</td>
+                        </tr>
+                        <tr>
+                            <td style="border: 1px #000 solid;display: flex;">
+                                <div style="width: 17%;"></div>
+                                {%if payment_name != 'เช็ค'%} 
+                                <div style="width: 58%;">เลขที่_____________ลงวันที่__________________</div>
+                                {%else%} 
+                                <div style="width: 58%;">เลขที่ {{tax_log.cheque_no}} ลงวันที่ {{tax_log.cheque_date.strftime('%d/%m/%Y')}} </div>
+                                {%endif%} 
+                                <div style="width: 25%;text-align: end;">รวมเงินทั้งสิ้น / Grand total</div>
+                            </td>
+                            <td style="text-align: right;border: 1px #000 solid;">{{total}}</td>
+                        </tr>
+                    </table>
+        
+                    <div style="width: 100%;display: flex;-ms-flex-wrap: wrap;
+                    flex-wrap: wrap;margin-top: 15px;">
+                        <div style="width: 60%;">
+                            <div class="p-reg3"><u>หมายเหตุ</u> ในกรณีชำระเงินเป็นเช็ค ใบเสร็จนี้จะสมบูรณ์
+                                ต่อเมื่อเรียกเก็บเงินได้ตามเช็ค
+                            </div>
+                            <div class="p-reg3"><u>REMARK</u> This receipt will be valid when the bank nopost this cheque</div>
+                        </div>
+        
+                        <div class="signature">
+                            <div class="p-reg3" style="margin-top: 20px;">
+                                ______________________________________________________________________________
+                            </div>
+                            <div class="p-reg3">ผู้รับเงิน / Collector</div>
+                        </div>
+                    </div>
+        
+        
+                </div>
+            </div>
+            <div style="zoom: 64%;padding-top:15px;">
+                <div class="invoice-box">
+                    <table cellpadding="0" cellspacing="0" style="margin-top: 15px">
+                        <tr class="top">
+                            <td colspan="3">
+                                <table>
+                                    <tr>
+                                        <td class="title" style="text-align: center;">
+                                            <img src="{{url_for('static', filename='image/mrt-logo.svg')}}"
+                                                style="width: 100%; max-width: 150px" />
+                                            <div class="p-reg1">เลขประจำตัวผู้เสียภาษีอากร</div>
+                                            <div class="p-reg3">Tax Register No.</div>
+                                            <div class="p-reg4">0994000165706</div>
+                                        </td>
+        
+                                        <td style="text-align: left;
+                                        padding-top: 15px;">
+                                            <div class="p-reg2">การรถไฟฟ้าขนส่งมวลชนแห่งประเทศไทย</div><br />
+                                            <div class="p-reg2">MASS RAPID TRANSIT AUTHORITY OF THAILAND</div><br />
+                                            <div class="p-reg3">175 ถนนพระรามเก้า แขวงห้วยขวาง เขตห้วยขวาง กรุงเทพมหานคร 10310
+                                                โทร.0-2716-4000 โทรสาร.0-2716-4030</div>
+                                            <div class="p-reg3">175 Rama 9, Huai Khwang, Bangkok 10310, Thailand
+                                                Tel.(66)0-2716-4000
+                                                Fax.(66)0-2716-4030</div>
+                                            <div class="p-reg3">สาขาที่ {{branch}}</div>
+                                        </td>
+        
+                                        <td class="invoice-no">
+                                            เลขที่/NO.{{invoice}}
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+        
+                        <tr>
+                            <td colspan="3">
+                                <table>
+                                    <tr>
+                                        <td style="width: 33%;"></td>
+        
+                                        <td class="title-center">
+                                            <u>ใบเสร็จรับเงิน / ใบกำกับภาษี</u>
+                                        </td>
+        
+                                        <td style="width: 33%;">
+        
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="width: 33%;"></td>
+                                        <td class="title-center">RECEIPT / TAX INVOICE</td>
+                                        {% if tax_log.transaction_type != '4' %}
+                                            {% if tax_log.receipt_no %} 
+                                            <td style="text-align: end;font-weight: bold    ;">เลขที่ใบกำกับภาษีอย่างย่อ
+                                                {{tax_log.receipt_no}}</td>
+                                            {% else %} 
+                                            <td style="text-align: end;font-weight: bold    ;">เลขที่ใบกำกับภาษีอย่างย่อ
+                                                </td>
+                                            {%endif%} 
+                                        {% endif %}
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                    </table>
+                    <table cellpadding="0" cellspacing="0">
+                        <tr class="heading-02">
+                            <td style="width: 16.6%;">ได้รับเงินจาก / Received from</td>
+                            {%if tax_log.transaction_type == '4' %} 
+                            <td style="width: 16.6%;">{{name}}</td>
+                            {%elif tax_log.address_type == 'home' and tax_log.transaction_type != '4' %} 
+                            <td style="width: 16.6%;">{{tax_mem.first_name_th}} {{tax_mem.last_name_th if tax_mem.last_name_th}}</td>
+                            {%else%} 
+                            <td style="width: 16.6%;">{{tax_mem.company_name | safe}}</td>
+                            {%endif%} 
+                            <td style="width: 16.6%;">{{thaidate}}</td>
+                        </tr>
+
+                        <tr class="heading-02">
+                            <td style="width: 16.6%;">ที่อยู่ / Address</td>
+                            <td style="width: 35%;">{{address|safe}}</td>
+                            <td style="width: 16.6%;"></td>
+                        </tr>
+                        
+                        <tr class="heading-02">
+                            <td style="width: 33%;">เลขที่ประจำตัวผู้เสียภาษี</td>
+                            <td style="width: 33%;">{{identity_card}}</td>
+                            <td style="width: 33%;"></td>
+                        </tr>
+                    </table>
+        
+                    <table cellpadding="0" cellspacing="0" style="margin-top: 20px;">
+                        <tr class="heading">
+                            <td style="text-align: center;width: 80%;">รายการ / Description</td>
+                            <td style="text-align: center;">จำนวนเงิน / Amount</td>
+                        </tr>
+        
+                        <tr>
+                            {% if tax_log.transaction_type == '4' %}
+                                <td class="list-1">ค่าบริการการจองที่จอดรถ</td>
+                            {% else %}
+                                <td class="list-1">ค่าบริการที่จอดรถ</td>
+                            {% endif %}
+                            <td style="text-align: right;
+                            border: 1px #000 solid;">{{amount}}</td>
+                        </tr>
+        
+                        <!-- <tr>
+                            <td class="list-1">ค่ามัดจำ</td>
+                            <td style="text-align: right;
+                            border: 1px #000 solid;">{{deposit}}</td>
+                        </tr> -->
+        
+        
+                        <tr>
+                            <td style="text-align:center;border: 1px #000 solid;">{{thaibath}}</td>
+                            <td style="text-align: right;
+                            border: 1px #000 solid;"></td>
+                        </tr>
+        
+                        <tr>
+                            <td style="border: 1px #000 solid;display: flex;">
+                                <div style="width: 20%;">ชำระโดย</div>
+                                <div style="width: 30%;">{{payment_name}}</div>
+                                <div style="width: 50%;">อื่นๆ _____________________</div>
+                                <div style="width: 20%;text-align: end;">รวมเงิน / Total</div>
+                            </td>
+                            <td style="text-align: right;border: 1px #000 solid;">{{amount}}</td>
+                        </tr>
+                        <tr>
+                            <td style="border: 1px #000 solid;display: flex;">
+                                <div style="width: 17%;"></div>
+                                {%if payment_name != 'เช็ค'%} 
+                                <div style="width: 58%;">เช็คธนาคาร / สาขา___________________________</div>
+                                {%else%} 
+                                <div style="width: 58%;">เช็คธนาคาร / สาขา  {{' ธนาคาร ' +tax_log.bank_name}} {{'สาขา'+tax_log.bank_branch if tax_log.bank_branch}}</div>
+                                {%endif%} 
+                                <div style="width: 25%;text-align: end;">ภาษีมูลค่าเพิ่ม / VAT 7%</div>
+                            </td>
+                            <td style="text-align: right;border: 1px #000 solid;">{{vat}}</td>
+                        </tr>
+                        <tr>
+                            <td style="border: 1px #000 solid;display: flex;">
+                                <div style="width: 17%;"></div>
+                                {%if payment_name != 'เช็ค'%} 
+                                <div style="width: 58%;">เลขที่_____________ลงวันที่__________________</div>
+                                {%else%} 
+                                <div style="width: 58%;">เลขที่ {{tax_log.cheque_no}} ลงวันที่ {{tax_log.cheque_date.strftime('%d/%m/%Y')}}</div>
+                                {%endif%} 
+                                <div style="width: 25%;text-align: end;">รวมเงินทั้งสิ้น / Grand total</div>
+                            </td>
+                            <td style="text-align: right;border: 1px #000 solid;">{{total}}</td>
+                        </tr>
+                    </table>
+        
+                    <div style="width: 100%;display: flex;-ms-flex-wrap: wrap;
+                    flex-wrap: wrap;margin-top: 15px;">
+                        <div style="width: 60%;">
+                            <div class="p-reg3"><u>หมายเหตุ</u> ในกรณีชำระเงินเป็นเช็ค ใบเสร็จนี้จะสมบูรณ์
+                                ต่อเมื่อเรียกเก็บเงินได้ตามเช็ค
+                            </div>
+                            <div class="p-reg3"><u>REMARK</u> This receipt will be valid when the bank nopost this cheque</div>
+                        </div>
+        
+                        <div class="signature">
+                            <div class="p-reg3" style="margin-top: 20px;">
+                                ______________________________________________________________________________
+                            </div>
+                            <div class="p-reg3">ผู้รับเงิน / Collector</div>
+                        </div>
+                    </div>
+        
+        
+                </div>
+            </div>
+    
+        </section>
+        
+    </body>
+    {% if tax_log.deposit_amount != 0 and tax_log.transaction_type != '4' %}
+    <body class="A4">
+        <section class="sheet padding-10mm">
+            <div style="zoom: 64%;">
+                <div class="invoice-box">
+                    <table cellpadding="0" cellspacing="0" style="margin-top: 15px">
+                        <tr class="top">
+                            <td colspan="3">
+                                <table>
+                                    <tr>
+                                        <td class="title" style="text-align: center;">
+                                            <img src="{{url_for('static', filename='image/mrt-logo.svg')}}"
+                                                style="width: 100%; max-width: 150px" />
+                                            <div class="p-reg1">เลขประจำตัวผู้เสียภาษีอากร</div>
+                                            <div class="p-reg3">Tax Register No.</div>
+                                            <div class="p-reg4">0994000165706</div>
+                                        </td>
+        
+                                        <td style="text-align: left;
+                                        padding-top: 15px;">
+                                            <div class="p-reg2">การรถไฟฟ้าขนส่งมวลชนแห่งประเทศไทย</div><br />
+                                            <div class="p-reg2">MASS RAPID TRANSIT AUTHORITY OF THAILAND</div><br />
+                                            <div class="p-reg3">175 ถนนพระรามเก้า แขวงห้วยขวาง เขตห้วยขวาง กรุงเทพมหานคร 10310
+                                                โทร.0-2716-4000 โทรสาร.0-2716-4030</div>
+                                            <div class="p-reg3">175 Rama 9, Huai Khwang, Bangkok 10310, Thailand
+                                                Tel.(66)0-2716-4000
+                                                Fax.(66)0-2716-4030</div>
+                                            <div class="p-reg3">สาขาที่ {{branch}}</div>
+                                        </td>
+        
+                                        <td class="invoice-no">
+                                            เลขที่/NO.{{invoice2}}
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+        
+                        <tr>
+                            <td colspan="3">
+                                <table>
+                                    <tr>
+                                        <td style="width: 33%;"></td>
+        
+                                        <td class="title-center">
+                                            <u>ใบเสร็จรับเงิน / ใบกำกับภาษี</u>
+                                        </td>
+        
+                                        <td style="width: 33%;">
+        
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="width: 33%;"></td>
+                                        <td class="title-center">RECEIPT / TAX INVOICE</td>
+                                        {% if tax_log.receipt_no %} 
+                                        <td style="text-align: end;font-weight: bold    ;">เลขที่ใบกำกับภาษีอย่างย่อ
+                                            {{tax_log.receipt_no}}</td>
+                                        {% else %} 
+                                        <td style="text-align: end;font-weight: bold    ;">เลขที่ใบกำกับภาษีอย่างย่อ
+                                            </td>
+                                        {%endif%} 
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                    </table>
+                    <table cellpadding="0" cellspacing="0">
+                        <tr class="heading-02">
+                            <td style="width: 16.6%;">ได้รับเงินจาก / Received from</td>
+                            {%if tax_log.address_type == 'home'%} 
+                            <td style="width: 16.6%;">{{tax_mem.first_name_th}} {{tax_mem.last_name_th if tax_mem.last_name_th}}</td>
+                            {%else%} 
+                            <td style="width: 16.6%;">{{tax_mem.company_name|safe}}</td>
+                            {%endif%}
+                            <td style="width: 16.6%;">{{thaidate}}</td>
+                        </tr>
+                        
+                        <tr class="heading-02">
+                            <td style="width: 16.6%;">ที่อยู่ / Address</td>
+                            <td style="width: 35%;">{{address2|safe}}</td>
+                            <td style="width: 16.6%;"></td>
+                        </tr>
+                        <tr class="heading-02">
+                            <td style="width: 33%;">เลขที่ประจำตัวผู้เสียภาษี</td>
+                            <td style="width: 33%;">{{identity_card2}}</td>
+                            <td style="width: 33%;"></td>
+                        </tr>
+                    </table>
+        
+                    <table cellpadding="0" cellspacing="0" style="margin-top: 20px;">
+                        <tr class="heading">
+                            <td style="text-align: center;width: 80%;">รายการ / Description</td>
+                            <td style="text-align: center;">จำนวนเงิน / Amount</td>
+                        </tr>
+        
+                        
+        
+                        <tr>
+                            <td class="list-1">ค่ามัดจำ</td>
+                            <td style="text-align: right;
+                            border: 1px #000 solid;">{{deposit}}</td>
+                        </tr>
+        
+        
+                        <tr>
+                            <td style="text-align:center;border: 1px #000 solid;">{{thaibath2}}</td>
+                            <td style="text-align: right;
+                            border: 1px #000 solid;"></td>
+                        </tr>
+        
+                        <tr>
+                            <td style="border: 1px #000 solid;display: flex;">
+                                <div style="width: 20%;">ชำระโดย</div>
+                                <div style="width: 30%;">{{payment_name}}</div>
+                                <div style="width: 50%;">อื่นๆ _____________________</div>
+                                <div style="width: 20%;text-align: end;">รวมเงิน / Total</div>
+                            </td>
+                            <td style="text-align: right;border: 1px #000 solid;">{{deposit}}</td>
+                        </tr>
+                        <tr>
+                            <td style="border: 1px #000 solid;display: flex;">
+                                <div style="width: 17%;"></div>
+                                <div style="width: 58%;">เช็คธนาคาร / สาขา___________________________</div>
+                                <div style="width: 25%;text-align: end;">ภาษีมูลค่าเพิ่ม / VAT 7%</div>
+                            </td>
+                            <td style="text-align: right;border: 1px #000 solid;">{{vat2}}</td>
+                        </tr>
+                        <tr>
+                            <td style="border: 1px #000 solid;display: flex;">
+                                <div style="width: 17%;"></div>
+                                <div style="width: 58%;">เลขที่_____________ลงวันที่__________________</div>
+                                <div style="width: 25%;text-align: end;">รวมเงินทั้งสิ้น / Grand total</div>
+                            </td>
+                            <td style="text-align: right;border: 1px #000 solid;">{{total2}}</td>
+                        </tr>
+                    </table>
+        
+                    <div style="width: 100%;display: flex;-ms-flex-wrap: wrap;
+                    flex-wrap: wrap;margin-top: 15px;">
+                        <div style="width: 60%;">
+                            <div class="p-reg3"><u>หมายเหตุ</u> ในกรณีชำระเงินเป็นเช็ค ใบเสร็จนี้จะสมบูรณ์
+                                ต่อเมื่อเรียกเก็บเงินได้ตามเช็ค
+                            </div>
+                            <div class="p-reg3"><u>REMARK</u> This receipt will be valid when the bank nopost this cheque</div>
+                        </div>
+        
+                        <div class="signature">
+                            <div class="p-reg3" style="margin-top: 20px;">
+                                ______________________________________________________________________________
+                            </div>
+                            <div class="p-reg3">ผู้รับเงิน / Collector</div>
+                        </div>
+                    </div>
+        
+        
+                </div>
+            </div>
+            <div style="zoom: 64%;padding-top:15px;">
+                <div class="invoice-box">
+                    <table cellpadding="0" cellspacing="0" style="margin-top: 15px">
+                        <tr class="top">
+                            <td colspan="3">
+                                <table>
+                                    <tr>
+                                        <td class="title" style="text-align: center;">
+                                            <img src="{{url_for('static', filename='image/mrt-logo.svg')}}"
+                                                style="width: 100%; max-width: 150px" />
+                                            <div class="p-reg1">เลขประจำตัวผู้เสียภาษีอากร</div>
+                                            <div class="p-reg3">Tax Register No.</div>
+                                            <div class="p-reg4">0994000165706</div>
+                                        </td>
+        
+                                        <td style="text-align: left;
+                                        padding-top: 15px;">
+                                            <div class="p-reg2">การรถไฟฟ้าขนส่งมวลชนแห่งประเทศไทย</div><br />
+                                            <div class="p-reg2">MASS RAPID TRANSIT AUTHORITY OF THAILAND</div><br />
+                                            <div class="p-reg3">175 ถนนพระรามเก้า แขวงห้วยขวาง เขตห้วยขวาง กรุงเทพมหานคร 10310
+                                                โทร.0-2716-4000 โทรสาร.0-2716-4030</div>
+                                            <div class="p-reg3">175 Rama 9, Huai Khwang, Bangkok 10310, Thailand
+                                                Tel.(66)0-2716-4000
+                                                Fax.(66)0-2716-4030</div>
+                                            <div class="p-reg3">สาขาที่ {{branch}}</div>
+                                        </td>
+        
+                                        <td class="invoice-no">
+                                            เลขที่/NO.{{invoice2}}
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+        
+                        <tr>
+                            <td colspan="3">
+                                <table>
+                                    <tr>
+                                        <td style="width: 33%;"></td>
+        
+                                        <td class="title-center">
+                                            <u>ใบเสร็จรับเงิน / ใบกำกับภาษี</u>
+                                        </td>
+        
+                                        <td style="width: 33%;">
+        
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="width: 33%;"></td>
+                                        <td class="title-center">RECEIPT / TAX INVOICE</td>
+                                        {% if tax_log.receipt_no %} 
+                                        <td style="text-align: end;font-weight: bold    ;">เลขที่ใบกำกับภาษีอย่างย่อ
+                                            {{tax_log.receipt_no}}</td>
+                                        {% else %} 
+                                        <td style="text-align: end;font-weight: bold    ;">เลขที่ใบกำกับภาษีอย่างย่อ
+                                            </td>
+                                        {%endif%} 
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                    </table>
+                    <table cellpadding="0" cellspacing="0">
+                        <tr class="heading-02">
+                            <td style="width: 16.6%;">ได้รับเงินจาก / Received from</td>
+                            {%if tax_log.address_type == 'home'%} 
+                            <td style="width: 16.6%;">{{tax_mem.first_name_th}} {{tax_mem.last_name_th if tax_mem.last_name_th}}</td>
+                            {%else%} 
+                            <td style="width: 16.6%;">{{tax_mem.company_name|safe}}</td>
+                            {%endif%}
+                            <td style="width: 16.6%;">{{thaidate}}</td>
+                        </tr>
+                        
+                     
+                        <tr class="heading-02">
+                            <td style="width: 16.6%;">ที่อยู่ / Address</td>
+                            <td style="width: 35%;">{{address2|safe}}</td>
+                            <td style="width: 16.6%;"></td>
+                        </tr>
+              
+                        <tr class="heading-02">
+                            <td style="width: 33%;">เลขที่ประจำตัวผู้เสียภาษี</td>
+                            <td style="width: 33%;">{{identity_card2}}</td>
+                            <td style="width: 33%;"></td>
+                        </tr>
+                    </table>
+        
+                    <table cellpadding="0" cellspacing="0" style="margin-top: 20px;">
+                        <tr class="heading">
+                            <td style="text-align: center;width: 80%;">รายการ / Description</td>
+                            <td style="text-align: center;">จำนวนเงิน / Amount</td>
+                        </tr>
+        
+                        
+        
+                        <tr>
+                            <td class="list-1">ค่ามัดจำ</td>
+                            <td style="text-align: right;
+                            border: 1px #000 solid;">{{deposit}}</td>
+                        </tr>
+        
+        
+                        <tr>
+                            <td style="text-align:center;border: 1px #000 solid;">{{thaibath2}}</td>
+                            <td style="text-align: right;
+                            border: 1px #000 solid;"></td>
+                        </tr>
+        
+                        <tr>
+                            <td style="border: 1px #000 solid;display: flex;">
+                                <div style="width: 20%;">ชำระโดย</div>
+                                <div style="width: 30%;">{{payment_name}}</div>
+                                <div style="width: 50%;">อื่นๆ _____________________</div>
+                                <div style="width: 20%;text-align: end;">รวมเงิน / Total</div>
+                            </td>
+                            <td style="text-align: right;border: 1px #000 solid;">{{deposit}}</td>
+                        </tr>
+                        <tr>
+                            <td style="border: 1px #000 solid;display: flex;">
+                                <div style="width: 17%;"></div>
+                                <div style="width: 58%;">เช็คธนาคาร / สาขา___________________________</div>
+                                <div style="width: 25%;text-align: end;">ภาษีมูลค่าเพิ่ม / VAT 7%</div>
+                            </td>
+                            <td style="text-align: right;border: 1px #000 solid;">{{vat2}}</td>
+                        </tr>
+                        <tr>
+                            <td style="border: 1px #000 solid;display: flex;">
+                                <div style="width: 17%;"></div>
+                                <div style="width: 58%;">เลขที่_____________ลงวันที่__________________</div>
+                                <div style="width: 25%;text-align: end;">รวมเงินทั้งสิ้น / Grand total</div>
+                            </td>
+                            <td style="text-align: right;border: 1px #000 solid;">{{total2}}</td>
+                        </tr>
+                    </table>
+        
+                    <div style="width: 100%;display: flex;-ms-flex-wrap: wrap;
+                    flex-wrap: wrap;margin-top: 15px;">
+                        <div style="width: 60%;">
+                            <div class="p-reg3"><u>หมายเหตุ</u> ในกรณีชำระเงินเป็นเช็ค ใบเสร็จนี้จะสมบูรณ์
+                                ต่อเมื่อเรียกเก็บเงินได้ตามเช็ค
+                            </div>
+                            <div class="p-reg3"><u>REMARK</u> This receipt will be valid when the bank nopost this cheque</div>
+                        </div>
+        
+                        <div class="signature">
+                            <div class="p-reg3" style="margin-top: 20px;">
+                                ______________________________________________________________________________
+                            </div>
+                            <div class="p-reg3">ผู้รับเงิน / Collector</div>
+                        </div>
+                    </div>
+        
+        
+                </div>
+            </div>
+        
+        </section>
+    </body>
+    {%endif%} 
+
+
+</html>

@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Service</title>
+    {% include "include/customer-css.html" %}
+    {% include "include/customer-js.html" %}
+</head>
+<style>
+    body {
+        background-color: #f8fafb;
+    }
+</style>
+
+<body>
+    {% include "eng/comps/navbar-2.html" %}
+
+    <div class="container pt-5">
+        <!-- UI - Step 1 Multi Form : Ming 31/05/2564 -->
+        <div class="row mt-3">
+            <div class="col-lg-12 text-center">
+                <div class="order-progress-stepper">
+                    <div class="step active">Choose Station</div>
+                    <div class="step">Check out the<br>terms and conditions</div>
+                    <div class="step">Fill in details</div>
+                    <div class="step">Verify the<br>application</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Step 1 เลือกลานจอดรถ -->
+        <!-- Filter เลือกอาคาร/ลานจอดรถ : Ming 31/05/2564 -->
+        <h3 class="text-center mt-5">Choose Station</h3>
+        <div class="cta filter text-center">
+            <a class="button-0 active" data-filter="all" role="button">All</a>
+            <a class="button-1" data-filter="button-1" role="button">Blue Line</a>
+            <a class="button-2" data-filter="button-2" role="button">Purple Line</a>
+            <a class="button-3" data-filter="button-3" role="button">Green Line</a>
+        </div>
+
+
+        <div class="row boxes">
+            {% for item in parkings %}
+            <div class="col-md-4" data-color="{{ item.mrline }}">
+                <!--modify by ittipon 23/6/2564 -->
+                <form class="needs-validation" method="POST">
+                    <figure class="card-2 card-with-hover">
+                        <img src="/static/image/manage/station/{{item.image_source}}">
+                        <figcaption class="card-caption">
+                            <div class="card-caption-content">
+                                <h6 name="parking_name" value="parking_name">{{item.name_en}}</h6>
+                                <!--modify by ittipon 23/6/2564 -->
+                                <input type="hidden" name="station" value="{{item.name}}" readonly>
+                                <p>
+                                <h5 class="mb-0 mt-3">Number of Vacancies</h5>
+                                <div class="col-12">
+                                    <!--modify by ittipon 23/6/2564-->
+                                    <button  type="{{item.button}}" class="btn btn-primary col-5 btn-lg" onclick={{item.alert}}>{{ item.nfreeparking }}</button>
+                                </div>
+                                </p>
+                            </div>
+                        </figcaption>
+                    </figure>
+                </form>
+            </div>
+            {% endfor %}
+        </div>
+
+    </div>
+    {% include "eng/comps/scroll-top.html" %}
+    {% include "eng/comps/popup-cookie.html" %}
+
+    {% include "eng/comps/footer.html" %}
+</body>
+
+<script>
+    $(document).ready(function () {
+        var $filters = $('.filter [data-filter]')
+        $boxes = $('.boxes [data-color]');
+
+        $filters.on('click', function (e) {
+            e.preventDefault();
+            var $this = $(this);
+
+            $filters.removeClass('active');
+            $this.addClass('active');
+
+            var $filterColor = $this.attr('data-filter');
+
+            if ($filterColor == 'all') {
+                $boxes.removeClass('is-animated')
+                    .fadeOut().promise().done(function () {
+                        $boxes.addClass('is-animated').fadeIn();
+                    });
+            } else {
+                $boxes.removeClass('is-animated')
+                    .fadeOut().promise().done(function () {
+                        $boxes.filter('[data-color = "' + $filterColor + '"]')
+                            .addClass('is-animated').fadeIn();
+                    });
+            }
+        });
+    });
+</script>
+</html>

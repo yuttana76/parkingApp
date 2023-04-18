@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Home</title>
+    <meta property="og:title" content="Home Public" />
+    <meta name="description" content="ระบบต่ออายุรายเดือน รฟม.">
+    <meta property="og:url" content="https://parking.mrta.co.th/" />
+    <meta property="og:image" content="/static/image/logo-blue.png">
+    {% include "include/customer-css.html" %}
+    {% include "include/customer-js.html" %}
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/responsive.css') }}">
+</head>
+<style>
+    @media (min-width: 992px) and (max-width: 1199.98px) {
+        .logo-mrta-responsive {
+            display: none;
+        }
+
+        .logo-mrta-responsive2 {
+            display: block;
+        }
+    }
+
+
+    .box-detail{
+        position: relative;
+        border-radius: 10px;
+        background: rgba(0, 178, 129, 0.2);
+        box-shadow: 0px 2.75214px 2.75214px 0px rgb(0 0 0 / 25%);
+        height: 170px;
+        margin-bottom: 20px;
+        color: rgb(0, 0, 0);
+        /* transition: transform 350ms; */
+        transition: transform 0.5s;
+        transform: scale(1);
+        /* min-width: 350px; */
+        max-width: 500px;
+        width: 100%;
+    }
+    .box-detail:hover{
+        transform: translateY(-10px);
+        box-shadow: 0px 2.75214px 2.75214px 2.75214px rgb(0 0 0 / 25%);
+    }
+
+    .box-detail2{
+        position: relative;
+        border-radius: 10px;
+        background: rgba(0, 178, 129, 0.2);
+        box-shadow: 0px 2.75214px 2.75214px 0px rgb(0 0 0 / 25%);
+        height: 190px;
+        margin-bottom: 20px;
+        color: rgb(0, 0, 0);
+        /* transition: transform 350ms; */
+        transition: transform 0.5s;
+        transform: scale(1);
+        /* min-width: 350px; */
+        max-width: 500px;
+        width: 100%;
+    }
+    .box-detail2:hover{
+        transform: translateY(-10px);
+        box-shadow: 0px 2.75214px 2.75214px 2.75214px rgb(0 0 0 / 25%);
+    }
+
+    .box-detail2{
+        margin-top: 5px;
+    }
+
+    .overflow-policy{
+        width: auto;
+        padding: 20px 20px 10px 20px;
+        background-repeat: no-repeat;
+        background-size: cover;
+    }
+
+</style>
+<body>
+    <!-- แถบเมนู -->
+    {% include "eng/comps/navbar-2.html" %}
+    {%if user_owned_card == 0 %} 
+    <!-- แสดงบัตรสมาชิก new-->
+    <div class="mrta-parking-area-02" style="padding-bottom: 250px;">
+        <div class="bg-slide pt-5 pb-3">
+            <div class="container">
+                <div class="carousel">
+                    <div class="row">
+                        <div class="col-12">
+                            {% include "comps/card-upload.html" %}
+                        </div>
+                         <br><br>
+                        <!--Modal details-->
+                        <!-- <div class="row">
+                            <div class="col-1"></div>
+                            <div class="col-10 p-4"> 
+                                <div class="card-body">
+                                <div class="text-center my-3">  
+                                <h4><a class="detaillink" data-toggle="modal" data-target="#detailModal">รายละเอียดข้อมูล</a></h4>
+
+                                <div class="modal fade" id="detailModal" tabindex="-1" role="dialog"
+                                    aria-labelledby="detailLabel" aria-hidden="true">
+                                    <div class="modal-dialog" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header card-header-mrta" >
+                                                <h5 class="modal-title" id="detailLabel">รายละเอียดข้อมูล</h5>
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <form>                                              
+                                                <div class="form-group text-left">
+                                                    <label for="name" class="col-form-label">ชื่อ-นามสกุล:</label>
+                                                    <input type="text" class="form-control" id="name">
+                                                </div>
+
+                                                <div class="form-group text-left">
+                                                    <label for="num_card" class="col-form-label">หมายเลขบัตร:</label>
+                                                    <input type="text" class="form-control" id="num_card">
+                                                </div>
+
+                                                <div class="form-group text-left">
+                                                    <label for="parking" class="col-form-label">อาคารลานจอด:</label>
+                                                    <input type="text" class="form-control" id="parking">
+                                                </div>
+
+                                                <div class="form-group text-left">
+                                                    <label for="parking" class="col-form-label">สถานะบัตร:</label>
+                                                    <input type="status" class="form-control" id="status">
+                                                </div>
+                                                </form>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <div class="col-md-12 text-center">
+                                                    <button type="button" class="btn btn-primary col-6" data-dismiss="modal">ยืนยัน</button>
+                                                </div>
+                                               
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                   
+                                </div> 
+                                </div>  
+                            </div>
+                            <div class="col-1"></div>  
+                        </div> -->
+
+                    </div>
+                    <div class="row">
+                        <div class="text-center h4">Remaining (Day)</div>
+                        <div class="col-12 text-center mt-2">
+                            <input type="text" class="dial2" value="0" data-min="0" data-max="31" data-fgColor="#66CC66"
+                                data-angleOffset=-125 data-angleArc=250 data-rotation=clockwise data-linecap=round
+                                readonly>
+                        </div>
+                        <!-- <div class="row text-center">
+                            <div class="col-6">
+                                จำนวนวันคงเหลือ 0 วัน
+                            </div>
+                            <div class="col-6">
+                                วันหมดอายุ - วัน
+                            </div>
+                        </div>   -->
+                       <br>
+                       <!-- <div class="row">
+  
+                            <div class="col-1"></div>
+                            <div class="col-10 p-4"> 
+                                <div class="card-body">
+                                <div class="text-center my-3">  
+                                <h4><a class="detaillink1" data-toggle="modal" data-target="#detailModal1">รายละเอียดข้อมูล</a></h4>
+
+                                <div class="modal fade" id="detailModal1" tabindex="-1" role="dialog"
+                                    aria-labelledby="detailLabel1" aria-hidden="true">
+                                    <div class="modal-dialog" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header card-header-mrta">
+                                                <h5 class="modal-title" id="detailLabel1">รายละเอียดข้อมูล</h5>
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+                                               <div class="card overflow-detail1" id="style-policy" >
+                                                <form>
+                                                    <div class="form-group text-left">
+                                                        <label for="firstsign_date" class="col-form-label">วันที่สมัคร:</label>
+                                                        <input type="text" class="form-control" id="firstsign_date">
+                                                    </div>
+                                                    <div class="form-group text-left">
+                                                        <label for="expire_date" class="col-form-label">วันที่หมดอายุ:</label>
+                                                        <input type="text" class="form-control" id="expire_date">
+                                                    </div>
+                                                    <div class="form-group text-left">
+                                                        <label for="num_card" class="col-form-label">จำนวนวันคงเหลือ:</label>
+                                                        <input type="text" class="form-control" id="num_card">
+                                                    </div>                        
+                                                </form>
+                                                </div>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <div class="col-md-12 text-center">
+                                                    <button type="button" class="btn btn-primary col-6" data-dismiss="modal">ยืนยัน</button>
+                                                </div>
+                                               
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                   
+                                </div> 
+                                </div>  
+                            </div>
+                            <div class="col-1"></div>   
+                           
+                        </div>    -->
+                        <input type="hidden" id="month" value="1">
+                        <input type="hidden" id="month2" value="1">
+                    </div>
+                </div>          
+            </div>               
+        </div>
+        <!---------------------------endcard----------------------------------------------->
+    {% elif user_owned_card ==1%} 
+    <input type="hidden" id="month" value="{{month}}">
+    <input type="hidden" id="month2" value="1">
+    <!-- แสดงบัตรสมาชิก -->
+    <div class="mrta-parking-area-02">
+        <div class="bg-slide pt-5 pb-3">
+            <div class="container">
+                <div class="carousel">
+                    <div class="row">
+                        <div class="col-12" data-aos="fade-right" data-aos-delay="500" data-aos-offset="200"
+                            data-aos-easing="ease-in-out" data-aos-mirror="true" data-aos-once="false">
+                            {% if vcard_type == 'JOWIT'%} 
+                            {% include "eng/comps/card-jowit.html" %}
+                            {% elif vcard_type == 'AFC'%} 
+                            {% include "eng/comps/card-afc.html" %} 
+                            {% elif vcard_type == 'CIT'%} 
+                            {% include "eng/comps/card-cit.html"%} 
+                            {% elif vcard_type == 'TAFF'%}
+                            {% include "eng/comps/card-taff.html"%} 
+                            {%endif%}
+                        </div>
+                        <br>
+                        <div class="row">
+                            <div class="col-1"></div>
+                            <div class="box-detail col-10 p-4"> 
+                                <h4 class="header-detail text-center">Detail Information</h4> 
+                                <span  class="name text-left">Fullname : {{fullname}}</span><br>
+                                {% if card_id.isdigit() %} 
+                                <span class="num_card text-left">ID Card : {{card_id}} </span><br>
+                                {% else %} 
+                                <span class="num_card text-left" style="color: maroon;">{{card_id}} </span><br>
+                                {% endif %} 
+                                <span class="parking text-left">Station Name : {{station_name}}</span><br>                      
+                                <span class="status text-left">Status : {{status_en}}</span>
+                            </div>  
+                            <div class="col-1"></div>   
+                        </div>
+                        <div class="mt-2 text-center">
+                            <a href="{{ url_for('member_register_step1_en')}}" class="btn btn-primary mr-2">add card</a>
+                            <a href="{{url_for('parking_reserve_en')}}" class="btn btn-primary mr-2">booking</a>
+                            <a href="{{ url_for('parking_payment_en')}}" class="btn btn-primary mr-2">pay</a>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="text-center h4">Remaining (Day)</div>
+                        <div class="col-12 text-center mt-3" data-aos="zoom-in" data-aos-delay="500"
+                            data-aos-easing="ease-in-out" data-aos-mirror="true" data-aos-once="false">
+                            <input type="text" class="dial" value="{{remaining}}" data-min="0" data-max="31" data-fgColor="#66CC66"
+                                data-angleOffset=-125 data-angleArc=250 data-rotation=clockwise data-linecap=round
+                                data-width="200" readonly>
+                        </div>
+                        <!-- <div class="row text-center">
+                            <div class="col-6">
+                                {{day_remaining}} 
+                            </div>
+                            <div class="col-6">
+                                วันหมดอายุ: {{exp}} 
+                            </div>
+                        </div> -->
+                        <br>
+                       <div class="row">
+                            <div class="col-1"></div>
+                            <div class="box-detail2 col-10 p-4"> 
+                                <h4 class="header-detail text-center">Detail Information</h4> 
+                                <span  class="firstsign_date text-left">Register Date : {{register_date}}</span><br>
+                                <span  class="firstsign_date text-left">Start Date : {{start}}</span><br>
+                                <span  class="expire_date text-left">Expire Date : {{exp}}</span><br>
+                                {% if remaining == 0%} 
+                                <!-- <span class="num_card text-left">Remaining (Day) : 0</span><br> -->
+                                {%else%}      
+                                <span class="num_card text-left">Remaining (Day) : {{remaining}}</span><br>
+                                {%endif%} 
+                                {%if check_status == 'หมดอายุ' or check_status == 'ยังไม่ถึงกำหนดการ' or seven_date == ''%} 
+                                {%else%} 
+                                <span class="num_card text-left" style="color: maroon;">Internal pay : {{seven_date}}</span> 
+                                {%endif%}         
+                            </div>   
+                            <div class="col-1"></div>   
+                        </div>
+                        <!-- <div class="mt-2 text-center">
+                            <a href="{{ url_for('member_register_step1')}}" class="btn btn-primary mr-2">เพิ่มบัตร</a>
+                            <a href="{{url_for('parking_reserve')}}" class="btn btn-primary mr-2">จองคิว</a>
+                            <a href="{{ url_for('parking_payment')}}" class="btn btn-primary mr-2">ชำระเงิน</a>
+                        </div> -->
+                    </div>
+                    <div class="row">
+                        <div class="col-12">
+                            {% include "comps/card-upload.html" %}
+                        </div>
+                        <br>
+                        <div class="row">
+                            <div class="col-1"></div>
+                            <div class="box-detail col-10 p-4"> 
+                                <h4 class="header-detail text-center">Detail Information</h4> 
+                                <span  class="name text-left">Fullname : </span><br>
+                                <span class="num_card text-left">ID Card : </span><br>
+                                <span class="parking text-left">Station Name : </span><br>                      
+                                <span class="status text-left">Status : </span>
+                            </div>    
+                            <div class="col-1"></div>   
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="text-center h4">Remaining (Day)</div>
+                        <div class="col-12 text-center mt-2">
+                            <input type="text" class="dial2" value="0" data-min="0" data-max="31" data-fgColor="#66CC66"
+                                data-angleOffset=-125 data-angleArc=250 data-rotation=clockwise data-linecap=round
+                                readonly>
+                        </div>
+                        <!-- <div class="row text-center">
+                            <div class="col-6">
+                                จำนวนวันคงเหลือ 0 วัน
+                            </div>
+                            <div class="col-6">
+                                วันหมดอายุ - วัน
+                            </div>
+                        </div> -->
+                        <br>
+                       <div class="row">
+                            <div class="col-1"></div>
+                            <div class="box-detail2 col-10 p-4"> 
+                                <h4 class="header-detail text-center">Detail Information</h4> 
+                                <span  class="firstsign_date text-left">Register Date :</span><br>
+                                <span  class="expire_date text-left">Expire Date :</span><br>
+                                <span class="num_card text-left">Remaining (Day) : </span>
+                                <span class="num_card text-left">Internal pay : </span>                         
+                            </div>   
+                            <div class="col-1"></div>   
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--------------------------endcard1------------------------------------>
+    {%elif user_owned_card == 2%} 
+    <input type="hidden" id="month" value="{{month}}">
+    <input type="hidden" id="month2" value="{{month2}}">
+    <!-- แสดงบัตรสมาชิก -->
+    <div class="mrta-parking-area-02">
+        <div class="bg-slide pt-5 pb-3">
+            <div class="container">
+                <div class="carousel">
+                    <div class="row">
+                        <div class="col-12" data-aos="fade-right" data-aos-delay="500" data-aos-offset="200"
+                            data-aos-easing="ease-in-out" data-aos-mirror="true" data-aos-once="false">
+                            {% if vcard_type1 == 'JOWIT'%} 
+                            {% include "eng/comps/card-jowit.html" %}
+                            {% elif vcard_type1 == 'AFC'%} 
+                            {% include "eng/comps/card-afc.html" %} 
+                            {% elif vcard_type1 == 'CIT'%} 
+                            {% include "eng/comps/card-cit.html"%} 
+                            {% elif vcard_type1 == 'TAFF'%}
+                            {% include "eng/comps/card-taff.html"%} 
+                            {%endif%}
+                        </div>
+                        <br>
+                        <div class="row">
+                            <div class="col-1"></div>
+                            <div class="box-detail col-10 p-4"> 
+                                <h4 class="header-detail text-center">Detail Information</h4> 
+                                <span  class="name text-left">Fullname : {{fullname}}</span><br>
+                                {% if card_id.isdigit() %} 
+                                <span class="num_card text-left">ID Card : {{card_id}} </span><br>
+                                {% else %} 
+                                <span class="num_card text-left" style="color: maroon;">{{card_id}} </span><br>
+                                {% endif %}
+                                <span class="parking text-left">Station Name : {{station_name}}</span><br>                      
+                                <span class="status text-left">Status : {{status_en}}</span>
+                            </div>  
+                            <div class="col-1"></div>   
+                        </div>
+                        <div class="mt-2 text-center">
+                            <a href="{{ url_for('member_register_step1_en')}}" class="btn btn-primary mr-2">add card</a>
+                            <a href="{{url_for('parking_reserve_en')}}" class="btn btn-primary mr-2">booking</a>
+                            <a href="{{ url_for('parking_payment_en')}}" class="btn btn-primary mr-2">pay</a>
+                        </div> 
+                    </div>
+                    <div class="row">
+                        <div class="text-center h4">Remaining (Day)</div>
+                        <div class="col-12 text-center mt-3" data-aos="zoom-in" data-aos-delay="500"
+                            data-aos-easing="ease-in-out" data-aos-mirror="true" data-aos-once="false">
+                            <input type="text" class="dial" value="{{remaining}}" data-min="0" data-max="31" data-fgColor="#66CC66"
+                                data-angleOffset=-125 data-angleArc=250 data-rotation=clockwise data-linecap=round
+                                data-width="200" readonly>
+                        </div>
+                        <!-- <div class="row text-center">
+                            <div class="col-6">
+                                {{day_remaining}}
+                            </div>
+                            <div class="col-6">
+                                วันหมดอายุ: {{exp}} 
+                            </div>
+                        </div> -->
+                        <br>
+                       <div class="row">
+                            <div class="col-1"></div>
+                            <div class="box-detail2 col-10 p-4"> 
+                                <h4 class="header-detail text-center">Detail Information</h4> 
+                                <span  class="firstsign_date text-left">Register Date : {{register_date}}</span><br>
+                                <span  class="firstsign_date text-left">Start Date : {{start}}</span><br>
+                                <span  class="expire_date text-left">Expire Date : {{exp}}</span><br>
+                                {% if remaining == 0%} 
+                                <!-- <span class="num_card text-left">Remaining (Day) : 0</span><br> -->
+                                {%else%}      
+                                <span class="num_card text-left">Remaining (Day) : {{remaining}}</span><br>
+                                {%endif%}
+                                {%if check_status == 'หมดอายุ' or check_status == 'ยังไม่ถึงกำหนดการ' or seven_date == ''%} 
+                                {%else%} 
+                                <span class="num_card text-left" style="color: maroon;">Internal pay : {{seven_date}}</span> 
+                                {%endif%}         
+                            </div>     
+                            <div class="col-1"></div>   
+                        </div>  
+                        <!-- <div class="mt-2 text-center">
+                            <a href="{{ url_for('member_register_step1')}}" class="btn btn-primary mr-2">เพิ่มบัตร</a>
+                            <a href="{{url_for('parking_reserve')}}" class="btn btn-primary mr-2">จองคิว</a>
+                            <a href="{{ url_for('parking_payment')}}" class="btn btn-primary mr-2">ชำระเงิน</a>
+                        </div>  -->
+                    </div>
+                    <div class="row">
+                        <div class="col-12" data-aos="fade-right" data-aos-delay="500" data-aos-offset="200"
+                            data-aos-easing="ease-in-out" data-aos-mirror="true" data-aos-once="false">
+                            {% if vcard_type2 == 'JOWIT'%} 
+                            {% include "eng/comps/card-jowit2.html" %}
+                            {% elif vcard_type2 == 'AFC'%} 
+                            {% include "eng/comps/card-afc2.html" %} 
+                            {% elif vcard_type2 == 'CIT'%} 
+                            {% include "eng/comps/card-cit2.html"%} 
+                            {% elif vcard_type2 == 'TAFF'%}
+                            {% include "eng/comps/card-taff2.html"%} 
+                            {%endif%}
+                        </div>
+                        <br>
+                        <div class="row">
+                            <div class="col-1"></div>
+                            <div class="box-detail col-10 p-4"> 
+                                <h4 class="header-detail text-center">Detail Information</h4> 
+                                <span  class="name text-left">Fullname : {{fullname2}}</span><br>
+                                {% if card_id2.isdigit() %} 
+                                <span class="num_card text-left">ID Card : {{card_id2}} </span><br>
+                                {% else %} 
+                                <span class="num_card text-left" style="color: maroon;">{{card_id2}} </span><br>
+                                {% endif %}
+                                <span class="parking text-left">Station Name : {{station_name2}}</span><br>                      
+                                <span class="status text-left">Status : {{status_en2}}</span>
+                            </div>  
+                            <div class="col-1"></div>   
+                        </div>
+                        <div class="mt-2 text-center">
+                            <a href="{{ url_for('member_register_step1_en')}}" class="btn btn-primary mr-2">add card</a>
+                            <a href="{{url_for('parking_reserve_en')}}" class="btn btn-primary mr-2">booking</a>
+                            <a href="{{ url_for('parking_payment_en')}}" class="btn btn-primary mr-2">pay</a>
+                        </div> 
+                    </div>
+                    <div class="row">
+                        <div class="text-center h4">Remaining (Day)</div>
+                        <div class="col-12 text-center mt-3" data-aos="zoom-in" data-aos-delay="500" 
+                            data-aos-easing="ease-in-out" data-aos-mirror="true" data-aos-once="false">
+                            <input type="text" class="dial2" value="{{remaining2}}" data-min="0" data-max="31" data-fgColor="#66CC66"
+                                data-angleOffset=-125 data-angleArc=250 data-rotation=clockwise data-linecap=round
+                                data-width="200" readonly>
+                        </div>
+                        <!-- <div class="row text-center">
+                            <div class="col-6">
+                                {{day_remaining2}}
+                            </div>
+                            <div class="col-6">
+                                วันหมดอายุ: {{exp2}}
+                            </div>
+                        </div> -->
+                        <br>
+                       <div class="row">
+                            <div class="col-1"></div>
+                            <div class="box-detail2 col-10 p-4"> 
+                                <h4 class="header-detail text-center">Detail Information</h4> 
+                                <span  class="firstsign_date text-left">Register Date : {{register_date2}}</span><br>
+                                <span  class="firstsign_date text-left">Start Date : {{start2}}</span><br>
+                                <span  class="expire_date text-left">Expire Date : {{exp2}}</span><br>
+                                {% if remaining2 == 0%} 
+                                <!-- <span class="num_card text-left">Remaining (Day) : 0</span><br> -->
+                                {%else%}      
+                                <span class="num_card text-left">Remaining (Day) : {{remaining2}}</span><br>
+                                {%endif%}
+                                {%if check_status2 == 'หมดอายุ' or check_status2 == 'ยังไม่ถึงกำหนดการ' or seven_date2 == ''%}  
+                                {%else%} 
+                                <span class="num_card text-left" style="color: maroon;">Internal pay : {{seven_date2}}</span>  
+                                {%endif%}         
+                            </div>   
+                            <div class="col-1"></div>   
+                        </div>   
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--------------------------endcard2------------------------------------>
+    {%endif%}
+        <div class="container mt-3" style="padding: 40px;">
+            <div class="row p-3">
+                <div class="col-6 my-2" data-aos="fade-right" data-aos-delay="300">
+                    <h3>News</h3>
+                </div>
+                <div class="col-6 my-2 text-right" data-aos="fade-right" data-aos-delay="300">
+                    <a class="h5 a-link" href="parking-all-news">View All</a>
+                </div>
+
+                {% include "comps/news-parking-slide.html" %}
+
+            </div>
+        </div>
+    </div>
+    {% include "eng/comps/scroll-top.html" %}
+
+    {% include "eng/comps/footer.html" %}
+</body>
+<script>
+    $(document).ready(function () {
+        $('.carousel').slick({
+            slidesToShow: 2,
+            slidesToScroll: 2,
+            dots: true,
+            centerMode: false,
+            arrows: true,
+            loop: false,
+            infinite: false,
+            responsive: [
+                {
+                    breakpoint: 1024,
+                    settings: {
+                        slidesToShow: 1,
+                        slidesToScroll: 1,
+                    }
+                },
+                {
+                    breakpoint: 600,
+                    settings: {
+                        slidesToShow: 1,
+                        slidesToScroll: 1
+                    }
+                },
+                {
+                    breakpoint: 480,
+                    settings: {
+                        slidesToShow: 1,
+                        slidesToScroll: 1
+                    }
+                }
+            ]
+        });
+    });
+</script>
+<script>
+    const month = document.getElementById('month').value;
+    console.log(month)
+    const month2 = document.getElementById('month2').value;
+    console.log(month2)
+    $(".dial").knob({
+        'min': 0,
+        'max': 30 * Number(month) + 7
+    });
+    $(".dial2").knob({
+        'min': 0,
+        'max': 30 * Number(month2) + 7
+    });
+</script>
+<script>
+    AOS.init({
+        duration: 1000
+        // easing: 'ease-out-back',
+    });
+</script>
+</html>

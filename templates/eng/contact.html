@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact MRTA</title>
+    {% include "include/customer-css.html" %}
+    {% include "include/customer-js.html" %}
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/map.css') }}">
+</head>
+
+<style>
+    @media only screen and (min-device-width: 280px) and (max-device-width : 736px) {
+
+        .contact-app{
+            margin-left: 15px;
+            
+        }
+        .phone-contact{
+            margin-left: -80px;
+            
+        }
+    }
+</style>
+
+<body>
+    {% include "eng/comps/navbar-1.html" %}
+
+    <div class="mrta-parking-area-02">
+        <div class="mt-0 p-5">
+            <div class="container">
+                <h4 class="text-center mb-0">Contact Us</h4>
+            </div>
+        </div>
+
+        <!-- พิกัดแผนที่ ติดต่อรฟม. : Ming 31/05/2564 -->
+        <div id="contain_map">
+            <div id="map_canvas">
+                <iframe src="https://www.google.com/maps/d/u/0/embed?mid=1suev76x9KeDf2IJ4BxI1o0tQsZsi3lwV" style="border:0;" width="100%" height="100%" loading="lazy"></iframe>
+                <!-- <iframe
+                    src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d15498.166067521171!2d100.5741729!3d13.8064899!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0xaffabb8d5bcf62!2z4Lit4Liy4LiE4Liy4Lij4LiI4Lit4LiU4LmB4Lil4LmJ4Lin4LiI4LijIE1SVCDguKXguLLguJTguJ7guKPguYnguLLguKc!5e0!3m2!1sth!2sth!4v1622426609442!5m2!1sth!2sth"
+                    style="border:0;" loading="lazy" width="100%" height="100%"></iframe> -->
+            </div>
+        </div>
+        <div id="directionsPanel"></div>
+
+
+        <div class="container">
+            <!-- ช่องทางติดต่อ : Ming 31/05/2564 -->
+            <div class="row my-4">
+                <div class="col-lg-6">
+                    <h5 class="mb-1">Contact</h5>
+                    <div class="row my-3">
+                        <div class="col-1"><i class="fas fa-map-marked-alt"></i></div>
+                        <div class="col-11">
+                            <h5>Office of the building management contractor</h5>
+                            <h5>and parking lot (24 hours a day)</h5>
+
+                            <h6 class="mt-3 mb-1"> Metro Chaloem Ratchamongkhon Line (Blue)</h6>
+                            <span><i class="phone-contact fas fa-phone-alt mb-3 ml-2"></i> Tel. </span>
+                            <span>02-513-1895</span></span> <br>
+
+                            <h6 class="mt-3 mb-1"> Metro Chalong Ratchatham Line (Purple)</h6>
+                                
+                            <span><i class="phone-contact fas fa-phone-alt mb-3 ml-2"></i> Tel. </span> <span>
+                                063-583-2290</span></span> <br>
+
+                            <h6 class="mt-3 mb-1">Green Line Metro Project (Bearing-Samut Prakan Range)</h6>
+                            <span><i class="phone-contact fas fa-phone-alt mb-3 ml-2"></i> Tel. </span> <span
+                                class="ml-2">092-271-7444</span></span><br>
+                        </div>
+                    </div>
+                    <!-- <div class="row my-3">
+                        <div class="col-1"><i class="far fa-envelope"></i></div>
+                        <div class="col-11 h6">parkandride@mrta.co.th</div>
+                    </div> -->
+                    <div class="row">
+                        <div class="col-1"><i class="fas fa-phone-alt"></i></div>
+                        <h6 class="col-11">contact number (Only on days and hours of operation)</h6>
+                    </div>
+                    <div class="row my-2">
+                        <div class="col-2"></div>
+                        <div class="col-4">- Tel.</div>
+                        <div class="col-6 h6 ">0 2716 4000</div>
+                    </div>
+                    <div class="row my-2">
+                        <div class="col-2"></div>
+                        <div class="col-4">- Fax</div>
+                        <div class="col-6 h6">0 2716 4030 </div>
+                    </div>
+                    <div class="row my-2">
+                        <div class="col-2"></div>
+                        <div class="col-4">- Call Center </div>
+                        <div class="col-4 h6"> 0 2716 4044 </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-1"><i class="fas fa-question"></i></div>
+                        <h6 class="col-11"><a href="{{url_for('faq_th')}}">FAQ</a></h6>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <h5 class="mb-1">Contact Information</h5>
+                    <a class="row my-3" href="https://www.facebook.com/MRTA.PR">
+                        <div class="col-1"><img width="35" src="{{url_for('static', filename='image/facebook.svg')}}">
+                        </div>
+                        <div class="contact-app col-10 h6 mt-2">การรถไฟฟ้าขนส่งมวลชนแห่งประเทศไทย</div>
+
+                    </a>
+                    <a class="row my-3" href="https://twitter.com/mrt_purpleline">
+                        <div class="col-1"><img width="35" src="{{url_for('static', filename='image/twitter.svg')}}">
+                        </div>
+                        <div class="contact-app col-10 h6 mt-2">@mrtpurpleline</div>
+                    </a>
+                    <a class="row my-3" href="https://www.youtube.com/user/9bhubeth">
+                        <div class="col-1"><img width="35" src="{{url_for('static', filename='image/youtube.svg')}}">
+                        </div>
+                        <div class="contact-app col-10 h6 mt-2">PR MRTA Offical</div>
+                    </a>
+                    <a class="row my-3" href="https://line.me/R/ti/p/%40164rpjrx">
+                        <div class="col-1"><img width="35" src="{{url_for('static', filename='image/line.svg')}}">
+                        </div>
+                        <div class="contact-app col-10 h6 mt-2">@mrtacontact</div>
+                    </a>
+                </div>
+            </div>
+
+
+            <!-- แบบฟอร์มการติดต่อ : Ming 31/05/2564 -->
+            <form class="form-contact py-4" action="{{ url_for('contact') }}", method="POST">
+                <div class="col-lg-12">
+                    <div class="card shadow">
+                        <div class="card-header card-header-mrta py-3">
+                            <h5 class="mb-0 text-center">Contact Form</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="row mb-2">
+                                <div class="col-md-6">
+                                    <div class="form-input">
+                                        <label>Firstname</label>
+                                        <input type="text" id="first_name" name="first_name" class="input"
+                                            required>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-input">
+                                        <label>Lastname</label>
+                                        <input type="text" id="last_name" name="last_name" class="input"
+                                            required>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mb-2">
+                                <div class="col-md-6">
+                                    <div class="form-input">
+                                        <label>Mobile</label>
+                                        <input type="text" id="phone" name="phone" class="input" required>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-input">
+                                        <label>Email (if any)</label>
+                                        <input type="text" id="email" name="email" class="input">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-12 mb-2 tab-sub-2">
+                                <div class="row">
+                                    <div class="form-check col-md-6">
+                                        <input class="form-check-input" type="radio" name="type" id="choose1">
+                                        <label class="form-check-label" for="choose1">
+                                            Inquire
+                                        </label>
+                                    </div>
+                                    <div class="form-check col-md-6">
+                                        <input class="form-check-input" type="radio" name="type" id="choose2">
+                                        <label class="form-check-label" for="choose2">
+                                            Feedback
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="my-4">
+                                <div class="form-input">
+                                    <textarea class="input" name="description" id="description" rows="6"
+                                        placeholder="The message you want to send..."></textarea>
+                                </div>
+                            </div>
+                            <div class="text-center">
+                                <button type="submit"
+                                    class="btn mrta-btn-primary-1 mrta-shadow-primary-1 col-lg-3 col-5">Send</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    {% include "eng/comps/scroll-top.html" %}
+    {% include "eng/comps/popup-cookie.html" %}
+
+    {% include "eng/comps/footer.html" %}
+</body>
+</html>

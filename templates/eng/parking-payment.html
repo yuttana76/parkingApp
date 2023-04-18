@@ -1,0 +1,1292 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Choose a payment item</title>
+    {% include "include/customer-css.html" %}
+    {% include "include/customer-js.html" %}
+</head>
+<style>
+    body {
+        background: #F5F5F5;
+    }
+
+    .scrollme {
+        overflow-x: auto;
+    }
+
+
+
+    /*****************************btn click ************************************/
+
+    #btn-onclick {
+        display: none;
+        background-color: #FFFFFF;
+        border: 1px solid #aaa;
+        position: fixed;
+        width: 400px;
+        left: 50%;
+        margin-top: -350px;
+        margin-left: -150px;
+        padding: 6px 8px 8px;
+        box-sizing: border-box;
+        text-align: center;
+        z-index: 1;
+    }
+
+    #btn-onclick button {
+        background-color: #48E5DA;
+        display: inline-block;
+        border-radius: 5px;
+        border: 1px solid #aaa;
+        padding: 5px;
+        text-align: center;
+        width: 80px;
+        cursor: pointer;
+    }
+
+    #btn-onclick .message {
+        text-align: left;
+    }
+
+
+    .img-replace {
+        /* replace text with an image */
+        display: inline-block;
+        overflow: hidden;
+        text-indent: 100%;
+        color: transparent;
+        white-space: nowrap;
+    }
+
+    #btn-onclick .btn-popup-close {
+        position: absolute;
+        top: 8px;
+        right: 8px;
+        width: 30px;
+        height: 30px;
+    }
+
+    #btn-onclick .btn-popup-close::before,
+    #btn-onclick .btn-popup-close::after {
+        content: '';
+        position: absolute;
+        top: 12px;
+        width: 16px;
+        height: 3px;
+        background-color: rgb(0, 0, 0);
+    }
+
+    #btn-onclick .btn-popup-close::before {
+        -webkit-transform: rotate(45deg);
+        -moz-transform: rotate(45deg);
+        -ms-transform: rotate(45deg);
+        -o-transform: rotate(45deg);
+        transform: rotate(45deg);
+        left: 8px;
+    }
+
+    #btn-onclick .btn-popup-close::after {
+        -webkit-transform: rotate(-45deg);
+        -moz-transform: rotate(-45deg);
+        -ms-transform: rotate(-45deg);
+        -o-transform: rotate(-45deg);
+        transform: rotate(-45deg);
+        right: 6px;
+        top: 13px;
+    }
+
+    .is-visible #btn-onclick {
+        -webkit-transform: translateY(0);
+        -moz-transform: translateY(0);
+        -ms-transform: translateY(0);
+        -o-transform: translateY(0);
+        transform: translateY(0);
+    }
+
+    /*****************************btn click end ************************************/
+</style>
+
+<body>
+    <!-- แถบเมนู -->
+    {% include "eng/comps/navbar-2.html" %}
+
+    <form method="POST">
+        <div class="container">
+            <div class="mrta-section">
+                <h3 class="text-center mb-4">Choose a payment item</h3>
+                <div class="row">
+                    <div class="col-md-7">
+                        <div class="scrollme">
+                            <table class="table table-resposive">
+                                <thead>
+                                    <tr>
+
+                                        <th>Card code</th>                           
+                                        <th>Parking lot</th>
+                                        <th>Months</th>
+                                        <th>Start date</th>
+                                        <th>Price</th>
+                                    </tr>
+                                </thead>
+                                {%if cards_count == 1%}
+                                <tbody>
+                                    <tr>
+                                        <input type="hidden" id="pricedummy2" value="0">
+                                        <button id="up2" disabled></button>
+                                        <button id="down2" disabled></button>
+                                        <input type="hidden" id="payment_status2" value="">
+                                        <input type="hidden" id="station2" value="">
+                                        <input type="hidden" id="status1" value="">
+                                        <input type="hidden" id="verify2" value="">
+                                        <input type="hidden" id="q2" value="">
+                                        <input type="hidden" id="paydate2" value="">
+                                        <input type="hidden" id="idcard2" value="">
+                                        <td>
+                                            {{card.card_id}}
+                                            <input type="hidden" id="card_id" name="card_id" value="{{card.card_id}}">
+                                        </td>
+                                        <td>{{card.parking_name_eng}}</td>
+                                        <input type="hidden" id="station" name="station" value="{{card.parking_name}}">
+                                        {% if card.type == 'TAFF' %}
+                                        <td>
+                                            <div class="input-group">
+                                                <div class="input-group-btn">
+                                                    <a type="button" id="down" class="btn btn-primary"
+                                                        onclick=" down('0')"><span class="fas fa-minus"></span></a>
+                                                </div>
+                                                <input type="text" id="myNumber" name="myNumber"
+                                                    class="form-control input-number text-center" value="0" min="0"
+                                                    max="12" readonly />
+                                                <div class="input-group-btn">
+                                                    <a type="button" id="up" class="btn btn-primary"
+                                                        onclick="up('12')"><span class="fas fa-plus"></span></a>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        {% elif card.type != 'TAFF' %}
+                                        <td>
+                                            <div class="input-group">
+                                                <div class="input-group-btn">
+                                                    <a id="down" class="btn btn-primary" onclick=" down('0')"><span
+                                                            class="fas fa-minus"></span></a>
+                                                </div>
+                                                <input type="text" id="myNumber"
+                                                    class="form-control input-number text-center" value="0" min="0"
+                                                    max="1" readonly />
+                                                <div class="input-group-btn">
+                                                    <a id="up" class="btn btn-primary" onclick="up('1')"><span
+                                                            class="fas fa-plus"></span></a>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        {%endif%}
+                                        {%if card.status == 'ต่ออายุ' or card.status == 'ยังไม่ถึงกำหนดการ'%}
+                                        <td>{{card.exp}}</td>
+                                        <input type="hidden" id="datefield" name="datefield" value="{{card.exp}}">
+                                        {%elif (card.color =='สายสีเขียว' or card.color =='สายสีน้ำเงิน')%}
+                                        <td><input type="date" id="datefield" name="datefield" value="{{min_date}}"
+                                                min="{{min_date}}" max="{{max_date}}" required></td>
+                                        {%elif card.color =='สายสีม่วง'%}
+                                        <td>{{date}}</td>
+                                        <input type="hidden" id="datefield" name="datefield" value="{{date}}">
+                                        {%endif%}
+                                        <td class="text-right" id="price">0</td>
+                                        <input type="hidden" id="pricedummy" name="pricedummy" value="{{card.price2}}">
+                                        <input type="hidden" id="price2" name="price2">
+                                    </tr>
+                                    {%if card.status == 'บัตรใหม่'%}
+                                    <tr>
+                                        <td></td>
+                                        <td>Deposit amount</td>
+                                        <td></td>
+                                        <td></td>
+                                        <td class="text-right">{{card.deposit}}</td>
+                                        <input type="hidden" value="{{card.deposit}}" name="deposit" id="deposit">
+
+
+                                    </tr>
+                                    {%else%}
+                                    <input type="hidden" value="0" id="deposit" name="deposit">
+                                    {%endif%}
+                                    <input type="hidden" id="status" name="status" value="{{card.status}}" readonly>
+                                    <input type="hidden" id="payment_status" value="{{card.payment_status}}" readonly>
+                                    <input type="hidden" id="verify" value="{{card.verify}}">
+                                    <input type="hidden" id="q" value="{{card.q}}">
+                                    <input type="hidden" id="paydate" value="{{card.paydate}}">
+                                    <input type="hidden" id="idcard" value="{{card.id}}">
+                                </tbody>
+
+                                {%elif cards_count ==2%}
+                                <tbody>
+                                    <tr>
+
+
+                                        <td>
+                                            {{card.card_id}}
+                                            <input type="hidden" id="card_id" name="card_id" value="{{card.card_id}}">
+                                        </td>
+                                        <td>{{card.parking_name_eng}}</td>
+                                        <input type="hidden" id="station" name="station" value="{{card.parking_name}}">
+                                        {% if card.type == 'TAFF' %}
+                                        <td>
+                                            <div class="input-group">
+                                                <div class="input-group-btn">
+                                                    <a type="button" id="down" class="btn btn-primary"
+                                                        onclick=" down('0')"><span class="fas fa-minus"></span></a>
+                                                </div>
+                                                <input type="text" id="myNumber" name="myNumber"
+                                                    class="form-control input-number text-center" value="0" min="0"
+                                                    max="12" readonly />
+                                                <div class="input-group-btn">
+                                                    <a type="button" id="up" class="btn btn-primary"
+                                                        onclick="up('12')"><span class="fas fa-plus"></span></a>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        {% elif card.type != 'TAFF' %}
+                                        <td>
+                                            <div class="input-group">
+                                                <div class="input-group-btn">
+                                                    <a id="down" class="btn btn-primary" onclick=" down('0')"><span
+                                                            class="fas fa-minus"></span></a>
+                                                </div>
+                                                <input type="text" id="myNumber"
+                                                    class="form-control input-number text-center" value="0" min="0"
+                                                    max="1" readonly />
+                                                <div class="input-group-btn">
+                                                    <a id="up" class="btn btn-primary" onclick="up('1')"><span
+                                                            class="fas fa-plus"></span></a>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        {%endif%}
+                                        {%if card.status == 'ต่ออายุ' or card.status == 'ยังไม่ถึงกำหนดการ'%}
+                                        <td>{{card.exp}}</td>
+                                        <input type="hidden" id="datefield" name="datefield" value="{{card.exp}}">
+                                        {%elif (card.color =='สายสีเขียว' or card.color =='สายสีน้ำเงิน')%}
+                                        <td><input type="date" id="datefield" name="datefield" value="{{min_date}}"
+                                                min="{{min_date}}" max="{{max_date}}" required></td>
+                                        {%elif card.color =='สายสีม่วง'%}
+                                        <td>{{date}}</td>
+                                        <input type="hidden" id="datefield" name="datefield" value="{{date}}">
+                                        {%endif%}
+                                        <td class="text-right" id="price">0</td>
+                                        <input type="hidden" id="pricedummy" name="pricedummy" value="{{card.price2}}">
+                                        <input type="hidden" id="price2" name="price2">
+                                    </tr>
+                                    {%if card.status == 'บัตรใหม่'%}
+                                    <tr>
+                                        <td></td>
+                                        <td>Deposit amount</td>
+                                        <td></td>
+                                        <td></td>
+                                        <td class="text-right">{{card.deposit}}</td>
+                                        <input type="hidden" value="{{card.deposit}}" name="deposit" id="deposit">
+                                    </tr>
+                                    {%else%}
+                                    <input type="hidden" value="0" id="deposit" name="deposit">
+                                    {%endif%}
+                                </tbody>
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                            {{card2.card_id}}
+                                            <input type="hidden" id="card_id" name="card_id2" value="{{card2.card_id}}">
+                                        </td>
+                                        <td>{{card2.parking_name_eng}}</td>
+                                        <input type="hidden" id="station2" name="station2"
+                                            value="{{card2.parking_name}}">
+                                        {% if card2.type == 'TAFF' %}
+                                        <td>
+                                            <div class="input-group">
+                                                <div class="input-group-btn">
+                                                    <a type="button" id="down2" class="btn btn-primary"
+                                                        onclick=" down2('0')"><span class="fas fa-minus"></span></a>
+                                                </div>
+                                                <input type="text" id="myNumber2"
+                                                    class="form-control input-number text-center" value="0" min="0"
+                                                    max="12" readonly />
+                                                <div class="input-group-btn">
+                                                    <a type="button" id="up2" class="btn btn-primary"
+                                                        onclick="up2('12')"><span class="fas fa-plus"></span></a>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        {% elif card2.type != 'TAFF' %}
+                                        <td>
+                                            <div class="input-group">
+                                                <div class="input-group-btn">
+                                                    <a id="down2" class="btn btn-primary" onclick=" down2('0')"><span
+                                                            class="fas fa-minus"></span></a>
+                                                </div>
+                                                <input type="text" id="myNumber2"
+                                                    class="form-control input-number text-center" value="0" min="0"
+                                                    max="1" readonly />
+                                                <div class="input-group-btn">
+                                                    <a id="up2" class="btn btn-primary" onclick="up2('1')"><span
+                                                            class="fas fa-plus"></span></a>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        {%endif%}
+                                        {%if card2.status == 'ต่ออายุ' or card2.status == 'ยังไม่ถึงกำหนดการ'%}
+                                        <td>{{card2.exp}}</td>
+                                        <input type="hidden" id="datefield" name="datefield2" value="{{card2.exp}}">
+                                        {%elif (card2.color =='สายสีเขียว' or card2.color =='สายสีน้ำเงิน')%}
+                                        <td><input type="date" id="datefield" name="datefield2" value="{{min_date}}"
+                                                min="{{min_date}}" max="{{max_date}}" required></td>
+                                        {%elif card2.color =='สายสีม่วง'%}
+                                        <td>{{date}}</td>
+                                        <input type="hidden" id="datefield" name="datefield2" value="{{date}}">
+                                        {%endif%}
+                                        <td class="text-right" id="total_price">0</td>
+                                        <input type="hidden" id="pricedummy2" name="pricedummy2"
+                                            value="{{card2.price2}}">
+                                        <input type="hidden" id="total_price2" name="total_price2">
+                                    </tr>
+                                    {%if card2.status == 'บัตรใหม่'%}
+                                    <tr>
+                                        <td></td>
+                                        <td>Deposit amount</td>
+                                        <td></td>
+                                        <td></td>
+                                        <td class="text-right">{{card2.deposit}}</td>
+                                        <input type="hidden" value="{{card2.deposit}}" name="deposit2" id="deposit2">
+                                    </tr>
+                                    {%else%}
+                                    <input type="hidden" value="0" id="deposit2" name="deposit">
+                                    {%endif%}
+                                    <input type="hidden" id="status" name="status" value="{{card.status}}" readonly>
+                                    <input type="hidden" id="status1" name="status1" value="{{card2.status}}" readonly>
+                                    <input type="hidden" id="payment_status2" value="{{card2.payment_status}}" readonly>
+                                    <input type="hidden" id="payment_status" value="{{card.payment_status}}" readonly>
+                                    <input type="hidden" id="verify" value="{{card.verify}}" readonly>
+                                    <input type="hidden" id="verify2" value="{{card2.verify}}" readonly>
+                                    <input type="hidden" id="q" value="{{card.q}}" readonly>
+                                    <input type="hidden" id="q2" value="{{card2.q}}" readonly>
+                                    <input type="hidden" id="paydate" value="{{card.paydate}}">
+                                    <input type="hidden" id="paydate2" value="{{card2.paydate}}">
+                                    <input type="hidden" id="idcard" value="{{card.id}}">
+                                    <input type="hidden" id="idcard2" value="{{card2.id}}">
+                                </tbody>
+                                {%endif%}
+                                {%for card_exp in cards_exp%}
+                                <tbody>
+                                    <tr>
+
+                                        <td>
+                                            {{card_exp.card_id}}
+                                        </td>
+                                        <td>{{card.parking_name}}</td>
+                                        <td>
+                                            <div class="input-group">
+                                                <input type="text" class="form-control input-number text-center"
+                                                    value="บัตรหมดอายุ" readonly />
+                                            </div>
+                                        </td>
+                                        <td>{{card_exp.exp}}</td>
+                                        <td class="text-right">0</td>
+                                    </tr>
+                                </tbody>
+                                {%endfor%}
+                            </table>
+                        </div>
+
+
+
+
+                    </div>
+
+                    <div class="col-md-5">
+                        <div class="card mb-2">
+                            <div class="card-header header-mrta-1">
+                                <h6 class="mb-0">Specify (select) if you want a full tax invoice.</h6>
+                            </div>
+                            <div class="card-body py-2">
+                                <div class="row">
+
+
+                                    <!-- <div class="col-4"> -->
+                                        <div class="col-6 p-1">
+                                            <label for="selected-item-1" class="selected-label">
+                                                <input type="radio" id="selected-item-1" name="address" value="home">
+                                                <span class="icon"></span>
+                                                <div class="selected-content">
+                                                    <h4>Current Address</h4>
+                                                    <a data-toggle="modal" id="modal_home" data-target="#address_home"
+                                                        class="btn btn-secondary btn-sm" onclick="address_home()" style="width: 100px;">Edit</a>
+                                                </div>
+                                            </label>
+                                        </div>
+                                        <div class="modal fade" id="address_home" tabindex="-1"
+                                            aria-labelledby="viewhomeModalLabel" aria-hidden="true">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title" id="viewhomeModalLabel">Address</h5>
+                                                        <button type="button" class="close" data-dismiss="modal"
+                                                            aria-label="Close">
+                                                            <span aria-hidden="true">&times;</span>
+                                                        </button>
+                                                    </div>
+                                                    <div id="address_home" class="modal-body">
+                                                        <form action="{url_for('update_address_home')}" method="POST">
+                                                        <div class="form-group">
+                                                            <input type="hidden" name="member_id" id="member_id">
+                                                            <label for="address_no" class="col-form-label">Adress No :</label>
+                                                            <input type="text" class="form-control" name="address_no" id="address_no">
+    
+                                                            <label for="unit" class="col-form-label">Building/Village :</label>
+                                                            <input type="text" class="form-control" name="unit" id="unit">
+    
+                                                            <label for="village" class="col-form-label">Village No. :</label>
+                                                            <input type="text" class="form-control" name="village" id="village">
+    
+                                                            <label for="province" class="col-form-label">Province :</label>
+                                                            <select type="text" class="form-control" name="province" id="province"></select>
+    
+                                                            <label for="district" class="col-form-label">District / Area :</label>
+                                                            <select type="text" class="form-control" name="district" id="district"></select>
+    
+                                                            <label for="sub_district" class="col-form-label">Sub-district/ Sub-area :</label>
+                                                            <select type="text" class="form-control" name="sub_district" id="sub_district"></select>
+    
+                                                            <label for="postal_code" class="col-form-label">Postal Code :</label>
+                                                            <select type="text" class="form-control" name="postal_code" id="postal_code"></select>
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                                                            <button type="submit" onclick="savehome()" data-dismiss="modal" class="btn btn-primary">Save</button>
+                                                        </div>
+                                                        </form>
+                                                    </div>
+                                                    
+                                                </div>
+                                            </div>
+                                        </div>
+                                    <div class="col-6 p-1">
+                                        <label for="selected-item-2" class="selected-label">
+                                            <input type="radio" id="selected-item-2" name="address" value="home">
+                                            <span class="icon"></span>
+                                            <div class="selected-content">
+                                                <h4>Workplace</h4>
+                                                <a data-toggle="modal" id="modal_work"  data-target="#address_work"
+                                                    class="btn btn-secondary btn-sm" onclick="address_work()" style="width: 100px;">Edit</a>
+                                            </div>
+                                        </label>
+                                    </div>
+                                    <div class="modal fade" id="address_work" tabindex="-1"
+                                        aria-labelledby="viewhomeModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="viewhomeModalLabel">Address</h5>
+                                                    <button type="button" class="close" data-dismiss="modal"
+                                                        aria-label="Close">
+                                                        <span aria-hidden="true">&times;</span>
+                                                    </button>
+                                                </div>
+                                                <div id="address_work" class="modal-body">
+                                                    <form action="{url_for('update_address_work')}" method="POST">
+                                                    <div class="form-group">
+                                                        <input type="hidden" id="member_id_company" name="member_id_company">
+                                                        <label for="company_no" class="col-form-label">Number :</label>
+                                                        <input type="text" class="form-control" id="company_no">
+
+                                                        <label for="unit" class="col-form-label">Building/Village :</label>
+                                                        <input type="text" class="form-control" id="company_unit">
+
+                                                        <label for="company_no" class="col-form-label">Tax-Number :</label>
+                                                        <input type="text" class="form-control" id="identity_com">
+                                                        
+                                                        <label for="village" class="col-form-label">Village No. :</label>
+                                                        <input type="text" class="form-control" id="company_village">
+
+                                                        <label for="province" class="col-form-label">Province :</label>
+                                                        <select type="text" class="form-control" id="company_province"></select>
+
+                                                        <label for="district" class="col-form-label">District / Area :</label>
+                                                        <select type="text" class="form-control" id="company_district"></select>
+
+                                                        <label for="sub_district" class="col-form-label">Sub-district/ Sub-area :</label>
+                                                        <select type="text" class="form-control" id="company_sub_district"></select>
+
+                                                        <label for="postal_code" class="col-form-label">Postal Code :</label>
+                                                        <select type="text" class="form-control" id="company_postal_code"></select>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                                                        <button type="button" onclick="savecompany()" data-dismiss="modal" class="btn btn-primary">Save</button>
+                                                    </div>
+                                                    </form>
+                                                </div>
+                                                
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- <div class="col-xl-4 col-md-6 col-sm-4 col-6 p-1">
+                                        <label for="selected-item-2" class="selected-label">
+                                            
+                                            <div class="selected-content">
+                                                <span class="h6"><i class="fas fa-plus-circle"></i> เพิ่มที่อยู่</span>
+
+                                            </div>
+                                        </label>
+                                    </div> -->
+                                    <!-- </div> -->
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card my-2">
+                            <div class="card-header header-mrta-1">
+                                <h5 class="mb-0">Service fee summary</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="form-group">
+                                    <div class="row">
+                                        <div class="col-7 h5">Total net service charge</div>
+                                        <div class="col-5 text-right h5" id="total">0</div>
+                                        <input type="hidden" id="total2" name="total2" value="0">
+                                        <input type="hidden" id="total3" name="total3" value="0">
+                                        <div class="col-12 mt-3 text-center">
+                                            <button class="accept col-8" id="paybutton" type="button"
+                                                onclick="altbox()">process the payment 
+                                            </button>
+
+                                            <div id="btn-onclick">
+                                                <img src="{{url_for('static', filename='image/employee.svg')}}"
+                                                    width="125" />
+                                                <br><br>
+                                                <div class="message text-center">Please pay within the specified date.</div>
+                                                <br>
+                                                <button class="yes">OK</button>
+                                                <a href="#0" class="btn-popup-close img-replace">Close</a>
+                                            </div>
+
+                                            <!-- <input class="accept col-7"  type="button" value="ดำเนินการชำระเงิน" onclick="functionAlert();"/>                                             -->
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+    {% include "comps/scroll-top.html" %}
+    {% include "eng/comps/popup-cookie.html" %}
+
+    {% include "comps/footer.html" %}
+</body>
+<script>
+    function numberWithCommas(x) {
+        return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    }
+    buttondown = document.getElementById('down');
+    buttonup = document.getElementById('up');
+    let price = Number(document.getElementById('pricedummy').value);
+
+    buttonup.addEventListener('click', function () {
+        month = document.getElementById('myNumber').value;
+        let resault = Number(price) * Number(month);
+        document.getElementById('price').innerHTML = numberWithCommas(resault);
+        document.getElementById('price2').value = resault;
+        let total = resault + Number(document.getElementById('deposit').value);
+        if (resault != 0) {
+            document.getElementById('total2').value = total;
+            let final = Number(document.getElementById('total2').value) + Number(document.getElementById('total3').value)
+            document.getElementById('total').innerHTML = numberWithCommas(final);
+        } else {
+            document.getElementById('total2').value = 0
+            let final = Number(document.getElementById('total2').value) + Number(document.getElementById('total3').value)
+            document.getElementById('total').innerHTML = numberWithCommas(final)
+        }
+
+    });
+    buttondown.addEventListener('click', function () {
+        month = document.getElementById('myNumber').value;
+        let resault = Number(price) * Number(month);
+        document.getElementById('price').innerHTML = numberWithCommas(resault);
+        document.getElementById('price2').value = resault;
+        let total = resault + Number(document.getElementById('deposit').value);
+        if (resault != 0) {
+            document.getElementById('total2').value = total;
+            let final = Number(document.getElementById('total2').value) + Number(document.getElementById('total3').value)
+            document.getElementById('total').innerHTML = numberWithCommas(final);
+        } else {
+            document.getElementById('total2').value = 0;
+            let final = Number(document.getElementById('total2').value) + Number(document.getElementById('total3').value)
+            document.getElementById('total').innerHTML = numberWithCommas(final);
+        }
+
+    });
+
+</script>
+<script>
+    function numberWithCommas(x) {
+        return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    }
+    buttondown2 = document.getElementById('down2');
+    buttonup2 = document.getElementById('up2');
+    let price2 = Number(document.getElementById('pricedummy2').value);
+
+    buttonup2.addEventListener('click', function () {
+        month2 = document.getElementById('myNumber2').value;
+        let resault2 = Number(price2) * Number(month2);
+        document.getElementById('total_price').innerHTML = numberWithCommas(resault2);
+        document.getElementById('total_price2').value = resault2;
+        let total = resault2 + Number(document.getElementById('deposit2').value);
+        if (resault2 != 0) {
+            document.getElementById('total3').value = total;
+            let final = Number(document.getElementById('total2').value) + Number(document.getElementById('total3').value)
+            document.getElementById('total').innerHTML = numberWithCommas(final);
+        }
+
+
+    });
+    buttondown2.addEventListener('click', function () {
+        month2 = document.getElementById('myNumber2').value;
+        let resault2 = Number(price2) * Number(month2);
+        document.getElementById('total_price').innerHTML = numberWithCommas(resault2);
+        document.getElementById('total_price2').value = resault2;
+        let total = resault2 + Number(document.getElementById('deposit2').value);
+        if (resault2 != 0) {
+            document.getElementById('total3').value = total;
+            let final = Number(document.getElementById('total2').value) + Number(document.getElementById('total3').value)
+            document.getElementById('total').innerHTML = numberWithCommas(final);
+        } else {
+            document.getElementById('total3').value = 0;
+            let final = Number(document.getElementById('total2').value) + Number(document.getElementById('total3').value)
+            document.getElementById('total').innerHTML = numberWithCommas(final);
+
+        }
+    });
+</script>
+
+<script>
+    function up(max) {
+        if (document.getElementById('total3').value != 0) {
+            alert('Please choose to pay the service fee one by one.')
+        } else if (document.getElementById('total3').value == 0) {
+            document.getElementById("myNumber").value = parseInt(document.getElementById("myNumber").value) + 1;
+            if (document.getElementById("myNumber").value >= parseInt(max)) {
+                document.getElementById("myNumber").value = max;
+            }
+        }
+    }
+    function down(min) {
+        document.getElementById("myNumber").value = parseInt(document.getElementById("myNumber").value) - 1;
+        if (document.getElementById("myNumber").value <= parseInt(min)) {
+            document.getElementById("myNumber").value = min;
+        }
+    }
+    function up2(max2) {
+        if (document.getElementById('total2').value != 0) {
+            alert('Please choose to pay the service fee one by one.')
+        } else if (document.getElementById('total2').value == 0) {
+            document.getElementById("myNumber2").value = parseInt(document.getElementById("myNumber2").value) + 1;
+            if (document.getElementById("myNumber2").value >= parseInt(max2)) {
+                document.getElementById("myNumber2").value = max2;
+            }
+        }
+    }
+    function down2(min2) {
+        document.getElementById("myNumber2").value = parseInt(document.getElementById("myNumber2").value) - 1;
+        if (document.getElementById("myNumber2").value <= parseInt(min2)) {
+            document.getElementById("myNumber2").value = min2;
+        }
+    }
+</script>
+
+<script>
+    document.getElementById('paybutton').setAttribute('type', 'button')
+    function changebtn() {
+        var payment1 = document.getElementById('payment_status').value;
+        var payment2 = document.getElementById('payment_status2').value;
+        var total_check = Number(document.getElementById('total2').value)
+        var total_check2 = Number(document.getElementById('total3').value)
+        var check1 = document.getElementById('selected-item-1');
+        var check2 = document.getElementById('selected-item-2');
+        var button = document.getElementById('paybutton');
+        var verify1 = document.getElementById('verify').value;
+        var verify2 = document.getElementById('verify2').value;
+        var paydate = document.getElementById('paydate').value;
+        var paydate2 = document.getElementById('paydate2').value;
+        var q1 = document.getElementById('q').value;
+        var q2 = document.getElementById('q2').value;
+        console.log('checked1', check1.checked == true)
+        console.log('checked2', check2.checked == true)
+        if ((total_check != 0) && ((check1.checked == true) || (check2.checked == true)) && (payment2 != '0') && (verify1 != '3') && (verify1 != '') && (verify1 != 'None') && (payment1 != '1' && paydate != 'ไม่ผ่าน')) {
+            if (verify1 != '4') {
+                button.setAttribute("type", "submit");
+            } else if (verify1 == '4' && q1 == 'Q0000') {
+                button.setAttribute('type', 'submit');
+            } else {
+                button.setAttribute('type', 'button')
+            }
+
+        } else if ((total_check2 != 0) && ((check1.checked == true) || (check2.checked == true)) && (payment1 != '0') && (verify2 != '3') && (verify2 != '') && (verify2 != 'None') && (payment2 != '1' && paydate2 != 'ไม่ผ่าน')) {
+            if (verify2 != '4') {
+                button.setAttribute("type", "submit");
+            } else if (verify2 == '4' && q2 == 'Q0000') {
+                button.setAttribute('type', 'submit');
+            } else {
+                button.setAttribute('type', 'button')
+            }
+        } else {
+            button.setAttribute('type', 'button');
+        }
+    }
+    function altbox() {
+        var total_check1 = Number(document.getElementById('total2').value)
+        var total_check2 = Number(document.getElementById('total3').value)
+        var payment1 = document.getElementById('payment_status').value;
+        var payment2 = document.getElementById('payment_status2').value;
+        var status = document.getElementById('status');
+        var status2 = document.getElementById('status1');
+        var total_check = Number(document.getElementById('total2').value) + Number(document.getElementById('total3').value)
+        var button = document.getElementById('paybutton');
+        var station1 = document.getElementById('station').value;
+        var station2 = document.getElementById('station2').value;
+        var check1 = document.getElementById('selected-item-1');
+        var check2 = document.getElementById('selected-item-2');
+        var verify1 = document.getElementById('verify').value;
+        var verify2 = document.getElementById('verify2').value;
+        var q1 = document.getElementById('q').value;
+        var q2 = document.getElementById('q2').value;
+        var paydate = document.getElementById('paydate').value;
+        var paydate2 = document.getElementById('paydate2').value;
+        if (button.type === 'button' && total_check == 0) {
+            alert('Please select the number of months you wish to pay');
+        } else if (status.value === 'not yet scheduled' && document.getElementById('total2').value != 0) {
+            document.getElementById('paybutton').setAttribute('type', 'button')
+            functionAlert();
+        } else if (status2.value === 'not yet scheduled' && document.getElementById('total3').value != 0) {
+            document.getElementById('paybutton').setAttribute('type', 'button')
+            functionAlert();
+        } else if ((check1.checked == false) && (check2.checked == false)) {
+            alert('Please select an address type.')
+        } else if (total_check1 != '0' && payment2 == '0') {
+            alert('Please pay the card fee ' + station2 + ' before doing another transaction')
+        } else if (total_check2 != '0' && payment1 == '0') {
+            alert('Please pay the card fee ' + station1 + ' before doing another transaction')
+        } else if (total_check1 != '0' && verify1 == '3') {
+            alert('Please make a reservation at the station. ' + station1 + ' before payment')
+        } else if (total_check2 != '0' && verify2 == '3') {
+            alert('Please make a reservation at the station. ' + station2 + ' before payment')
+        } else if (total_check1 != '0' && q1 != 'Q0000' && verify1 == '4') {
+            alert('Haven nott reached the payment queue yet.')
+        } else if (total_check2 != '0' && q2 != 'Q0000' && verify2 == '4') {
+            alert('Haven not reached the payment queue yet.')
+        } else if (total_check1 != '0' && verify1 == 'None') {
+            alert('Checking Status Unable to pay')
+        } else if (total_check2 != '0' && verify2 == 'None') {
+            alert('Checking Status Unable to pay')
+        } else if (payment1 == '1' && paydate == 'ไม่ผ่าน'){
+            alert('Payment cannot duplicate be made within this monthly cycle.')
+        } else if (payment2 == '1' && paydate2 == 'ไม่ผ่าน'){
+            alert('Payment cannot duplicate be made within this monthly cycle.')
+        }
+    }
+    function checkselectbox() {
+        var total_check = Number(document.getElementById('total2').value)
+        var total_check2 = Number(document.getElementById('total3').value)
+        var payment1 = document.getElementById('payment_status').value;
+        var payment2 = document.getElementById('payment_status2').value;
+        var check1 = document.getElementById('selected-item-1');
+        var check2 = document.getElementById('selected-item-2');
+        var button = document.getElementById('paybutton');
+        var verify1 = document.getElementById('verify').value;
+        var verify2 = document.getElementById('verify2').value;
+        var q1 = document.getElementById('q').value;
+        var q2 = document.getElementById('q2').value;
+        var paydate = document.getElementById('paydate').value;
+        var paydate2 = document.getElementById('paydate2').value;
+        if ((check1.checked == false) && (check2.checked == false)) {
+            button.setAttribute('type', 'button')
+        } else if (((check1.checked == true) || (check2.checked == true)) && ((total_check != '0')) && (payment2 != '0') && (verify1 != '3') && (verify1 != '') && (verify1 != 'None') && (payment1 != '1' && paydate != 'ไม่ผ่าน')) {
+            if (verify1 != '4') {
+                button.setAttribute("type", "submit");
+            } else if (verify1 == '4' && q1 == 'Q0000') {
+                button.setAttribute('type', 'submit');
+            } else {
+                button.setAttribute('type', 'button')
+            }
+        } else if (((check1.checked == true) || (check2.checked == true)) && ((total_check2 != '0')) && (payment1 != '0') && (verify2 != '3') && (verify2 != '') && (verify2 != 'None') && (payment2 != '1' && paydate2 != 'ไม่ผ่าน')) {
+            if (verify2 != '4') {
+                button.setAttribute("type", "submit");
+            } else if (verify2 == '4' && q2 == 'Q0000') {
+                button.setAttribute('type', 'submit');
+            } else {
+                button.setAttribute('type', 'button')
+            }
+        } else {
+            button.setAttribute('type', 'button')
+        }
+    }
+    document.getElementById('up').addEventListener('click', changebtn);
+    document.getElementById('down').addEventListener('click', changebtn);
+    document.getElementById('up2').addEventListener('click', changebtn);
+    document.getElementById('down2').addEventListener('click', changebtn);
+    document.getElementById('selected-item-1').onchange = checkselectbox
+    document.getElementById('selected-item-2').onchange = checkselectbox
+</script>
+
+<script>
+    $(function () {
+        //button select all or cancel
+        $("#select-all").click(function () {
+            var all = $("input.select-all")[0];
+            all.checked = !all.checked
+            var checked = all.checked;
+            $("input.select-item").each(function (index, item) {
+                item.checked = checked;
+            });
+        });
+
+        //button select invert
+        $("#select-invert").click(function () {
+            $("input.select-item").each(function (index, item) {
+                item.checked = !item.checked;
+            });
+            checkSelected();
+        });
+
+        //button get selected info
+        $("#selected").click(function () {
+            var items = [];
+            $("input.select-item:checked:checked").each(function (index, item) {
+                items[index] = item.value;
+            });
+            if (items.length < 1) {
+                alert("no selected items!!!");
+            } else {
+                var values = items.join(',');
+                console.log(values);
+                var html = $("<div></div>");
+                html.html("selected:" + values);
+                html.appendTo("body");
+            }
+        });
+
+        //column checkbox select all or cancel
+        $("input.select-all").click(function () {
+            var checked = this.checked;
+            $("input.select-item").each(function (index, item) {
+                item.checked = checked;
+            });
+        });
+
+        //check selected items
+        $("input.select-item").click(function () {
+            var checked = this.checked;
+            console.log(checked);
+            checkSelected();
+        });
+
+        //check is all selected
+        function checkSelected() {
+            var all = $("input.select-all")[0];
+            var total = $("input.select-item").length;
+            var len = $("input.select-item:checked:checked").length;
+            console.log("total:" + total);
+            console.log("len:" + len);
+            all.checked = len === total;
+        }
+    });
+</script>
+
+<script>
+    function functionAlert(msg, myYes) {
+        var btnBox = $("#btn-onclick");
+        btnBox.find(".message").text(msg);
+        btnBox.find(".yes").unbind().click(function () {
+            btnBox.hide();
+        });
+        btnBox.find(".yes").click(myYes);
+        btnBox.show();
+
+
+
+        //close popup
+        $('#btn-onclick').on('click', function (event) {
+            if ($(event.target).is('.btn-popup-close,.yes') || $(event.target).is('#btn-onclick')) {
+                event.preventDefault();
+                $(this).removeClass('is-visible');
+            }
+        });
+
+        //close popup when clicking the esc keyboard button
+        $(document).keyup(function (event) {
+            if (event.which == '27') {
+                $('#btn-onclick').removeClass('is-visible');
+            }
+        });
+
+    }
+</script>
+<script>
+    fetch('/province_').then((response)=>{
+        response.json().then((data) =>{
+            optionHTML = ''
+            for (province of data.province) {
+                 optionHTML += '<option value="' + province + '">' + province + '</option>'
+                }
+            document.getElementById('company_province').innerHTML = optionHTML
+            document.getElementById('province').innerHTML = optionHTML
+        })
+    })
+    //-----------------------------------------------------------------------company modal -----------------------------------
+    province_select = document.getElementById('company_province');
+    district_select = document.getElementById('company_district');
+    subdistrict_select = document.getElementById('company_sub_district');
+    postcode_select = document.getElementById('company_postal_code');
+
+    province_select.onchange = function(){
+     province = province_select.value;
+     fetch('district/' + province).then(function(response){
+      response.json().then(function(data){
+       optionHTML = '';
+       for (district of data.districtlist){
+        optionHTML += '<option value="' + district.name +'">' + district.name+ '</option>'
+       }
+       district_select.innerHTML = optionHTML;
+      });
+     });
+    }
+    district_select.onchange = function(){
+     district = district_select.value; 
+     province = province_select.value;
+     fetch('subdistrict/'+province +'/' + district).then(function(response){
+      response.json().then(function(data){
+       optionHTML = '';
+       for (sub of data.subdistrictlist){
+        optionHTML += '<option value="' + sub +'">' + sub + '</option>'
+       }
+       subdistrict_select.innerHTML = optionHTML;
+      });
+     });
+    }
+    subdistrict_select.onchange = function(){
+        subdistrict = subdistrict_select.value;
+        province = province_select.value;
+        district_ = district_select.value;
+        fetch('postcode/' +province+'/'+district_+'/'+ subdistrict).then(function(response){
+         response.json().then(function(data){
+          optionHTML = '';
+          for (post of data.postcodelist){
+           optionHTML += '<option value="' + post +'">' + post + '</option>'
+          }
+          postcode_select.innerHTML = optionHTML;
+         });
+        });
+       }
+
+    //---------------------------------------------------------------end company modal--------------------------------------
+    //---------------------------------------------------------------home modal-----------------------------------------------
+    province_select2 = document.getElementById('province');
+    district_select2 = document.getElementById('district');
+    subdistrict_select2 = document.getElementById('sub_district');
+    postcode_select2 = document.getElementById('postal_code');
+    
+    province_select2.onchange = function(){
+     province = province_select2.value;
+     fetch('district/' + province).then(function(response){
+      response.json().then(function(data){
+       optionHTML = '';
+       for (district of data.districtlist){
+        optionHTML += '<option value="' + district.name +'">' + district.name+ '</option>'
+       }
+       district_select2.innerHTML = optionHTML;
+      });
+     });
+    }
+    district_select2.onchange = function(){
+     district = district_select2.value; 
+     province = province_select2.value;
+     fetch('subdistrict/'+province+'/' + district).then(function(response){
+      response.json().then(function(data){
+       optionHTML = '';
+       for (sub of data.subdistrictlist){
+        optionHTML += '<option value="' + sub +'">' + sub + '</option>'
+       }
+       subdistrict_select2.innerHTML = optionHTML;
+      });
+     });
+    }
+    subdistrict_select2.onchange = function(){
+        subdistrict = subdistrict_select2.value;
+        district = district_select2.value; 
+        province = province_select2.value; 
+        fetch('postcode/'+province +'/'+district+'/' + subdistrict).then(function(response){
+         response.json().then(function(data){
+          optionHTML = '';
+          for (post of data.postcodelist){
+           optionHTML += '<option value="' + post +'">' + post + '</option>'
+          }
+          postcode_select2.innerHTML = optionHTML;
+         });
+        });
+       }
+
+    //-----------------------------------------------------------------------end home modal------------------------------------------------
+    
+    function address_home(){
+        const total1 = document.getElementById('total2').value;
+        const total2 = document.getElementById('total3').value;
+        const modal = document.getElementById('modal_home')
+        if (total1 != 0){
+            modal.setAttribute('data-target','#address_home')
+            const idcard = document.getElementById('idcard').value;
+            fetch('/modal_address/home/'+idcard).then(function(response){
+                response.json().then(async function(data){
+                    console.log(data[0])
+                    const address = data[0]
+                    document.getElementById('member_id').value = idcard
+                    document.getElementById('address_no').value = address.address_no
+                    document.getElementById('unit').value = address.unit
+                    document.getElementById('village').value = address.village
+                    document.getElementById('province').value = address.province
+                    await fetch('district/' + address.province).then(async function(response){
+                        await response.json().then(function(data){
+                         optionHTML = '';
+                         for (district of data.districtlist){
+                          optionHTML += '<option value="' + district.name +'">' + district.name+ '</option>'
+                         }
+                         document.getElementById('district').innerHTML = optionHTML;
+                        });
+                       });
+                    document.getElementById('district').value = address.district
+                    await fetch('subdistrict/'+address.province+'/' + address.district).then(async function(response){
+                        await response.json().then(function(data){
+                         optionHTML = '';
+                         for (sub of data.subdistrictlist){
+                          optionHTML += '<option value="' + sub +'">' + sub + '</option>'
+                         }
+                         document.getElementById('sub_district').innerHTML = optionHTML;
+                        });
+                       });
+                    document.getElementById('sub_district').value = address.sub_district
+                    await fetch('postcode/'+address.province +'/'+address.district+'/' + address.sub_district).then(async function(response){
+                        await response.json().then(function(data){
+                         optionHTML = '';
+                         for (post of data.postcodelist){
+                          optionHTML += '<option value="' + post +'">' + post + '</option>'
+                         }
+                         document.getElementById('postal_code').innerHTML = optionHTML;
+                        });
+                       });
+                    document.getElementById('postal_code').value = address.postal_code
+                })
+            })
+        }else if (total2 != 0){
+            modal.setAttribute('data-target','#address_home')
+            const idcard = document.getElementById('idcard2').value;
+            fetch('/modal_address/home/'+idcard).then(function(response){
+                response.json().then(async function(data){
+                    console.log(data[0])
+                    const address = data[0]
+                    document.getElementById('member_id').value = idcard
+                    document.getElementById('address_no').value = address.address_no
+                    document.getElementById('unit').value = address.unit
+                    document.getElementById('village').value = address.village
+                    document.getElementById('province').value = address.province
+                    await fetch('district/' + address.province).then(async function(response){
+                        await response.json().then(function(data){
+                         optionHTML = '';
+                         for (district of data.districtlist){
+                          optionHTML += '<option value="' + district.name +'">' + district.name+ '</option>'
+                         }
+                         document.getElementById('district').innerHTML = optionHTML;
+                        });
+                       });
+                    document.getElementById('district').value = address.district
+                    await fetch('subdistrict/'+address.province+'/' + address.district).then(async function(response){
+                        await response.json().then(function(data){
+                         optionHTML = '';
+                         for (sub of data.subdistrictlist){
+                          optionHTML += '<option value="' + sub +'">' + sub + '</option>'
+                         }
+                         document.getElementById('sub_district').innerHTML = optionHTML;
+                        });
+                       });
+                    document.getElementById('sub_district').value = address.sub_district
+                    await fetch('postcode/'+address.province +'/'+address.district+'/' + address.sub_district).then(async function(response){
+                        await response.json().then(function(data){
+                         optionHTML = '';
+                         for (post of data.postcodelist){
+                          optionHTML += '<option value="' + post +'">' + post + '</option>'
+                         }
+                         document.getElementById('postal_code').innerHTML = optionHTML;
+                        });
+                       });
+                    document.getElementById('postal_code').value = address.postal_code
+                })
+            })
+        }else{
+            modal.setAttribute('data-target','')
+            alert('Please select the number of months of the card you wish to pay first.')
+            
+        }
+    }
+    function address_work(){
+        const total1 = document.getElementById('total2').value;
+        const total2 = document.getElementById('total3').value;
+        const modal = document.getElementById('modal_work')
+        if (total1 != 0){
+            modal.setAttribute('data-target','#address_work')
+            const idcard = document.getElementById('idcard').value;
+            fetch('/modal_address/company/'+idcard).then(function(response){
+                response.json().then(async function(data){
+                    const address = data[0]
+                    document.getElementById('member_id_company').value = idcard
+                    document.getElementById('company_no').value = address.address_no
+                    document.getElementById('company_unit').value = address.unit
+                    document.getElementById('company_village').value = address.village
+                    document.getElementById('company_province').value = address.province
+                    document.getElementById('identity_com').value = address.identity_com
+                    await fetch('district/' + address.province).then(async function(response){
+                        await response.json().then(function(data){
+                         optionHTML = '';
+                         for (district of data.districtlist){
+                          optionHTML += '<option value="' + district.name +'">' + district.name+ '</option>'
+                         }
+                         document.getElementById('company_district').innerHTML = optionHTML;
+                        });
+                       });
+
+                    document.getElementById('company_district').value = address.district
+
+                    await fetch('subdistrict/'+address.province+'/' + address.district).then(async function(response){
+                        await response.json().then(function(data){
+                         optionHTML = '';
+                         for (sub of data.subdistrictlist){
+                          optionHTML += '<option value="' + sub +'">' + sub + '</option>'
+                         }
+                         document.getElementById('company_sub_district').innerHTML = optionHTML;
+                        });
+                       });
+                    
+                    document.getElementById('company_sub_district').value = address.sub_district
+                    
+                    await fetch('postcode/' +address.province+'/'+address.district+'/'+ address.sub_district).then(async function(response){
+                        await response.json().then(function(data){
+                         optionHTML = '';
+                         for (post of data.postcodelist){
+                          optionHTML += '<option value="' + post +'">' + post + '</option>'
+                         }
+                         document.getElementById('company_postal_code').innerHTML = optionHTML;
+                        });
+                       });
+                    document.getElementById('company_postal_code').value = address.postal_code
+                    
+                })
+            })
+        }else if (total2 != 0){
+            modal.setAttribute('data-target','#address_work')
+            const idcard = document.getElementById('idcard2').value;
+            fetch('/modal_address/company/'+idcard).then(function(response){
+                response.json().then(async function(data){
+                    const address = data[0]
+                    document.getElementById('member_id_company').value = idcard
+                    document.getElementById('company_no').value = address.address_no
+                    document.getElementById('company_unit').value = address.unit
+                    document.getElementById('company_village').value = address.village
+                    document.getElementById('company_province').value = address.province
+                    document.getElementById('identity_com').value = address.identity_com
+                    await fetch('district/' + address.province).then(async function(response){
+                        await response.json().then(function(data){
+                         optionHTML = '';
+                         for (district of data.districtlist){
+                          optionHTML += '<option value="' + district.name +'">' + district.name+ '</option>'
+                         }
+                         document.getElementById('company_district').innerHTML = optionHTML;
+                        });
+                       });
+
+                    document.getElementById('company_district').value = address.district
+
+                    await fetch('subdistrict/'+address.province+'/' + address.district).then(async function(response){
+                        await response.json().then(function(data){
+                         optionHTML = '';
+                         for (sub of data.subdistrictlist){
+                          optionHTML += '<option value="' + sub +'">' + sub + '</option>'
+                         }
+                         document.getElementById('company_sub_district').innerHTML = optionHTML;
+                        });
+                       });
+                    
+                    document.getElementById('company_sub_district').value = address.sub_district
+                    
+                    await fetch('postcode/' +address.province+'/'+address.district+'/'+ address.sub_district).then(async function(response){
+                        await response.json().then(function(data){
+                         optionHTML = '';
+                         for (post of data.postcodelist){
+                          optionHTML += '<option value="' + post +'">' + post + '</option>'
+                         }
+                         document.getElementById('company_postal_code').innerHTML = optionHTML;
+                        });
+                       });
+                    document.getElementById('company_postal_code').value = address.postal_code
+                    
+                })
+            })
+        }else{
+            modal.setAttribute('data-target','')
+            alert('Please select the number of months of the card you wish to pay first.')
+            
+        }
+    }
+    function savehome(){
+        const address_no = document.getElementById('address_no').value 
+        const unit = document.getElementById('unit').value 
+        const village = document.getElementById('village').value 
+        const province = document.getElementById('province').value 
+        const district = document.getElementById('district').value 
+        const sub_district = document.getElementById('sub_district').value 
+        const postal_code = document.getElementById('postal_code').value
+        const member_id = document.getElementById('member_id').value
+        $.ajax({
+            url:'/update_address_home',
+            method:'POST',
+            data:{
+                address_no:address_no,unit:unit,village:village,
+                province:province,sub_district:sub_district,postal_code,member_id:member_id,district:district},
+            success:function(){
+                alert('The data was saved successfully.')
+            }
+        }) 
+    }
+    function savecompany(){
+        const address_no = document.getElementById('company_no').value 
+        const unit = document.getElementById('company_unit').value 
+        const village = document.getElementById('company_village').value 
+        const province = document.getElementById('company_province').value 
+        const district = document.getElementById('company_district').value 
+        const sub_district = document.getElementById('company_sub_district').value 
+        const postal_code = document.getElementById('company_postal_code').value
+        const member_id = document.getElementById('member_id_company').value
+        const identity_com = document.getElementById('identity_com').value 
+        $.ajax({
+            url:'/update_address_work',
+            method:'POST',
+            data:{
+                address_no:address_no,unit:unit,village:village,
+                province:province,sub_district:sub_district,postal_code,
+                member_id:member_id,district:district,identity_com:identity_com},
+            success:function(){
+                alert('The data was saved successfully.')
+            }
+        }) 
+    }
+
+</script>
+</html>

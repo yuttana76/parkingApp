@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+  <style>
+    .qrcode-float {
+      position: fixed;
+      bottom: 50px;
+      right: 50px;
+      width: 75px;
+      height: 75px;
+      display: -webkit-box;
+      display: -webkit-flex;
+      display: -moz-box;
+      display: -ms-flexbox;
+      display: flex;
+      -webkit-box-align: center;
+      -webkit-align-items: center;
+      -moz-box-align: center;
+      -ms-flex-align: center;
+      align-items: center;
+      -webkit-box-pack: center;
+      -webkit-justify-content: center;
+      -moz-box-pack: center;
+      -ms-flex-pack: center;
+      justify-content: center;
+      -webkit-border-radius: 50%;
+      -moz-border-radius: 50%;
+      border-radius: 50%;
+      background-color: #fff;
+      -webkit-transition: 0.3s all ease;
+      -o-transition: 0.3s all ease;
+      -moz-transition: 0.3s all ease;
+      transition: 0.3s all ease;
+      cursor: pointer;
+      text-decoration: none;
+      color: #fff;
+      z-index: 1000;
+    }
+
+    .qrcode-float:hover {
+      -webkit-transform: translateY(-5px);
+      -moz-transform: translateY(-5px);
+      -ms-transform: translateY(-5px);
+      -o-transform: translateY(-5px);
+      transform: translateY(-5px);
+      -webkit-box-shadow: 0 5px 15px 2px rgba(37, 211, 102, 0.3);
+      -moz-box-shadow: 0 5px 15px 2px rgba(37, 211, 102, 0.3);
+      box-shadow: 0 5px 15px 2px rgba(37, 211, 102, 0.3);
+    }
+
+    .qrcode-float .icon {
+      width: 50%;
+      height: 50%;
+      display: block;
+      fill: #fff;
+      -webkit-transform: translateX(1px);
+      -moz-transform: translateX(1px);
+      -ms-transform: translateX(1px);
+      -o-transform: translateX(1px);
+      transform: translateX(1px);
+    }
+
+    .qrcode-float .icon {
+      width: 100%;
+      height: 70%;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 60 60'%3E%3Cpath d='M37.5 52.5H32.5V47.5H37.5V52.5ZM32.5 35H27.5V47.5H32.5V35ZM52.5 30H47.5V40H52.5V30ZM47.5 25H42.5V30H47.5V25ZM17.5 30H12.5V35H17.5V30ZM12.5 25H7.5V30H12.5V25ZM30 12.5H35V7.5H30V12.5ZM11.25 11.25V18.75H18.75V11.25H11.25ZM22.5 22.5H7.5V7.5H22.5V22.5ZM11.25 41.25V48.75H18.75V41.25H11.25ZM22.5 52.5H7.5V37.5H22.5V52.5ZM41.25 11.25V18.75H48.75V11.25H41.25ZM52.5 22.5H37.5V7.5H52.5V22.5ZM47.5 47.5V40H37.5V45H42.5V52.5H52.5V47.5H47.5ZM42.5 30H32.5V35H42.5V30ZM32.5 25H17.5V30H22.5V35H27.5V30H32.5V25ZM35 22.5V17.5H30V12.5H25V22.5H35ZM16.875 13.125H13.125V16.875H16.875V13.125ZM16.875 43.125H13.125V46.875H16.875V43.125ZM46.875 13.125H43.125V16.875H46.875V13.125Z' fill='%23000'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: center;
+      background-size: 70%;
+    }
+
+    .text-float {
+      position: fixed;
+      bottom: 10px;
+      right: 35px;
+      color: white;
+      z-index: 2000;
+      text-shadow: 0px 2px 6px rgb(0 0 0 / 50%);
+    }
+  </style>
+
+  <body>
+    <div id="qr-redirect" style="display: none;">
+      <h5 class="text-float">QR เปิดไม้กั้น</h5>
+      <div>
+        <a href="{{ url_for('qrcode_opengate')}}" class="qrcode-float">
+          <span class="icon"></span>
+        </a>
+      </div>
+    </div>
+  </body>
+</html>

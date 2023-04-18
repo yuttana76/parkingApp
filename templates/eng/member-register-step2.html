@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Service</title>
+    {% include "include/customer-css.html" %}
+    {% include "include/customer-js.html" %}
+</head>
+<style>
+    body {
+        background-color: #f8fafb;
+    }
+
+    .overflow-policy{
+        width: auto;
+        padding: 20px 20px 10px 20px;
+        background-repeat: no-repeat;
+        background-size: cover;
+    }
+
+ 
+  
+</style>
+
+<body>
+    {% include "eng/comps/navbar-2.html" %}
+
+    <!-- Step 2 เงื่อนไขการสมัครสมาชิกรายเดือน -->
+    <div class="bg-shape">
+        <div class="container pt-5">
+            <div class="row mt-3">
+                <div class="col-lg-12 text-center">
+                    <div class="order-progress-stepper">
+                        <div class="step completed">Choose Station</div>
+                        <div class="step active">Check out the<br>terms and conditions</div>
+                        <div class="step">Fill in details</div>
+                        <div class="step">Verify the<br>application</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row mt-3">
+                <div class="col-md-12">
+                    <div class="card my-3">
+                        <div class="card-header card-header-mrta text-center">
+                            <h4 class="my-2">Monthly Subscription Terms</h4>
+                        </div>
+                        <div class="card-body">
+                            <div class="row px-sm-5 px-0 py-3">
+                                <div class="col-sm-2 col-1">
+                                    <div class="circle">
+                                        <div class="icon">
+                                            <img src="{{url_for('static', filename='image/money.svg')}}">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-10 col-10">
+                                    <div class="space">
+                                        <div class="p-list">
+                                            <!-- modify by ittipon 23/6/2564-->
+                                            <span>Monthly Parking Fee {{parking_price}} Baht</span>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row px-sm-5 px-0 py-3">
+                                <div class="col-sm-2 col-1">
+                                    <div class="circle">
+                                        <div class="icon">
+                                            <img src="{{url_for('static', filename='image/car-park.svg')}}">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-10 col-10">
+                                    <div class="space">
+                                        <div class="p-list">
+                                            <span>Opening hours 05.00 AM.– 01.00 AM.</span>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row px-sm-5 px-0 py-3">
+                                <div class="col-sm-2 col-1">
+                                    <div class="circle">
+                                        <div class="icon">
+                                            <img src="{{url_for('static', filename='image/ticket.svg')}}">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-10 col-10">
+                                    <div class="space">
+                                        <div class="p-list">
+                                            <!-- modify by ittipon 23/6/2564-->
+                                            <span>Overnight parking will incur a fine {{over_night}} Baht/Day</span>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="text-center my-3">
+                                <small>I accept <a class="policylink" data-toggle="modal" data-target="#policyModal">Monthly parking conditions</a>
+                                    of the Mass Rapid Transit Authority of Thailand when pressing "Accept the conditions"</small>
+
+                                   
+                                <div class="modal fade" id="policyModal" tabindex="-1"
+                                    aria-labelledby="policyLabel" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header card-header-mrta">
+                                                <h5 class="modal-title" id="policyLabel">Monthly access conditions</h5>
+                                                <button type="button" class="close" data-dismiss="modal"
+                                                    aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+                                               <div class="card overflow-policy" id="style-policy" >
+                                                   {% for i in policy%} 
+                                                   {{i}}
+                                                   <br>
+                                                   {%endfor%} 
+                                               </div>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <div class="col-md-12 text-center">
+                                                    <button type="button" class="accept col-6" data-dismiss="modal" disabled>Confirm</button>
+                                                </div>
+                                               
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="text-center mt-3">
+                                <button type="button" class="btn btn-accept-shadow col-lg-5 col-10 animate"
+                                    onclick="window.location.href='/en/member-register-step3'">Accept the Terms</button>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div class="text-center my-3">
+                        <a class="h5 a-link" href="member-register-step1">Cancel</a>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <img src="{{url_for('static', filename='image/manager.svg')}}" class="img-fluid">
+                </div>
+            </div>
+        </div>
+
+    </div>
+    {% include "eng/comps/scroll-top.html" %}
+    {% include "eng/comps/popup-cookie.html" %}
+
+    {% include "eng/comps/footer.html" %}
+</body>
+
+</html>
+
+
+<script>
+    document.getElementsByClassName("overflow-policy")[0].addEventListener("scroll", checkScrollHeight, false);
+
+    function checkScrollHeight() {
+        var agreementTextElement = document.getElementsByClassName("overflow-policy")[0];
+
+        if (agreementTextElement.clientHeight + agreementTextElement.scrollTop >= agreementTextElement.scrollHeight) {
+            document.getElementsByClassName("accept")[0].disabled = false;
+        }
+    }
+</script>

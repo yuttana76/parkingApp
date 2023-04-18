@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://code.jquery.com/jquery-3.2.0.min.js"></script>
+    <title>QR Code</title>
+    {% include "include/customer-css.html" %}
+    {% include "include/customer-js.html" %}
+</head>
+<style>
+    body {
+        background: #F5F5F5;
+    }
+</style>
+
+<body>
+    {% include "comps/navbar-2.html" %}
+
+    <div class="container">
+        <div class="mrta-section">
+            <div class="row">
+                <div class="col-md-2"></div>
+                <div class="col-md-8">
+                    <div class="card text-center">
+                        <div class="card-header card-header-mrta py-3">
+                            <h5 class="mb-0 text-center">กรุณาสแกน QR Code เพื่อชำระเงิน</h5>
+                        </div>
+                        <div class="card-body">
+                            <div id="label-qrcode">
+                                <div id="qrcode">
+                                    <input type="hidden" id="textQr" value="{{qrcode}}">
+                                    <img id='barcode'  width="300"/>  
+                                </div>
+                            </div>
+                            <div class="my-4"> <!--btn-mrta-warning classสีเก่า-->
+                                <!-- <a type="button"  id='qrcode-dwnld-btn' class="btn btn-success col-lg-5 col-8 btn-lg"  download="filename.png">บันทึกรูปภาพ</a> -->
+                            </div>
+                            <div class="my-4">
+                                <h3 class="text-center">ชำระผ่าน Mobile banking ได้โดย</h3> 
+                                <h4>Capture หน้าจอโทรศัพท์>>นำภาพ QR ชำระผ่าน App ของ ธนาคาร</h4> 
+                                
+                                <a type="button" href="/home-private"
+                                    class="btn btn-mrta-info col-lg-5 col-8">กลับหน้าแรก</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-2"></div>
+            </div>
+
+        </div>
+
+
+    </div>
+    {% include "comps/popup-cookie.html" %}
+    {% include "comps/footer.html" %}
+</body>
+<script>
+    var textqr = document.getElementById('textQr').value;
+    var url = 'https://api.qrserver.com/v1/create-qr-code/?data='+textqr;
+    var imgQr = document.getElementById('barcode')
+    imgQr.src = url;
+    $('#qrcode-dwnld-btn').click(function() {
+    var qrCodeBaseUri = 'https://api.qrserver.com/v1/create-qr-code/?',
+        params = {
+            data: textqr,
+            size: '400x400',
+            margin: 0,
+            download: 1
+        };
+
+    window.location.href = qrCodeBaseUri + $.param(params);        
+   });
+</script>
+</html>

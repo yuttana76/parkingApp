@@ -1,0 +1,934 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta property="og:title" content="Home Public"/> 
+    <meta property="description" content="รายงานจำนวนที่จอดว่าง"/>  
+    <meta property="og:url" content="https://parking.mrta.co.th/"/>  
+    <!-- <meta name="og:image" content="/static/image/logo-blue.png"/>   -->
+    <meta property="og:image" content="https://sv1.picz.in.th/images/2021/07/26/2Thylk.png"/>
+    <meta property="og:image:secure_url" content="https://sv1.picz.in.th/images/2021/07/26/2Thylk.png" />
+    <title>MRTA PARKING</title>
+    {% include "include/customer-css.html" %}
+    {% include "include/customer-js.html" %}
+</head>
+
+<style>
+    .padding-park-name {
+    text-align: start;
+    padding: 18px 15px 10px 0px;
+    word-break: break-word;
+    font-size: 18px;
+  
+    white-space: wrap;
+    text-decoration: none;
+    -webkit-box-orient: vertical; 
+    text-overflow: ellipsis;  /* เพิ่ม ... จุดจุดจุดท้ายสุด */ 
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    overflow: hidden;
+  
+  }
+  </style>
+  <style>
+    .icon-bar {
+        position: fixed;
+        top: 50%;
+        left: 0%;
+        transform: translateY(-50%);
+        -webkit-transform: translateY(-50%);
+        -ms-transform: translateY(-50%);
+        z-index: 10;
+    }
+    
+    .icon-bar > a {
+        text-decoration: none;
+        width: 210px;
+        background: #3b5999;
+        color: #fff;
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        padding: 5px;
+        font-size: 20px;
+        transform: translateX(-170px);
+        -webkit-transform: translateX(-170px);
+        -ms-transform: translateX(-170px);
+        transition: all 0.5s linear;
+        -webkit-transition: all 0.5s linear;
+        -ms-transition: all 0.5s linear;
+    }
+    
+    .icon-bar >a > .facebook {
+        background: #3b5998;
+    }
+    .icon-bar > a > .twitter {
+        background: #00aced;
+    }
+    
+    .icon-bar > a > .instagram {
+        background: #e4405f;
+    }
+    
+    .icon-bar > a > .youtube {
+        background: #cd201f;
+    }
+    
+    .icon-bar > a > .linkedin {
+        background: #0077B5;
+    }
+    
+    
+    .icon-bar > a i {
+        padding-left: 20px;
+        font-size: 30px !important;
+        animation: letszoom 3s linear alternate-reverse infinite;
+    }
+    
+    @keyframes letszoom {
+        from {
+            transform: scale(0.8);
+        }
+    
+        to {
+            transform: scale(1);
+        }
+    
+    }
+    
+    a:hover {
+        transform: translateX(0);
+        -webkit-transform: translateX(0);
+        -ms-transform: translateX(0);
+    }
+    
+    </style>
+
+<body scroll="no" style="overflow-x: hidden;">
+    <!-- Menu -->
+    {% include "eng/comps/navbar.html" %}
+
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-xl-2 col-lg-0 col-md-0 mrta-parking-public">
+                <!-- <div data-aos="fade-right" data-aos-delay="200"> -->
+                <!-- <div class="animation-parking">
+                        PARKING
+                    </div> -->
+                <!-- </div> -->
+            </div>
+            <div class="col-xl-6 col-lg-7 col-md-12 mrta-parking-public">
+                <div class="container">
+                    <h3 class="mt-5 text-white">MRTA PARK & RIDE</h3>
+                </div>
+                <div class="row wrap-feature41-box mt-5">
+                    <div class="col-xl-3 col-lg-4 col-md-3">
+                        <ul class="nav vtab f41-tab text-center">
+                            <li class="nav-item">
+                                <a class="nav-link active nav-all" id="home-tab" data-toggle="tab" href="#home">
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <img src="{{url_for('static', filename='image/train.svg')}}" width="50">
+                                        </div>
+                                        <div class="col-12">
+                                            <h5 class="my-3">All {{total}}P</h5>
+                                        </div>
+                                    </div>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link nav-blue" id="profile-tab" data-toggle="tab" href="#profile">
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <img src="{{url_for('static', filename='image/train-white.svg')}}"
+                                                width="50">
+                                        </div>
+                                        <div class="col-12">
+                                            <h5 class="my-3">Blue Line {{blue_count}}P</h5>
+                                        </div>
+                                    </div>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link nav-purple" id="dropdown1-tab" data-toggle="tab" href="#dropdown1">
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <img src="{{url_for('static', filename='image/train-white.svg')}}"
+                                                width="50">
+                                        </div>
+                                        <div class="col-12">
+                                            <h5 class="my-3">Purple Line {{purple_count}}P</h5>
+                                        </div>
+                                    </div>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link nav-green" id="ssd-tab" data-toggle="tab" href="#ssd">
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <img src="{{url_for('static', filename='image/train-white.svg')}}"
+                                                width="50">
+                                        </div>
+                                        <div class="col-12">
+                                            <h5 class="my-3">Green Line {{green_count}}P</h5>
+                                        </div>
+                                    </div>
+
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="col-xl-9 col-lg-8 col-md-9">
+                        <div class="tab-content" id="myTabContent">
+                            <div class="tab-pane fade show active" id="home" role="tabpanel">
+                                <div class="col-lg-12 text-center">
+                                    <div class="mrta-parking-1 mt-4">
+                                        {% for api in data_list %}
+                                        <div class="row">
+                                            <form method="POST">
+                                            <button type="{{api[0].button}}" style="background-color:Transparent; border:none;">
+                                            <input type="hidden" name="station" value="{{api[0].nameth}}">
+                                            <div class="d-flex align-items-stretch">
+                                                <div class="boxes-card">
+                                                    <div class="row">
+                                                        <div class="col-6">
+                                                            <h3 class="mb-0 p-25" style="margin-left: -20px;">{{api[0].ncarrem}}</h3>
+                                                            <div class="{{api[0].color}}">Empty Parking</div>
+                                                            <div class="circle-parking"></div>
+                                                        </div>
+                                                        <div class="col-6 padding-park-name">
+                                                            {{api[0].name}}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            </button>
+                                            </form>
+                                            <form method="POST">
+                                            <button type="{{api[1].button}}" style="background-color:Transparent; border:none;">
+                                            <input type="hidden" name='station' value="{{api[1].nameth}}">
+                                            <div class="d-flex align-items-stretch">
+                                                <div class="boxes-card">
+                                                    <div class="row">
+                                                        <div class="col-6">
+                                                            <h3 class="mb-0 p-25" style="margin-left: -20px;">{{api[1].ncarrem}}</h3>
+                                                            <div class="{{api[1].color}}">Empty Parking</div>
+                                                            <div class="circle-parking"></div>
+                                                        </div>
+                                                        <div class="col-6 padding-park-name">
+                                                            {{api[1].name}}      
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            </button>
+                                            </form>
+                                            <form method="POST">
+                                            <button type="{{api[2].button}}" style="background-color:Transparent; border:none;">
+                                            <input type="hidden" name='station' value="{{api[2].nameth}}">  
+                                            <div class="d-flex align-items-stretch">
+                                                <div class="boxes-card">
+                                                    <div class="row">
+                                                        <div class="col-6">
+                                                            <h3 class="mb-0 p-25" style="margin-left: -20px;">{{api[2].ncarrem}}</h3>
+                                                            <div class="{{api[2].color}}">Empty Parking</div>
+                                                            <div class="circle-parking"></div>
+                                                        </div>
+                                                        <div class="col-6 padding-park-name">
+                                                            {{api[2].name}}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            </button>
+                                            </form>
+                                        </div>
+                                        {%endfor%}
+                                        {% for api2 in last_data_list %} 
+                                        <div class="row">
+                                            <form method="POST">
+                                            <button type="{{api2.button}}" style="background-color:Transparent; border:none;">
+                                            <input type="hidden" name='station' value="{{api2.nameth}}">  
+                                            <div class="d-flex align-items-stretch">
+                                                <div class="boxes-card">
+                                                    <div class="row">
+                                                        <div class="col-6">
+                                                            <h3 class="mb-0 p-25" style="margin-left: -20px;">{{api2.ncarrem}}</h3>
+                                                            <div class="{{api2.color}}">Empty Parking</div>
+                                                            <div class="circle-parking"></div>
+                                                        </div>
+                                                        <div class="col-6 padding-park-name">
+                                                            {{api2.name}}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            </button>
+                                            </form>
+                                        </div>
+                                        {%endfor%} 
+                                    </div>
+                                    <div class="paginationpk1"></div>
+                                </div>
+                            </div>
+                            <div class="tab-pane fade" id="profile" role="tabpanel">
+                                <div class="col-lg-12 text-center">
+                                    <div class="mrta-parking-2 mt-4">
+                                        {% for blue in blue_line %} 
+                                        <div class="row">
+                                            <form method="POST">
+                                            <button type="{{blue[0].button}}" style="background-color:Transparent; border:none;">
+                                            <input type="hidden" name='station' value="{{blue[0].nameth}}">  
+                                            <div class="d-flex align-items-stretch">
+                                                <div class="boxes-card">
+                                                    <div class="row">
+                                                        <div class="col-6">
+                                                            <h3 class="mb-0 p-25" style="margin-left: -20px;">{{blue[0].ncarrem}}</h3>
+                                                            <div class="{{blue[0].color}}">Empty Parking</div>
+                                                            <div class="circle-parking"></div>
+                                                        </div>
+                                                        <div class="col-6 padding-park-name">
+                                                            {{blue[0].name}}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            </button>
+                                            </form>
+                                            <form method="POST">
+                                            <button type="{{blue[1].button}}" style="background-color:Transparent; border:none;">
+                                            <input type="hidden" name='station' value="{{blue[1].nameth}}">  
+                                            <div class="d-flex align-items-stretch">
+                                                <div class="boxes-card">
+                                                    <div class="row">
+                                                        <div class="col-6">
+                                                            <h3 class="mb-0 p-25" style="margin-left: -20px;">{{blue[1].ncarrem}}</h3>
+                                                            <div class="{{blue[1].color}}">Empty Parking</div>
+                                                            <div class="circle-parking"></div>
+                                                        </div>
+                                                        <div class="col-6 padding-park-name">
+                                                            {{blue[1].name}}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            </button>
+                                            </form>
+                                            <form method="POST">
+                                            <button type="{{blue[2].button}}" style="background-color:Transparent; border:none;">
+                                            <input type="hidden" name='station' value="{{blue[2].nameth}}">  
+                                            <div class="d-flex align-items-stretch">
+                                                <div class="boxes-card">
+                                                    <div class="row">
+                                                        <div class="col-6">
+                                                            <h3 class="mb-0 p-25" style="margin-left: -20px;">{{blue[2].ncarrem}}</h3>
+                                                            <div class="{{blue[2].color}}">Empty Parking</div>
+                                                            <div class="circle-parking"></div>
+                                                        </div>
+                                                        <div class="col-6 padding-park-name">
+                                                            {{blue[2].name}}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            </button>
+                                            </form>
+                                        </div>
+                                        {%endfor%}      
+                                        <div class="row">
+                                            {% for blue2 in last_blue_line %} 
+                                            <form method="POST">
+                                            <button type="{{blue2.button}}" style="background-color:Transparent; border:none;">
+                                            <input type="hidden" name='station' value="{{blue2.nameth}}">  
+                                            <div class="d-flex align-items-stretch">
+                                                <div class="boxes-card">
+                                                    <div class="row">
+                                                        <div class="col-6">
+                                                            <h3 class="mb-0 p-25" style="margin-left: -20px;">{{blue2.ncarrem}}</h3>
+                                                            <div class="{{blue2.color}}">Empty Parking</div>
+                                                            <div class="circle-parking"></div>
+                                                        </div>
+                                                        <div class="col-6 padding-park-name">
+                                                            {{blue2.name}}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            </button>
+                                            </form>
+                                            {%endfor%} 
+                                        </div>
+                                    </div>
+                                    <div class="paginationpk2"></div>
+                                </div>
+                            </div>
+                            <div class="tab-pane fade" id="dropdown1" role="tabpanel">
+                                <div class="col-lg-12 text-center">
+                                    <div class="mrta-parking-3 mt-4">
+                                        {% for purple in purple_line %}
+                                        <div class="row">
+                                            <form method="POST">
+                                            <button type="{{purple.button}}" style="background-color:Transparent; border:none;">
+                                            <input type="hidden" name='station' value="{{purple.nameth}}">  
+                                            <div class="d-flex align-items-stretch">
+                                                <div class="boxes-card">
+                                                    <div class="row">
+                                                        <div class="col-6">
+                                                            <h3 class="mb-0 p-25" style="margin-left: -20px;">{{purple.ncarrem}}</h3>
+                                                            <div class="{{purple.color}}">Empty Parking</div>
+                                                            <div class="circle-parking"></div>
+                                                        </div>
+                                                        <div class="col-6 padding-park-name">
+                                                            {{purple.name}}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            </button>
+                                            </form>
+                                        </div>
+                                        {%endfor%} 
+                                    </div>
+                                    <div class="paginationpk3"></div>
+                                </div>
+                            </div>
+                            <div class="tab-pane fade" id="ssd" role="tabpanel">
+                                <div class="col-lg-12 text-center">
+                                    <div class="mrta-parking-4 mt-4">
+                                        {%for green in green_line %}
+                                        <div class="row">
+                                            <form method="POST">
+                                            <button type="{{green.button}}" style="background-color:Transparent; border:none;" >
+                                            <input type="hidden" name='station' value="{{green.nameth}}">  
+                                            <div class="d-flex align-items-stretch">
+                                                <div class="boxes-card">
+                                                    <div class="row">
+                                                        <div class="col-6">
+                                                            <h3 class="mb-0 p-25" style="margin-left: -20px;">{{green.ncarrem}}</h3>
+                                                            <div class="{{green.color}}">Empty Parking</div>
+                                                            <div class="circle-parking"></div>
+                                                        </div>
+                                                        <div class="col-6 padding-park-name">
+                                                             {{green.name}}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            </button>
+                                            </form>
+                                        </div>
+                                        {%endfor%}                                         
+                                    </div>
+                                    <div class="paginationpk4"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-4 col-lg-5 col-md-12 mrta-parking-login" id="login">
+                <form class="form-login mt-5" method="POST">
+                    <div class="text-center">
+                        <h2 class="py-2">Login</h2>
+                        <h4 class="py-2">Monthly Parking Service</h4>
+                    </div>
+                    <div class="col-md-12 p-0">
+                        
+                        <label>Email</label>  
+                        <div class="form-input">               
+                            <label class="icon fas fa-envelope"></label>
+                            <input type="email" id="email" name="email" class="input" value="{{
+                                request.form.email }}" required>
+                        </div>
+                    </div>
+                    <div class="col-md-12 p-0">
+                        
+                        <label>Password</label> 
+                        <div class="form-input">
+                            <label class="icon fas fa-lock"></label>
+                            <span class="button fas fa-eye" onclick="reswitchVisibility()"></span>
+                            <input id="repassword" name="repassword" type="password" class="input"
+                                placeholder="ยืนยันรหัสผ่าน" value="{{ request.form.password }}" required>
+                        </div>
+                    </div>
+                    <!-- message error -->
+                    {% with messages = get_flashed_messages(with_categories=true)%} 
+                        {% if messages%} 
+                        {% for category,message in messages%} 
+                            <div class="alert alert-{{ category }}">
+                                <button type="button" class="m1-2 mb-1 close" data-dismiss="alert" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                                {{message}}
+                            </div>
+                        {%endfor%} 
+                        {%endif%} 
+                    {%endwith%}
+                    <a class="float-right" href="en/reset-password">Forget Password ?</a><br>
+                    <div class="text-center mt-2">
+                        <button type="submit"
+                            class="btn mrta-btn-primary-1 mrta-shadow-primary-1 col-6">Login</button>
+                    </div>
+                    <div class="text-center mt-3">
+                        <span style="font-size: 0.9rem;">Don't have an account ?</span><a class="a-link h5 ml-2"
+                            href="en/register">Create account here</a>
+                        <br><br><br>
+                    </div>
+                </form>
+            </div>
+            <div class="col-xl-1 col-lg-0 col-md-12 mrta-parking-login">
+                <!-- <div data-aos="fade-left" data-aos-delay="500">
+                <div class="animation-mrta d-none d-lg-block d-xl-none">
+                        MRTA
+                    </div>
+                </div> -->
+            </div>
+        </div>
+    </div>
+
+
+
+
+    <!-- News -->
+    <div class="mrta-parking-area-02">
+        <div class="container">
+            <div class="mrta-section">
+                <div class="row">
+                    <div class="col-lg-6">
+                        <div class="row">
+                            <div class="col-6">
+                                <h3>News</h3>
+                            </div>
+                            <div class="col-6 text-right">
+                                <a class="h5 a-link" href="en/parking-all-news">View All</a>
+                            </div>
+                            <div class="col-md-12 text-center">
+                                <div class="mrta-parking-news">
+                                    {% for i in news_advertise %} 
+                                    <div class="row">
+                                        <form method="POST">
+                                        <div class="d-flex align-items-stretch">
+                                            <button class="card-news" type="submit">
+                                                <input type="hidden" name="news_id" value="{{i[0].Id}}">
+                                                <div class="card-news__img-wrapper">
+                                                    <div class="card-news__img"
+                                                        style="background-image:url(/static/image/allnews/news/{{i[0].news_image}})">
+                                                    </div>
+                                                </div>
+                                                <div class="card-body-2 d-flex flex-column">
+                                                    <p class="card-news__text"><span>{{i[0].news_date.strftime('%d/%m/%Y')}}</span>
+                                                        {{i[0].news_name_eng}}
+                                                    </p>
+                                                </div>
+                                            </button>
+                                        </div>
+                                        </form>
+
+                                        <form method="POST">
+                                        <div class="d-flex align-items-stretch">
+                                            <button class="card-news" type="submit">
+                                                <input type="hidden" name="news_id" value="{{i[1].Id}}">
+                                                <div class="card-news__img-wrapper">
+                                                    <div class="card-news__img"
+                                                        style="background-image:url(/static/image/allnews/news/{{i[1].news_image}})">
+                                                    </div>
+                                                </div>
+                                                <div class="card-body-2 d-flex flex-column">
+                                                    <p class="card-news__text"><span>{{i[1].news_date.strftime('%d/%m/%Y')}}</span>
+                                                        {{i[1].news_name_eng}}
+                                                    </p>
+                                                </div>
+                                            </button>
+                                        </div>
+                                        </form>
+                                    </div>
+                                    {%endfor%} 
+                                    <div class="row">
+                                        {%for i in news_advertise_last%} 
+                                        <form method="POST">
+                                            <div class="d-flex align-items-stretch">
+                                                <button class="card-news" type="submit">
+                                                    <input type="hidden" name="news_id" value="{{i.Id}}">
+                                                    <div class="card-news__img-wrapper">
+                                                        <div class="card-news__img"
+                                                            style="background-image:url(/static/image/allnews/news/{{i.news_image}})">
+                                                        </div>
+                                                    </div>
+                                                    <div class="card-body-2 d-flex flex-column">
+                                                        <p class="card-news__text"><span>{{i.news_date.strftime('%d/%m/%Y')}}</span>
+                                                            {{i.news_name_eng}}
+                                                        </p>
+                                                    </div>
+                                                </button>
+                                            </div>
+                                        </form>
+                                        {%endfor%} 
+                                    </div>
+                                </div>
+                                <div class="pagination"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="row">
+                            <div class="col-6">
+                                <h3>Activity</h3>
+                            </div>
+                            <div class="col-6 text-right">
+                                <a class="h5 a-link" href="en/parking-all-activities">View All</a>
+                            </div>
+                            <div class="col-md-12 text-center">
+                                <div class="mrta-parking-activity">
+                                    <!------------------------------------------------------->
+                                    {% for i in news_activity %} 
+                                    <div class="row">
+                                        <form method="POST">
+                                        <div class="d-flex align-items-stretch">
+                                            <button class="card-news" type="submit">
+                                                <input type="hidden" name="activity_id" value="{{i[0].Id}}">
+                                                <div class="card-news__img-wrapper">
+                                                    <div class="card-news__img"
+                                                        style="background-image:url(/static/image/allnews/activities/{{i[0].activity_image}})">
+                                                    </div>
+                                                </div>
+                                                <div class="card-body-2 d-flex flex-column">
+                                                    <p class="card-news__text"><span>{{i[0].activity_date.strftime('%d/%m/%Y')}}</span>
+                                                        {{i[0].activity_name_eng}}
+                                                    </p>
+                                                </div>
+                                            </button>
+                                        </div>
+                                        </form>
+
+                                        <form method="POST">
+                                        <div class="d-flex align-items-stretch">
+                                            <button class="card-news" type="submit">
+                                                <input type="hidden" name="activity_id" value="{{i[1].Id}}">
+                                                <div class="card-news__img-wrapper">
+                                                    <div class="card-news__img"
+                                                        style="background-image:url(/static/image/allnews/activities/{{i[1].activity_image}})">
+                                                    </div>
+                                                </div>
+                                                <div class="card-body-2 d-flex flex-column">
+                                                    <p class="card-news__text"><span>{{i[1].activity_date.strftime('%d/%m/%Y')}}</span>
+                                                        {{i[1].activity_name_eng}}
+                                                    </p>
+                                                </div>
+                                            </button>
+                                        </div>
+                                        </form>
+                                    </div>
+                                    {%endfor%} 
+                                    <div class="row">
+                                        {%for i in news_activity_last%} 
+                                        <form method="POST">
+                                            <div class="d-flex align-items-stretch">
+                                                <button class="card-news" type="submit">
+                                                    <input type="hidden" name="activity_id" value="{{i.Id}}">
+                                                    <div class="card-news__img-wrapper">
+                                                        <div class="card-news__img"
+                                                            style="background-image:url(/static/image/allnews/activities/{{i.activity_image}})">
+                                                        </div>
+                                                    </div>
+                                                    <div class="card-body-2 d-flex flex-column">
+                                                        <p class="card-news__text"><span>{{i.activity_date.strftime('%d/%m/%Y')}}</span>
+                                                            {{i.activity_name_eng}}
+                                                        </p>
+                                                    </div>
+                                                </button>
+                                            </div>
+                                        </form>
+                                        {%endfor%} 
+                                    </div>
+                                    <!------------------------------------------------------------------>
+                                </div>
+                                <div class="pagination2"></div>
+                            </div>
+                        </div>
+                        <!--icon social media bar-->
+                        <div class="icon-bar" style="z-index: 1;">
+                            <a href='https://www.facebook.com/MRTA.PR' class='facebook' target='_blank' style="background-color:#3b5998 ;">
+                                MRTA THAILAND <i class=" fab fa-facebook-square"></i>
+                            </a>
+                            <a href='https://line.me/R/ti/p/%40164rpjrx' class='line' target='_blank' style="background-color:#05c726 ;">
+                                @mrtacontact<i class=" fab fa-line"></i>
+                            </a>
+
+                            <a href='https://twitter.com/mrt_purpleline' class='twitter' target='_blank' style="background-color:rgb(29, 155, 240) ;">
+                                @mrtpurpleline<i class=" fab fa-twitter"></i>
+                            </a>
+                            
+                            <!-- <a href='https://www.instagram.com/vinodthapa55/' class='instagram' target='_blank' style="background-color:#d104e4 ;">
+                                click here to visit<i class="fab fa-instagram"></i> -->
+                            </a>
+                            <!-- <a href='' class='linkedin' target='_blank' style="background-color:#cd201f ;">
+                                click here to visit<i class=" fab fa-linkedin"></i> -->
+                            </a>
+                            <a href='https://www.youtube.com/user/9bhubeth' class='youtube' target='_blank' style="background-color:#cd201f ;">
+                                PR MRTA Official<i class=" fab fa-youtube-square"></i></a>
+                        </div>
+                        {% include "eng/comps/scroll-top.html" %}
+                        {% include "eng/comps/chatbot.html" %}
+                        {% include "eng/comps/popup-cookie.html" %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- <div class="animation-mrta-2">
+            <strong>MRTA</strong> <span>NEWS</span>
+        </div> -->
+        <!-- <div class="animation-news">
+            NEWS
+        </div> -->
+
+    </div>
+
+    {% include "eng/comps/footer.html" %}
+
+</body>
+
+
+<script src="{{ url_for('static', filename='js/parking.js') }}"></script>
+<script src="{{ url_for('static', filename='js/chat_en.js') }}"></script>
+<script src="{{ url_for('static', filename='js/responses_en.js') }}"></script>
+<script>
+    const repasswordField = document.querySelector('#repassword')
+    function reswitchVisibility() {
+        if (repasswordField.getAttribute('type') === 'password') repasswordField.setAttribute('type', 'text')
+        else repasswordField.setAttribute('type', 'password')
+    }
+    $('.mrta-parking-news').slick({
+        slidesToShow: 2,
+        slidesToScroll: 2,
+        dots: false,
+        centerMode: false,
+        arrows: true,
+        loop: false,
+        infinite: true,
+        autoplay: true,
+        autoplaySpeed: 3000,
+        appendArrows: $('.pagination'),
+        prevArrow: '<div class="pagination__button"><i class="fas fa-arrow-left"></i></div>',
+        nextArrow: '<div class="pagination__button"><i class="fas fa-arrow-right"></i></div>',
+    });
+
+    $('.mrta-parking-activity').slick({
+        slidesToShow: 2,
+        slidesToScroll: 2,
+        dots: false,
+        centerMode: false,
+        arrows: true,
+        loop: false,
+        infinite: true,
+        autoplay: true,
+        autoplaySpeed: 3000,
+        appendArrows: $('.pagination2'),
+        prevArrow: '<div class="pagination2__button"><i class="fas fa-arrow-left"></i></div>',
+        nextArrow: '<div class="pagination2__button"><i class="fas fa-arrow-right"></i></div>'
+    });
+
+    $('.mrta-parking-1').slick({
+        slidesToShow: 2,
+        slidesToScroll: 2,
+        dots: false,
+        centerMode: false,
+        arrows: true,
+        loop: false,
+        infinite: true,
+        autoplay: true,
+        autoplaySpeed: 3000,
+        appendArrows: $('.paginationpk1'),
+        prevArrow: '<div class="paginationpk1__button"><i class="fas fa-arrow-left"></i></div>',
+        nextArrow: '<div class="paginationpk1__button"><i class="fas fa-arrow-right"></i></div>',
+        responsive: [
+            {
+                breakpoint: 1366,
+                settings: {
+                    slidesToShow: 1,
+                    slidesToScroll: 1,
+                }
+            },
+            {
+                breakpoint: 1024,
+                settings: {
+                    slidesToShow: 2,
+                    slidesToScroll: 1,
+                }
+            },
+            {
+                breakpoint: 600,
+                settings: {
+                    slidesToShow: 2,
+                    slidesToScroll: 1
+                }
+            },
+            {
+                breakpoint: 480,
+                settings: {
+                    slidesToShow: 1,
+                    slidesToScroll: 1
+                }
+            }
+        ]
+    });
+
+    $('.mrta-parking-2').slick({
+        slidesToShow: 2,
+        slidesToScroll: 2,
+        dots: false,
+        centerMode: false,
+        arrows: true,
+        loop: false,
+        infinite: true,
+        autoplay: true,
+        autoplaySpeed: 3000,
+        appendArrows: $('.paginationpk2'),
+        prevArrow: '<div class="paginationpk2__button"><i class="fas fa-arrow-left"></i></div>',
+        nextArrow: '<div class="paginationpk2__button"><i class="fas fa-arrow-right"></i></div>',
+        responsive: [
+            {
+                breakpoint: 1366,
+                settings: {
+                    slidesToShow: 1,
+                    slidesToScroll: 1,
+                }
+            },
+            {
+                breakpoint: 1024,
+                settings: {
+                    slidesToShow: 2,
+                    slidesToScroll: 1,
+                }
+            },
+            {
+                breakpoint: 600,
+                settings: {
+                    slidesToShow: 2,
+                    slidesToScroll: 1
+                }
+            },
+            {
+                breakpoint: 480,
+                settings: {
+                    slidesToShow: 1,
+                    slidesToScroll: 1
+                }
+            }
+        ]
+    });
+
+    $('.mrta-parking-3').slick({
+        slidesToShow: 2,
+        slidesToScroll: 2,
+        dots: false,
+        centerMode: false,
+        arrows: true,
+        loop: false,
+        infinite: true,
+        autoplay: true,
+        autoplaySpeed: 3000,
+        appendArrows: $('.paginationpk3'),
+        prevArrow: '<div class="pagination__button"><i class="fas fa-arrow-left"></i></div>',
+        nextArrow: '<div class="pagination__button"><i class="fas fa-arrow-right"></i></div>',
+        responsive: [
+            {
+                breakpoint: 1366,
+                settings: {
+                    slidesToShow: 1,
+                    slidesToScroll: 1,
+                }
+            },
+            {
+                breakpoint: 1024,
+                settings: {
+                    slidesToShow: 2,
+                    slidesToScroll: 1,
+                }
+            },
+            {
+                breakpoint: 600,
+                settings: {
+                    slidesToShow: 2,
+                    slidesToScroll: 1,
+                }
+            },
+            {
+                breakpoint: 480,
+                settings: {
+                    slidesToShow: 1,
+                    slidesToScroll: 1
+                }
+            }
+        ]
+    });
+
+    $('.mrta-parking-4').slick({
+        slidesToShow: 2,
+        dots: false,
+        centerMode: false,
+        arrows: true,
+        loop: false,
+        infinite: true,
+        appendArrows: $('.paginationpk4'),
+        prevArrow: '<div class="pagination__button"><i class="fas fa-arrow-left"></i></div>',
+        nextArrow: '<div class="pagination__button"><i class="fas fa-arrow-right"></i></div>',
+        responsive: [
+        {
+                breakpoint: 1366,
+                settings: {
+                    slidesToShow: 1,
+                    slidesToScroll: 1,
+                }
+            },
+            {
+                breakpoint: 1024,
+                settings: {
+                    slidesToShow: 2,
+                    slidesToScroll: 1,
+                }
+            },
+            {
+                breakpoint: 600,
+                settings: {
+                    slidesToShow: 2,
+                    slidesToScroll: 1
+                }
+            },
+            {
+                breakpoint: 480,
+                settings: {
+                    slidesToShow: 1,
+                    slidesToScroll: 1
+                }
+            }
+        ]
+    });
+</script>
+
+
+<script>
+    //*****************refresh tabs parking******************//
+    $("#home-tab").click(function () {
+        $('.mrta-parking-1').slick('refresh');
+    });
+    $("#profile-tab").click(function () {
+        $('.mrta-parking-2').slick('refresh');
+    });
+    $("#dropdown1-tab").click(function () {
+        $('.mrta-parking-3').slick('refresh');
+    });
+    $("#ssd-tab").click(function () {
+        $('.mrta-parking-4').slick('refresh');
+    });
+</script>
+<script>
+    AOS.init({
+        duration: 1000
+        // easing: 'ease-out-back',
+    });
+</script>
+</html>

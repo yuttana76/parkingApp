@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+</head>
+
+<!-- <style>
+    .box-alert >span {
+      margin-top: 17px;  
+      text-decoration: none;
+      position: relative;
+      display: inline-block;
+      background-color:  #053273;
+      border-radius: 50%; 
+      margin-top: 20px;
+      
+    }
+    
+    .fas.fa-bell:hover{
+      background: red ;
+    }
+
+   .fas.fa-bell{
+      background-color: rgb(255, 255, 255);   
+      border-color: skyblue;    
+      width: 20px;
+      height: 20px;
+      padding-left: 3px; /*bell*/
+      padding-top: 2px; /*bell*/
+      border-radius: 5px;
+    }
+
+    .box-alert >span.badge{
+     margin-right: -38px;
+     border-radius: 50%;
+    background-color: red;
+    }
+</style> -->
+
+<body>
+    <div id='message' style="display: none;">{{session['message'] }}</div>
+    <nav class="navbar navbar-expand-lg navbar-dark mrta_navbar bg-dark mrta-navbar-light site-navbar-target scrolled awake"
+        id="mrta-navbar">
+        <div class="container">
+            <a class="navbar-brand logo-mrta-responsive" href="{{ url_for('home_2')}}"><img
+                src="{{url_for('static', filename='image/logo-mrta-th.svg')}}" width="65" class="img-fluid"></a>
+
+        <a class="navbar-brand logo-mrta-responsive2" href="{{ url_for('home_2')}}"><img
+                src="{{url_for('static', filename='image/logo-mrta-th.svg')}}" width="65" class="img-fluid"></a>
+
+            <!-- <button class="navbar-toggler js-fh5co-nav-toggle fh5co-nav-toggle" type="button" data-toggle="collapse"
+                data-target="#mrta-nav" aria-controls="mrta-nav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="oi oi-menu"></span> เมนู
+            </button> -->
+            <div class="navbar-toggler icon nav-icon-1" data-toggle="collapse" data-target="#mrta-nav"
+                aria-controls="mrta-nav" aria-expanded="false" aria-label="Toggle navigation">
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+
+            <div class="collapse navbar-collapse" id="mrta-nav">
+                <ul class="navbar-nav nav ml-auto">
+                    <li class="nav-item"><a href="{{ url_for('home_2')}}"
+                            class="nav-link {% if request.endpoint=='home_2' %}active{%endif %}"><span>หน้าแรก</span></a>
+                    </li>
+                    <li class="nav-item"><a href="{{ url_for('parking_detail2')}}"
+                            class="nav-link {% if request.endpoint=='parking_detail2' %}active{%endif %}"><span>ข้อมูลที่จอด</span></a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
+                            aria-haspopup="true" aria-expanded="false">
+                            บริการรายเดือน
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <a href="{{ url_for('member_register_step1')}}"
+                                class="dropdown-item {% if request.endpoint=='member_register_step1' %}active{%endif %}">สมัครสมาชิกรายเดือน</a>
+                            <!-- <a href="{{ url_for('parking_reserve')}}"
+                                class="dropdown-item {% if request.endpoint=='parking_reserve' %}active{%endif %}">รายการจองสิทธิ</a> -->
+                            <a href="{{ url_for('home_private')}}"
+                                class="dropdown-item {% if request.endpoint=='home_private' %}active{%endif %}">ข้อมูลสมาชิกจอดรถรายเดือน</a>
+                        </div>
+                    </li>
+                    
+                    <!-- Show Device PC -->
+                    <li class="nav-item d-lg-none d-xl-block"><a onclick="alert('บริการนี้ยังไม่เปิดให้ใช้งาน')" 
+                        class="nav-link {% if request.endpoint=='reserve_step1' %}active{%endif %}"><span>จองที่จอด</span></a>
+                    </li>
+                    <!-- <li class="nav-item d-lg-none d-xl-block"><a href="{{ url_for('reserve_step1')}}" 
+                        class="nav-link {% if request.endpoint=='reserve_step1' %}active{%endif %}"><span>จองที่จอด</span></a>
+                    </li> -->
+                    <li class="nav-item d-lg-none d-xl-block"><a href="{{ url_for('contact_2')}}"
+                            class="nav-link {% if request.endpoint=='contact_2' %}active{%endif %}"><span>ติดต่อ รฟม.</span></a>
+                    </li>
+
+                    <!-- Show เฉพาะ ipad pro -->
+                    <li class="nav-item dropdown d-lg-block d-xl-none">
+                        <a class="nav-link" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
+                            aria-haspopup="true" aria-expanded="false">
+                            ...
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <!-- <a class="dropdown-item {% if request.endpoint=='reserve_step1' %}active{%endif %}"
+                                href="{{ url_for('reserve_step1')}}">จองที่จอด</a> -->
+                            <a class="dropdown-item {% if request.endpoint=='reserve_step1' %}active{%endif %}"
+                                onclick="{alert('บริการนี้ยังไม่เปิดให้ใช้งาน ขออภัยในความไม่สะดวกค่ะ')}">จองที่จอด</a>
+                            <a class="dropdown-item {% if request.endpoint=='contact_2' %}active{%endif %}"
+                                href="{{ url_for('contact_2')}}">ติดต่อรฟม.</a>
+                        </div>
+                    </li>
+                </ul>
+
+                <ul class="navbar-nav nav ml-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('notification_list')}}" aria-expanded="false">
+                            <i class="fas fa-bell"></i>
+                        </a>
+                        
+                    </li>
+                    <li class="nav-item dropdown">
+                        {%if current_user.profile == '' or current_user.profile == none%}
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown"
+                            aria-haspopup="true" aria-expanded="false">
+                            <img src="https://www.pngall.com/wp-content/uploads/5/User-Profile-PNG-Clipart.png" width="25" height="25" class="rounded-circle mr-2">
+                            {{current_user.first_name}}
+                        </a>
+                        {%else%}
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown"
+                            aria-haspopup="true" aria-expanded="false">
+                            <img src="../../static/image/manage/profile/{{current_user.profile}}" width="25" height="25" class="rounded-circle mr-2">
+                            {{current_user.first_name}}
+                        </a> 
+                        {%endif%} 
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                            <h6 class="mb-1"></h6>
+                            <a class="dropdown-item" href="customer-profile"><i class="fas fa-user mr-2"></i>
+                                ข้อมูลผู้ใช้งาน</a>
+                            <a class="dropdown-item" href="parking-reserve"><i class="far fa-file-alt mr-2"></i>
+                                รายการจองสิทธิ</a>
+                            <a class="dropdown-item" href="history"><i class="fas fa-history mr-2"></i> การทำรายการ</a>
+                            <a class="dropdown-item" href="{{url_for('logout')}}"><i class="fas fa-sign-out-alt mr-2"></i> ออกจากระบบ</a>
+                        </div>
+                    </li>
+                    <!-- <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink2" role="button"
+                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <i class="fas fa-language" style="font-size: 20px;"></i>
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink2">
+                            <h6 class="mb-1"></h6>
+                            <a class="dropdown-item" id="th" href="/"><img
+                                    src="{{url_for('static', filename='image/thai.png')}}" width="20" height="25"> <span>TH</span></a>
+                            <a class="dropdown-item" id="eng" href="/en"><img
+                                    src="{{url_for('static', filename='image/eng.png')}}" width="20" height="28"> <span>EN</span></a>
+
+                        </div>
+                    </li> -->
+                    <li>           
+                        <a class="dropdown-item" style="margin-top: 10px;" id="th" href="/"><img
+                                src="{{url_for('static', filename='image/thai.png')}}" width="20" height="25" >
+                            <span style="color: rgb(173, 170, 170);">TH</span></a>
+                    </li>
+                    <li>         
+                        <a class="dropdown-item" style="margin-top: 9px;" id="eng" href="/en"><img
+                                src="{{url_for('static', filename='image/eng.png')}}" width="20" height="28"> 
+                            <span style="color: rgb(173, 170, 170);">EN</span></a>                
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+</body>
+
+<script>
+    function language(){
+        let th = document.getElementById('th')
+        let eng = document.getElementById('eng')
+        let path = window.location.pathname
+        
+        if (path.split('/')[1] == 'en'){
+            eng.hidden = true
+    
+        }else{
+            th.hidden = true
+        }
+    }
+window.onload = language
+</script>
+<script>
+    //Canvas Menu
+    $(".canvas__open").on('click', function () {
+        $(".offcanvas-menu-wrapper").addClass("active");
+        $(".offcanvas-menu-overlay").addClass("active");
+    });
+
+    $(".offcanvas-menu-overlay").on('click', function () {
+        $(".offcanvas-menu-wrapper").removeClass("active");
+        $(".offcanvas-menu-overlay").removeClass("active");
+    });
+
+    $(document).click(function (event) {
+        $('.navbar-collapse').collapse('hide');
+    });
+</script>
+<script>
+    function language(){
+        let th = document.getElementById('th')
+        let eng = document.getElementById('eng')
+        let path = window.location.pathname
+        if (path.split('/')[1] == 'en'){
+            eng.hidden = true
+            th.href = path.slice(3)
+        }else{
+            th.hidden = true
+            eng.href = '/en' + path
+        }
+    }
+    language()
+</script>
+</html>

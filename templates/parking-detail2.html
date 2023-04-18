@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ข้อมูลอาคารและลานจอดรถ</title>
+    {% include "include/customer-css.html" %}
+    {% include "include/customer-js.html" %}
+</head>
+
+<style>
+    .card-hover-content{
+        padding-top: 3.5px;
+    }
+
+    @media only screen and (min-device-width: 414px) and (max-device-width : 736px) {
+
+        .card-block{
+            margin-top: -12px;;
+        }
+
+    }
+
+    .card img{
+            height: 250px; 
+            width: 400px; 
+        }
+</style>
+
+<body>
+    {% include "comps/navbar-2.html" %}
+
+    <div class="mrta-parking-area-02">
+        <div class="container pt-5">
+            <!-- Step 1 เลือกลานจอดรถ -->
+            <h3 class="text-center mt-5">เลือกอาคาร/ลานจอดรถ</h3>
+
+            <div class="cta filter text-center">
+                <a class="button-0 active" data-filter="all" role="button">ทั้งหมด</a>
+                <a class="button-1" data-filter="button-1" role="button">สายสีน้ำเงิน</a>
+                <a class="button-2" data-filter="button-2" role="button">สายสีม่วง</a>
+                <a class="button-3" data-filter="button-3" role="button">สายสีเขียว</a>
+            </div>
+
+            <div class="boxes text-center">
+                <div class="row my-4">
+                    {% for item in parkings %}
+                    <div class="col-sm-4 mb-3" data-color="{{item.mrline}}">
+                        <form method="POST">
+                        <div class="card has-card-hover">
+                            <img class="card-img-top card-img-with-frame img-fluid" src="/static/image/manage/station/{{item.image_source}}">
+                            <div class="card-block p-3">
+                                <p class="card-title d-inline">{{item.name}}</p>
+                            </div>
+                            <div class="card-hover zoom-in {{item.card_hover_detail_color}}">
+                                <div class="card-hover-content text-center p-3">
+                                    <h5 class="my-2">จำนวนที่จอดว่าง</h5>
+                                    <div class="card">
+                                        <div class="p-2 text-center">
+                                            {%if item.allfreeparking not in [0,'0']%}
+                                            <h4 class="mb-0" style="color: green;">{{item.allfreeparking}}</h4>
+                                            {%else%} 
+                                            <h4 class="mb-0" style="color: red;">เต็ม</h4>
+                                            {%endif%} 
+                                        </div>
+                                    </div>
+
+                                    <h5 class="my-2">จำนวนสิทธิว่าง</h5>
+                                    <div class="card">
+                                        <div class="p-2 text-center">
+                                            {%if item.nfreeparking not in [0,'0']%} 
+                                            <h4 class="mb-0" style="color: red;">{{ item.nfreeparking }}</h4>
+                                            {%else%} 
+                                            <h4 class="mb-0" style="color: red;">เต็ม</h4>
+                                            {%endif%} 
+                                        </div>
+                                    </div>
+                                    <input type="hidden" name="station" value="{{item.name}}">
+                                    <div class="py-4" style="margin-top: -10px;">
+                                        <button class="a-link" type="{{item.button}}"  onclick={{item.alert}} style="color: rgb(0, 0, 0);background-color:Transparent; border:none;">รายละเอียด</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                    </div>
+                    {% endfor %}
+
+                    <!-- <div class="col-sm-4 mb-3" data-color="button-3">
+                        <div class="card has-card-hover">
+                            <img class="card-img-top card-img-with-frame img-fluid"
+                                src="https://www.mrta.co.th/media/546529/bangraknoithait.jpg">
+                            <div class="card-block p-3">
+                                <p class="card-title d-inline">อาคารจอดแล้วจร</p><br>
+                                <p class="card-text d-inline">สถานีบางรักน้อยท่าอิฐ</p>
+                            </div>
+                            <div class="card-hover zoom-in">
+                                <div class="card-hover-content text-center">
+                                    <h5 class="my-2">จำนวนที่จอดทั้งหมด</h5>
+                                    <div class="card">
+                                        <div class="p-2 text-center">
+                                            <h4 class="mb-0">100</h4>
+                                        </div>
+                                    </div>
+
+                                    <h5 class="my-2">จำนวนสิทธิว่าง</h5>
+                                    <div class="card">
+                                        <div class="p-2 text-center">
+                                            <h4 class="mb-0">1</h4>
+                                        </div>
+                                    </div>
+
+                                    <div class="py-4">
+                                        <a class="a-link" href="parking-info">รายละเอียด</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-4 mb-3" data-color="button-2">
+                        <div class="card has-card-hover">
+                            <img class="card-img-top card-img-with-frame img-fluid"
+                                src="https://www.mrta.co.th/media/546529/bangraknoithait.jpg">
+                            <div class="card-block p-3">
+                                <p class="card-title d-inline">อาคารจอดแล้วจร</p><br>
+                                <p class="card-text d-inline">สถานีบางรักน้อยท่าอิฐ</p>
+                            </div>
+                            <div class="card-hover zoom-in">
+                                <div class="card-hover-content text-center">
+                                    <h5 class="my-2">จำนวนที่จอดทั้งหมด</h5>
+                                    <div class="card">
+                                        <div class="p-2 text-center">
+                                            <h4 class="mb-0">100</h4>
+                                        </div>
+                                    </div>
+
+                                    <h5 class="my-2">จำนวนสิทธิว่าง</h5>
+                                    <div class="card">
+                                        <div class="p-2 text-center">
+                                            <h4 class="mb-0">1</h4>
+                                        </div>
+                                    </div>
+
+                                    <div class="py-4">
+                                        <a class="a-link" href="parking-info">รายละเอียด</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-4 mb-3" data-color="button-1">
+                        <div class="card has-card-hover">
+                            <img class="card-img-top card-img-with-frame img-fluid"
+                                src="https://www.mrta.co.th/media/546529/bangraknoithait.jpg">
+                            <div class="card-block p-3">
+                                <p class="card-title d-inline">อาคารจอดแล้วจร</p><br>
+                                <p class="card-text d-inline">สถานีบางรักน้อยท่าอิฐ</p>
+                            </div>
+                            <div class="card-hover zoom-in">
+                                <div class="card-hover-content text-center">
+                                    <h5 class="my-2">จำนวนที่จอดทั้งหมด</h5>
+                                    <div class="card">
+                                        <div class="p-2 text-center">
+                                            <h4 class="mb-0">100</h4>
+                                        </div>
+                                    </div>
+
+                                    <h5 class="my-2">จำนวนสิทธิว่าง</h5>
+                                    <div class="card">
+                                        <div class="p-2 text-center">
+                                            <h4 class="mb-0">1</h4>
+                                        </div>
+                                    </div>
+
+                                    <div class="py-4">
+                                        <a class="a-link" href="parking-info">รายละเอียด</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div> -->
+                </div>
+            </div>
+
+        </div>
+    </div>
+    {% include "comps/scroll-top.html" %}
+    {% include "comps/popup-cookie.html" %}
+
+    {% include "comps/footer.html" %}
+</body>
+
+<script>
+    $(document).ready(function () {
+        var $filters = $('.filter [data-filter]')
+        $boxes = $('.boxes [data-color]');
+
+        $filters.on('click', function (e) {
+            e.preventDefault();
+            var $this = $(this);
+
+            $filters.removeClass('active');
+            $this.addClass('active');
+
+            var $filterColor = $this.attr('data-filter');
+
+            if ($filterColor == 'all') {
+                $boxes.removeClass('is-animated')
+                    .fadeOut().promise().done(function () {
+                        $boxes.addClass('is-animated').fadeIn();
+                    });
+            } else {
+                $boxes.removeClass('is-animated')
+                    .fadeOut().promise().done(function () {
+                        $boxes.filter('[data-color = "' + $filterColor + '"]')
+                            .addClass('is-animated').fadeIn();
+                    });
+            }
+        });
+    });
+</script>
+</html>

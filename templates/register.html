@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>สมัครสมาชิก</title>
+    {% include "include/customer-css.html" %}
+    {% include "include/customer-js.html" %}
+</head>
+<style>
+    body {
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+        background-size: cover;
+        background-position: top;
+        background-image: url(/static/image/bangkokads_0010.png);
+        width: 100%;
+        height: 100%;
+    }
+
+     /************************iPad / iPad mini **********************************/
+     @media only screen and (device-width: 768px){
+        .form-mrta{
+            width: 155%;
+            margin-left: -90px;     
+        }
+    }
+
+        /*************************Ipad Pro 11 นิ้ว portrait แนวตั้ง*********************************/
+        @media only screen and (min-width: 834px) and (max-width: 1194px) 
+    and (orientation: portrait) and (-webkit-min-device-pixel-ratio: 2){
+
+        .form-mrta{
+            width: 170%;
+            margin-left: -115px;
+        }
+    }
+
+      /* ----------- iPad Pro ----------- */
+        /* Portrait and Landscape */
+        @media only screen and (min-width: 1024px) 
+        and (max-height: 1366px) and (-webkit-min-device-pixel-ratio: 1.5) {
+            
+        .form-mrta{
+            width: 110%;
+            margin-left: -20px;
+        }
+    }
+</style>
+
+<body>
+    {% include "comps/navbar-1.html" %}
+
+    <div class="container">
+        <div class="mrta-section">
+            <div class="row py-3">
+                <div class="col-md-3 col-lg-2"></div>
+                <div class="col-md-6 col-lg-8">
+                    <form class="form-mrta needs-validation" method="POST" novalidate>
+                        {{ registerform.hidden_tag()}}
+                        <div class="text-center">
+                            <h3 class="py-3">สร้างบัญชีผู้ใช้งาน</h3>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-input">
+                                    <label for="validationRegister">เลขบัตรประชาชน <span class="text-valid">*</span></label>
+                                    {{registerform.identity_card(class='input',id='validationRegister',maxlength='13')}}
+                                    <span class="error"></span>
+                                    <div class="invalid-feedback">กรุณากรอกข้อมูลในช่องว่าง</div>
+                                </div>
+                            </div>                   
+                            <div class="col-md-6">
+                                <div class="form-input">
+                                    <label>ชื่อ <span class="text-valid">*</span></label>
+                                    {{registerform.name(type="text",class="input")}}
+                                    <!-- <input type="text" id="firstname" name="firstname" class="input" value="{{
+                                        request.form.firstname }}" required> -->
+                                    <div class="invalid-feedback">กรุณากรอกข้อมูลในช่องว่าง</div>   
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-input">
+                                    <label>นามสกุล <span class="text-valid">*</span></label>
+                                    {{registerform.last_name(type="text",class="input")}}
+                                    <!-- <input type="text" id="lastname" name="lastname" class="input" value="{{
+                                        request.form.lastname }}" required> -->
+                                    <div class="invalid-feedback">กรุณากรอกข้อมูลในช่องว่าง</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-input">
+                            <label class="icon fas fa-envelope"></label>
+                            {{registerform.email_address(class="input",placeholder="อีเมล")}}
+                            <!-- <input type="email" id="email" name="email" class="input" placeholder="อีเมล" value="{{
+                                request.form.email }}" required> -->
+                            <div class="invalid-feedback">กรุณากรอกข้อมูลในช่องว่าง</div>
+                        </div>
+                        
+                        <div class="form-input">
+                            <label class="icon fas fa-lock"></label>
+                            <span class="button fas fa-eye" onclick="switchVisibility()"></span>
+                            {{registerform.password(class="input",id="password",placeholder="รหัสผ่านต้องประกอบด้วยตัวอักษร a-z, A-Z และ 0-9 ความยาวขั้นต่ำ 8 ตัวอักษร")}}
+                            <!-- <input type="password" id="password" name="password" class="input" placeholder="รหัสผ่าน"
+                                value="{{request.form.password }}" required> -->
+                                <div class="invalid-feedback">รหัสผ่านต้องยาวอย่างน้อย 8 หลัก ซึ่งประกอบด้วย ตัวอักษร ตัวเลข และอักขระพิเศษ 
+                                    หรือสัญลักษณ์ เช่น (a-Z) (0-9) (@ , # , & , “ , ‘ , *, =, < , > , % , $ , + , ?)</div>    
+                        </div>
+
+
+                        <div class="text-left my-3">
+                            <small><a class="policylink" data-toggle="modal" data-target="#policyModal3">
+                                เงื่อนไขการกรอกข้อมูลรหัสผ่าน</a>
+                            </small>
+
+                               
+                            <div class="modal fade" id="policyModal3" tabindex="-1"
+                                aria-labelledby="policyLabel" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header card-header-mrta">
+                                            <h5 class="modal-title" id="policyLabel3">ตัวอย่างการกรอกรหัสผ่าน</h5>
+                                            <button type="button" class="close" data-dismiss="modal"
+                                                aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                           <div class="card password-policy" id="style-policy" >
+                                              <p>รหัสผ่านต้องยาวอย่างน้อย 8 หลัก ซึ่งประกอบด้วย ตัวอักษร ตัวเลข และอักขระพิเศษ 
+                                                หรือสัญลักษณ์ เช่น (a-Z) (0-9) (@ , # , & , “ , ‘ , *, =, < , > , % , $ , + , ?)</p>
+                                           </div>
+                                        </div>
+                                        <!-- <div class="modal-footer">
+                                            <div class="col-md-12 text-center">
+                                                <button type="button" class="accept col-6" data-dismiss="modal" disabled>ยืนยัน</button>
+                                            </div>
+                                           
+                                        </div> -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+
+                        <div class="form-input">
+                            <label class="icon fas fa-lock"></label>
+                            <span class="button fas fa-eye" onclick="switchVisibility2()"></span>
+                            {{registerform.confirm_password(class="input",id="conpassword",placeholder="ยืนยันรหัสผ่าน")}}
+                            <!-- <input type="password" id="conpassword" name="conpassword" class="input"
+                                placeholder="ยืนยันรหัสผ่าน" required> -->
+                            <div class="invalid-feedback">กรุณากรอกข้อมูลในช่องว่าง</div>
+                        </div>
+
+                        <div class="form-group form-check ">
+                            <label class="form-check-label">
+                                <input class="form-check-input" type="checkbox" required><small> ยอมรับเงื่อนไข
+                                <a class="policylink" data-toggle="modal" data-target="#policyModal2">
+                                ข้าพเจ้ายอมรับ เงื่อนไขการสมัครสมาชิก</a></small>
+
+                                <div class="valid-feedback">ถูกต้อง</div>
+                                <div class="invalid-feedback">กรุณากดยอมรับเงื่อนไข</div>
+
+                                    <div class="modal fade" id="policyModal2" tabindex="-1"
+                                    aria-labelledby="policyLabel2" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header card-header-mrta">
+                                                <h5 class="modal-title" id="policyLabel2">เงื่อนไขการสมัครสมาชิก</h5>
+                                                <button type="button" class="close" data-dismiss="modal"
+                                                    aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+                                            <div class="card overflow-policy text-left pl-3 pr-2" id="style-policy" >
+                                                <div class="h4 pt-2"style="color: #1a086e;">นโยบายสิทธิส่วนบุคคล (Privacy Policy)</div>
+                                                การรถไฟฟ้าขนส่งมวลชนแห่งประเทศไทย (รฟม.) ยินดีต้อนรับผู้ใช้บริการทุกท่านเข้าสู่เว็บไซต์ https://parking.mrta.co.th ซึ่งอยู่ในความดูแลของการรถไฟฟ้าขนส่งมวลชนแห่งประเทศไทย (รฟม.) 
+                                                และดำเนินการจัดทำ “นโยบายสิทธิส่วนบุคคล” (Privacy Policy) ฉบับนี้ขึ้น เพื่อคุ้มครองข้อมูลส่วนบุคคลของผู้ใช้ที่เข้ามาใช้บริการของเว็บไซต์ https://parking.mrta.co.th
+                                                <span>1. การรถไฟฟ้าขนส่งมวลชนแห่งประเทศไทย (รฟม.) จะเผยแพร่ข้อมูลส่วนบุคคล (Personal Data) เมื่อได้รับความยินยอมเท่านั้น</span>
+                                                <span>2. การเผยแพร่ข้อมูลหรือการแบ่งปันให้เป็นไปตามที่กฎหมายกำหนด</span>
+                                                <span>3. การรถไฟฟ้าขนส่งมวลชนแห่งประเทศไทย (รฟม.) ดำเนินการรักษาความปลอดภัยข้อมูลส่วนบุคคลตามมาตรฐานที่กำหนด</span>
+                                                นโยบายสิทธิส่วนบุคคลนี้จะใช้ดำเนินการกับ https://parking.mrta.co.th และแอพพลิเคชั่น parkandride.mrta.co.th 
+                                                รวมถึงแพลตฟอร์มอื่นๆ ที่อยู่ภายใต้โดเมนเนม https://parking.mrta.co.th หากมีการเปลี่ยนแปลงใดๆ เกิดขึ้นกับนโยบายส่วนบุคคล 
+                                                การรถไฟฟ้าขนส่งมวลชนแห่งประเทศไทย (รฟม.) จะดำเนินการแจ้งผู้ใช้ทันที
+                                                <br><br>
+                                                <div class="h4"style="color: #1a086e;">การเก็บรวบรวมข้อมูลส่วนบุคคล</div>
+                                                1. เพื่อความสะดวกในการให้บริการทุกท่านที่เข้าสู่เว็บไซต์ https://parking.mrta.co.th สำหรับ สมัครสมาชิกต่ออายุลานจอดรถ รฟม. รายเดือน รวมถึงสิทธิประโยชน์อื่นๆ 
+                                                ที่ผู้ใช้ พึงได้รับหลังจากการสมัครสมาชิก ผู้ใช้จะต้องสร้างบัญชีกับ การรถไฟฟ้าขนส่งมวลชนแห่งประเทศไทย (รฟม.) ผู้ใช้จะต้องแจ้ง ชื่อ-นามสกุล,รหัสบัตรประชาชน, ที่อยู่, หมายเลขโทรศัพท์,​ 
+                                                อีเมล์, รหัสผ่าน,เอกสารสำเนาเล่มรถ,เอกสารสำเนาบัตรประชาชน และยอมรับในข้อตกลง นโยบายสิทธิส่วนบุคคล
+                                                <span>2. หลังจากสมัครสมาชิกแล้ว ผู้ใช้สามารถให้ข้อมูลเพิ่มได้ เช่น รหัสไปรษณีย์,​ เลขประจำตัวบัตรประชาชน เพื่อใช้ในการจัดทำข้อมูลเพื่อให้ผู้ใช้ได้รับ ข้อมูลที่เหมาะสมมากที่สุด</span>
+                                                <span>3. เพื่อประโยชน์ในการให้บริการ และการปรับปรุงคุณภาพการบริการให้ดียิ่งขึ้น การรถไฟฟ้าขนส่งมวลชนแห่งประเทศไทย (รฟม.) จำเป็นต้องเก็บรวบรวมข้อมูลเพิ่มเติม ได้แก่ IP Address, 
+                                                เวลาที่เยี่ยมชม,​ การใช้บริการก่อนที่เข้ามาที่เว็บไซต์ https://parking.mrta.co.th</span>
+                                                4. การรถไฟฟ้าขนส่งมวลชนแห่งประเทศไทย (รฟม.) ขอแนะนำให้ผู้ใช้ตรวจสอบนโยบายสิทธิส่วนบุคคล หากผู้ใช้เห็นว่าไม่สมควร และไม่ต้องการยอมรับเงื่อนไขดังกล่าว ผู้ใช้สามารถยกเลิกการ เป็นสมาชิกได้ทันที
+                                                <br><br>
+                                                <div class="h4"style="color: #1a086e;">การใช้ข้อมูลส่วนตัว</div>
+                                                <span>1. https://parking.mrta.co.th  จะใช้ข้อมูลส่วนบุคคลของสมาชิกตามที่มีความจำเป็นเท่านั้น เช่น ชื่อ-นามสกุล,​ ที่อยู่, เบอร์โทร ทั้งนี้เพื่อใช้ในการติดต่อสื่อสารและให้ เป็นไปตามเงื่อนไขในการสมัครสมาชิกที่จอดรถรายเดือน รฟม. เท่านั่น</span>
+                                                <span>2. https://parking.mrta.co.th  ขอรับรองว่าจะไม่นำข้อมูลส่วนบุคคลของผู้ใช้ที่ได้เก็บรวบรวมไว้ ไปเผยแพร่แก่บุคคลภายนอกโดยเด็ดขาดเว้นเสียแต่จะได้รับ การยินยอมจากผู้ใช้เท่านั้น</span>
+                                                <span>3. ในกรณีที่ https://parking.mrta.co.th ได้ว่าจ้างหน่วยงานอื่นเพื่อดำเนินการเกี่ยวกับข้อมูลส่วนบุคคลของผู้ใช้ เช่น การวิเคราะห์ข้อมูลเชิงสถิติหรือการ ดำเนินกิจกรรมต่างๆ https://parking.mrta.co.th จะกำหนดให้การรถไฟฟ้าขนส่งมวลชนแห่งประเทศไทย 
+                                                (รฟม.)หรือบุคคลที่ได้รับมอบหมายให้ดำเนินการดังกล่าว เก็บรักษาความลับและความ ปลอดภัยของข้อมูลผู้ใช้ ห้ามมิให้นำข้อมูลส่วนบุคคลไปเผยแพร่โดยเด็ดขาดนอกเหนือจากกิจกรรมของ https://parking.mrta.co.th เท่านั้น</span>
+                                                <span>4. ในกรร๊ที่ต้องการยกเลิกบัญชี Application "MRTA PARKING" หรือ https://parking.mrta.co.th ผู้ใช้สามารถดำเนินการยกเลิกบัญชีได้ที่ เมนู "ข้อมูลผู้ใช้งาน" และยกเลิกบัญชีผู้ใช้ ได้ทันที
+                                                และหลังจากที่ผู้ใช้ยืนยันยกเลิกบัญชี ระบบจะมีเวลาให้ 30 วัน เมื่อครบกำหนดผู้ใช้จะไม่สามารถ login ด้วยบัญชีอีเมลดังกล่าว</span>
+                                                5. กรณีผู้ใช้งานต้องการสมัคร สมาชิกใหม่ Application "MRTA PARKING" หรือ https://parking.mrta.co.th ผู้ใช้งานสามารถนำอีเมล สมัครบริการที่เมนู "สร้างบัญชีผู้ใช้งาน"
+                                                <br><br>
+                                                <div class="h4"style="color: #1a086e;">สิทธิในการควบคุมข้อมูลส่วนบุคคล</div>
+                                                เพื่อประโยชน์ในการรักษาความปลอดภัยและความลับของข้อมูลส่วนบุคคล https://parking.mrta.co.th  จึงกำหนดกฎและสิทธิในการเข้าถึงข้อมูลส่วนบุคคลและจัดให้มีช่องทางการสื่อสารแบบปลอดภัยสำหรับข้อมูลด้วยการเข้ารหัสข้อมูล 
+                                                โดยการใช้ Secure Socket (SSL) Protocal เข้ามาใช้ในการรับส่งข้อมูล
+                                                <br><br>
+                                                <h6>การปรับปรุงนโยบายความเป็นส่วนตัว</h6>
+                                                คุกกี้ คือ ข้อมูลที่ https://parking.mrta.co.th อาจจะทำการปรับปรุงหรือแก้ไขนโยบายความเป็นส่วนตัวโดยไม่แจ้งให้ผู้ใช้ทราบล่วงหน้า ทั้งนี้เพื่อความเหมาะสมและประสิทธิภาพในการให้บริการ จึงขอแนะนำให้ผู้ใช้บริการอ่านนโยบายความเป็นส่วนตัวทุกครั้งที่เข้าเยี่ยมชมเว็บไซต์
+                                                <span>โทรศัพท์ : 02-716-4044</span>
+                                                <span>โทรสาร : 02-716-4030</span>
+                                                <span>อีเมล : parkandride@mrta.co.th</span>
+                                            </div>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <div class="col-md-12 text-center">
+                                                    <button type="submit" class="accept col-6" data-dismiss="modal" disabled>ยืนยัน</button>
+                                                </div>
+                                            
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>          
+                            </label>
+                        </div>
+                            
+                        <!-- message error -->
+                        {% with messages = get_flashed_messages(with_categories=true)%}
+                            {% if messages %}
+                                {%for category,message in messages%} 
+                                <div class="alert alert-{{ category }}">
+                                    <button type="button" class="m1-2 mb-1 close" data-dismiss="alert" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                    {{message}}
+                                </div>
+                                {%endfor%}
+                            {%endif%}
+                        {%endwith%}
+                        <div class="text-center">
+                            {{registerform.submit(class="btn mrta-btn-primary-1 mrta-shadow-primary-1 col-6")}}
+                            <!-- <button type="submit"
+                                class="btn mrta-btn-primary-1 mrta-shadow-primary-1 col-6">สร้างบัญชี</button> -->
+                        </div>
+
+                        <div class="text-center mt-4">
+                            <span style="font-size: 0.9rem;">มีบัญชีผู้ใช้งานแล้ว</span><a class="a-link h5 ml-2"
+                                href="/">เข้าสู่ระบบที่นี่</a>
+                        </div>
+                    </form>
+                </div>
+                <div class="col-md-3 col-lg-2"></div>
+            </div>
+        </div>
+
+
+    </div>
+    {% include "comps/popup-cookie.html" %}
+    {% include "comps/footer.html" %}
+</body>
+<script>
+    // แปรตัวรหัสผ่านเป็นตัวอักษร
+    // รหัสผ่าน
+    const passwordField = document.querySelector('#password')
+    function switchVisibility() {
+        if (passwordField.getAttribute('type') === 'password') passwordField.setAttribute('type', 'text')
+        else passwordField.setAttribute('type', 'password')
+    }
+    // ยืนยันรหัสผ่าน
+    const passwordField2 = document.querySelector('#conpassword')
+    function switchVisibility2() {
+        if (passwordField2.getAttribute('type') === 'password') passwordField2.setAttribute('type', 'text')
+        else passwordField2.setAttribute('type', 'password')
+    }
+
+    // -------------------------------------------------------------------------------------------------
+    // ตรวจสอบรหัสบัตรประชาชน
+    $(document).ready(function () {
+        $('#validationRegister').on('keyup', function () {
+            if ($.trim($(this).val()) != '' && $(this).val().length == 13) {
+                id = $(this).val().replace(/-/g, "");
+                var result = Script_checkID(id);
+                if (result === false) {
+                    $('span.error').removeClass('true').text('เลขบัตรประชาชนผิด');
+                } else {
+                    $('span.error').addClass('true').text('เลขบัตรประชาชนถูกต้อง');
+                }
+            } else {
+                $('span.error').removeClass('true').text('');
+
+            }
+        })
+    });
+    // ตรวจสอบตัวแปรบัตรประชาชน
+    function Script_checkID(id) {
+        if (!IsNumeric(id)) return false;
+        if (id.substring(0, 1) == 0) return false;
+        if (id.length != 13) return false;
+        for (i = 0, sum = 0; i < 12; i++)
+            sum += parseFloat(id.charAt(i)) * (13 - i);
+        if ((11 - sum % 11) % 10 != parseFloat(id.charAt(12))) return false;
+        return true;
+    }
+    function IsNumeric(input) {
+        var RE = /^-?(0|INF|(0[1-7][0-7]*)|(0x[0-9a-fA-F]+)|((0|[1-9][0-9]*|(?=[\.,]))([\.,][0-9]+)?([eE]-?\d+)?))$/;
+        return (RE.test(input));
+    }
+</script>
+
+<script>
+    var y = document.forms["register"]["password"].value;
+
+if (y.length < 4) {
+    alert("Password should contain minimum four characters");
+    return false;
+} 
+
+var pwd=/^(?=.*[a-z])/;
+var pwd1=/^(?=.*[A-Z])/;
+var pwd2=/^(?=.*[0-9])/;
+
+if (pwd.test(y) == false) {
+    alert("Password Should contain atleast One lowerCase letter");
+    return false;
+}
+
+if (pwd1.test(y) == false) {
+    alert("Password Should contain atleast One UpperCase letter");
+    return false;
+}
+if (pwd2.test(y) == false) {
+    alert("Password Should contain atleast One Number");
+    return false;
+}
+</script>
+<script>
+    document.getElementsByClassName("overflow-policy")[0].addEventListener("scroll", checkScrollHeight, false);
+
+    function checkScrollHeight() {
+        var agreementTextElement = document.getElementsByClassName("overflow-policy")[0];
+
+        if (agreementTextElement.clientHeight + agreementTextElement.scrollTop >= agreementTextElement.scrollHeight) {
+            document.getElementsByClassName("accept")[0].disabled = false;
+        }
+    }
+</script>
+
+
+<script>
+    document.getElementsByClassName("password-policy")[0].addEventListener("scroll", checkScrollHeight, false);
+
+    function checkScrollHeight() {
+        var agreementTextElement = document.getElementsByClassName("password-policy")[0];
+
+        if (agreementTextElement.clientHeight + agreementTextElement.scrollTop >= agreementTextElement.scrollHeight) {
+            document.getElementsByClassName("accept")[0].disabled = false;
+        }
+    }
+</script>
+
+<script>
+    // Disable form submissions if there are invalid fields
+    (function() {
+      'use strict';
+      window.addEventListener('load', function() {
+        // Get the forms we want to add validation styles to
+        var forms = document.getElementsByClassName('needs-validation');
+        // Loop over them and prevent submission
+        var validation = Array.prototype.filter.call(forms, function(form) {
+          form.addEventListener('submit', function(event) {
+            if (form.checkValidity() === false) {
+              event.preventDefault();
+              event.stopPropagation();
+            }
+            form.classList.add('was-validated');
+          }, false);
+        });
+      }, false);
+    })();
+    </script>
+</html>

@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark mrta_navbar bg-dark mrta-navbar-light site-navbar-target scrolled awake"
+        id="mrta-navbar">
+        <div class="container">
+            <a class="navbar-brand logo-mrta-responsive" href="{{ url_for('index_en')}}"><img
+                src="{{url_for('static', filename='image/logo-mrta-en.svg')}}" width="65" class="img-fluid"></a>
+
+            <a class="navbar-brand logo-mrta-responsive2" href="{{ url_for('index_en')}}"><img
+                src="{{url_for('static', filename='image/logo-mrta-en.svg')}}" width="65" class="img-fluid"></a>
+
+            <!-- <button class="navbar-toggler js-fh5co-nav-toggle fh5co-nav-toggle" type="button" data-toggle="collapse"
+                data-target="#mrta-nav" aria-controls="mrta-nav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="oi oi-menu"></span> เมนู
+            </button> -->
+            <div class="navbar-toggler icon nav-icon-1" data-toggle="collapse" data-target="#mrta-nav"
+                aria-controls="mrta-nav" aria-expanded="false" aria-label="Toggle navigation" data-close-on-click="true">
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+
+            <div class="collapse navbar-collapse" id="mrta-nav">
+                <ul class="navbar-nav nav ml-auto">
+                    <li class="nav-item"><a href="/en"
+                            class="nav-link {% if request.endpoint=='index' %}active{%endif %}"><span>Home</span></a>
+                    </li>
+                    <!-- <li class="nav-item"><a href="{{ url_for('parking_detail2_en')}}"
+                        class="nav-link {% if request.endpoint=='parking_detail2_en' %}active{%endif %}"><span>Parking
+                            Info</span></a>
+                    </li> -->
+                    <li class="nav-item"><a href="en/parking-detail"
+                            class="nav-link {% if request.endpoint=='en/parking-detail' %}active{%endif %}"><span>Parking Info</span></a>
+                    </li>
+                    <li class="nav-item"><a href="en/contact"
+                            class="nav-link {% if request.endpoint=='en/contact' %}active{%endif %}"><span>Contact Us</span></a>
+                    </li>    
+                    <li class="nav-item"><a href="#login"
+                        class="nav-link "><span>Login</span></a>
+                </li>   
+                    <!-- <li class="nav-item"><a href="{{ url_for('home_private')}}"
+                            class="nav-link {% if request.endpoint=='home_private' %}active{%endif %}"><span>Login
+                                Complete (test)</span></a>
+                    </li> -->
+                </ul>
+                <ul class="navbar-nav nav ml-auto">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link" data-toggle="dropdown" href="#" aria-expanded="false">
+                            <i class="fas fa-bell"></i>
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
+                            <!-- <span class="dropdown-item dropdown-header">15 Notifications</span> -->
+                            <!-- <div class="dropdown-divider"></div> -->
+                            <a href="#" class="dropdown-item">
+                                <i class="fas fa-envelope mr-2"></i> 
+                            </a>
+                            <div class="dropdown-divider"></div>
+                            <a href="#" class="dropdown-item">
+                                <!-- <i class="fas fa-users mr-2"></i> 8 friend requests -->
+                            </a>
+                            <div class="dropdown-divider"></div>
+                            <a href="#" class="dropdown-item">
+                                <!-- <i class="fas fa-file mr-2"></i> 3 new reports -->
+                            </a>
+                            <div class="dropdown-divider"></div>
+                            <a href="#" class="dropdown-item dropdown-footer">See All Notifications</a>
+                        </div>
+                    </li>
+                    <!-- <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink2" role="button"
+                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <i class="fas fa-language" style="font-size: 20px;"></i>
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink2">
+                            <h6 class="mb-1"></h6>
+                            <a class="dropdown-item" href="/"><img
+                                    src="{{url_for('static', filename='image/thai.png')}}" width="20" height="25"> <span>TH</span></a>
+                            <a class="dropdown-item" href="/en"><img
+                                    src="{{url_for('static', filename='image/eng.png')}}" width="20" height="28"> <span>EN</span></a>
+
+                        </div>
+                    </li> -->
+                    <li>           
+                            <a class="dropdown-item" style="margin-top: 10px;" id="th" href="/"><img
+                                    src="{{url_for('static', filename='image/thai.png')}}" width="20" height="25" >
+                                <span style="color: rgb(173, 170, 170);">TH</span></a>
+                    </li>
+                    <!-- <li>         
+                            <a class="dropdown-item" style="margin-top: 9px;" id="eng"  href="/en"><img
+                                    src="{{url_for('static', filename='image/eng.png')}}" width="20" height="28"> 
+                                <span style="color: rgb(173, 170, 170);">EN</span></a>                
+                    </li> -->
+                </ul>
+            </div>
+        </div>
+    </nav>
+</body>
+<script>
+    function language(){
+        let th = document.getElementById('th')
+        let eng = document.getElementById('eng')
+        let path = window.location.pathname
+        
+        if (path.split('/')[1] == 'en'){
+            eng.hidden = true
+    
+        }else{
+            th.hidden = true
+        }
+    }
+window.onload = language
+</script>
+<script>
+    //Canvas Menu
+    $(".canvas__open").on('click', function () {
+        $(".offcanvas-menu-wrapper").addClass("active");
+        $(".offcanvas-menu-overlay").addClass("active");
+    });
+
+    $(".offcanvas-menu-overlay").on('click', function () {
+        $(".offcanvas-menu-wrapper").removeClass("active");
+        $(".offcanvas-menu-overlay").removeClass("active");
+    });
+
+    const icons = document.querySelectorAll('.icon');
+    icons.forEach(icon => {
+        icon.addEventListener('click', (event) => {
+            icon.classList.toggle("open");
+        });
+    });
+
+    var navMain = $(".navbar-toggler"); // avoid dependency on #id
+     // "a:not([data-toggle])" - to avoid issues caused
+     // when you have dropdown inside navbar
+     navMain.on("click", "a:not([data-toggle])", null, function () {
+         navMain.collapse('hide');
+     });
+     
+    $(document).click(function (event) {
+        $('.navbar-collapse').collapse('hide');
+    });
+</script>
+
+</html>

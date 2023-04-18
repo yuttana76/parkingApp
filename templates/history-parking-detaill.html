@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>history-parking-detaill</title>
+    {% include "include/customer-css.html" %} {% include
+    "include/customer-js.html" %}
+  </head>
+  <style>
+    .text-main-billslist {
+      color: #ff0000;
+    }
+    .text-body-billslist {
+      color: #091e78 !important;
+    }
+  </style>
+  <body>
+    {% include "comps/navbar.html" %}
+    <div class="container">
+      <div class="row">
+        <div class="col-12">
+          <!-- <div class="card-reserve my-3 mt-5">
+            <div class="card-body">
+              <div class="row py-2 mb-0">
+                <div class="col-8 h5 font-weight-bold text-main-billslist">
+                  รอการชำระ
+                </div>
+                <div class="col-4 h5 text-right text-main-billslist">
+                  20 บาท
+                </div>
+
+                <div
+                  class="col-8 h5 text-body-billslist"
+                  style="color: #091e78"
+                >
+                  กท1234
+                </div>
+
+                <div class="col-4 text-right" style="color: #091e78">
+                  ค่าบริการการจอง
+                </div>
+
+                <div class="col-7" style="color: #091e78">
+                  สถานีบางรักน้อยท่าอิฐ
+                </div>
+
+                <div class="col-5 text-right" style="color: #091e78">
+                  04/01/2565
+                </div>
+              </div>
+            </div>
+          </div> -->
+
+            <div class="row mt-5">
+              <div class="col-12">
+                <div class="alert alert-success" role="alert">
+                   สถานะ <span>ชำระเงินแล้ว</span>
+                  </div>
+              </div>
+          </div>  
+          
+
+          <div class="card-reserve mt-3">
+            <div class="card-body">
+              <div class="row mt-2">
+                <div class="col-9" style="color: #053273">
+                  <img
+                    class="mx-2"
+                    style="width: 43px"
+                    src="../static/image/mrt-bule-1.svg"
+                    class="text-weight-bold h5"
+                  />
+                  ที่จอดแม่ข้าวปั้น
+                </div>
+                <div class="col-3 text-right" style="color: #091e78">
+                  04/01/2565
+                </div>
+                
+              </div>
+            </div>
+          </div>
+
+          <div class="card-reserve my-3">
+            <div class="card-body">
+              <div class="row mt-2">
+                <div class="col-9" style="color: #053273">
+                  ทะเบียน
+                </div>
+                <div class="col-3 text-right" style="color: #091e78">
+                  บป 9875
+                </div>
+                
+              </div>
+            </div>
+          </div>
+
+          <div class="card-reserve my-3">
+            <div class="card-body">
+              <div class="row ">
+                <div class="col-9 mt-3" style="color: #053273">
+                    เวลาเข้า
+                </div>
+                <div class="col-3 text-right mt-3" style="color: #091e78">
+                    10/11/2021 11.00
+                </div>
+                <div class="col-9 mt-3" style="color: #053273">
+                    เวลาออก
+                </div>
+                <div class="col-3 text-right mt-3" style="color: #091e78">
+                   18.00
+                </div>
+                <div class="col-9 mt-3" style="color: #053273">
+                    เวลาจอดรวม
+                </div>
+                <div class="col-3 text-right mt-3" style="color: #091e78">
+                    07:00:00
+                </div>
+                
+              </div>
+            </div>
+          </div>
+
+          <div class="card-reserve my-2">
+            <div class="card-body">
+              <div class="row ">
+                <div class="col-9 mt-3" style="color: #053273">
+                    ช่องทางการชำระ
+                </div>
+                <div class="col-3 text-right mt-3" style="color: #091e78">
+                    ออนไลน์
+                </div>
+                <div class="col-9 mt-3" style="color: #053273">
+                    ค่าบริการรวมภาษี
+                </div>
+                <div class="col-3 text-right mt-3" style="color: #091e78">
+                   100.00
+                </div>
+                <div class="col-9 mt-3" style="color: #053273">
+                    ส่วนลด
+                </div>
+                <div class="col-3 text-right mt-3" style="color: #091e78">
+                    -
+                </div>
+                
+              </div>
+
+              <div class="row mt-4">
+                <div class="col-9" style="color: #053273">
+                    <h5>ค่าบริการทั้งหมด</h5>
+                </div>
+                <div class="col-3 text-right" style="color: #091e78">
+                    <h5>60.00</h5>
+                </div>
+                
+              </div>
+              <hr>
+              <div class="row mt-4">
+                <div class="col-9" style="color: #053273">
+                    เลขอ้างอิง
+                </div>
+                <div class="col-3 text-right" style="color: #091e78">
+                    2031123445
+                </div>
+                
+              </div>
+
+              <div class="row mt-4">
+                <div class="col-9" style="color: #053273">
+                    เวลาที่ชำระ
+                </div>
+                <div class="col-3 text-right" style="color: #091e78">
+                    2021/11/10 13.30
+                </div>
+                
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    {% include "comps/fivemenu.html" %}
+  </body>
+</html>

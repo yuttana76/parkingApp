@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Waiting confirm</title>
+    {% include "include/customer-css.html" %}
+    {% include "include/customer-js.html" %}
+</head>
+<style>
+    body {
+        background: #F5F5F5;
+    }
+</style>
+
+<body>
+    {% include "eng/comps/navbar-1.html" %}
+    <div class="container">
+        <div class="mrta-section">
+            <div class="row">
+                <div class="col-md-3"></div>
+                <div class="col-md-6">
+                    <div class="card text-center">
+                        <div class="card-body">
+                            <img src="{{url_for('static', filename='image/checked.svg')}}" class="my-2" width="125">
+                            <h3 class="py-3">You have already subscribed.</h3>
+                            <h6 class="my-2">
+                                Open that email and click on Verify your email
+                            </h6>
+                            <div class="my-4">
+                                <a type="button" href="/en"
+                                    class="btn btn-mrta-danger-2 col-lg-5 col-8">back to home page</a>
+                            </div>
+
+                            <!-- <div class="my-4">
+                                <a type="button" href="/home-private" class="btn btn-mrta-danger-2 col-lg-5 col-8">กลับหน้าแรก</a>
+                            </div> -->
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3"></div>
+            </div>
+
+        </div>
+
+
+    </div>
+    {% include "eng/comps/footer.html" %}
+</body>
+
+</html>

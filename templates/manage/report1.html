@@ -1,0 +1,217 @@
+<style>
+  #ui-datepicker-div {
+    background: white;
+  }
+</style>
+
+<body>
+  <table id="capacity2" class="table table-bordered table-striped" width="100%">
+    <div class="row mb-3">
+      <div class="col-lg-4"></div>
+      <div class="col-lg-8">
+        <div class="row">
+          <div class="col-sm-4 mt-2 text-right">เลือกประเภทรายการ :</div>
+          <div class="col-sm-8">
+            <select id="reportselectorlist" class="form-select">
+              <option value="">----- กรุณาเลือประเภทรายการ -----</option>
+              <option>สมัครใหม่</option>
+              <option>ต่ออายุ</option>
+              <option>จองที่จอด</option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!--Start search -->
+    <div class="input-group row">
+      <div class="col-sm-3 input-group">
+        <input
+          type="text"
+          id="tag2"
+          class="form-control"
+          placeholder="ค้นหา"
+          name="search"
+        />
+        <div class="input-group-btn">
+          <button class="btn btn-primary" type="submit">
+            <i class="fas fa-search"></i>
+          </button>
+        </div>
+      </div>
+      <div class="col-sm-3 input-group">
+        <span class="mt-2 mr-2">วันที่เริ่มต้น :</span>
+        <input
+          type="text"
+          class="form-control"
+          id="date_start"
+          name="date_start"
+        />
+      </div>
+      <div class="col-sm-3 input-group">
+        <span class="mt-2 mr-2">วันที่สิ้นสุด :</span>
+        <input type="text" class="form-control" id="date_end" name="date_end" />
+      </div>
+
+      <button class="btn btn-success mb-2 ml-3" id="excel">
+        <i class="far fa-file-excel"></i> Export to Excel
+      </button>
+    </div>
+    <!--end search -->
+
+    <thead>
+      <tr>
+        <th>ลำดับ</th>
+        <th>ชื่อลูกค้า</th>
+        <th>นามสกุลลูกค้า</th>
+        <th>ชื่่อลานจอดรถ</th>
+        <th>ประเภทลานจอด</th>
+        <th>มัดจำ</th>
+        <th>ค่าบริการ</th>
+        <th>Vat</th>
+        <th>อัตราค่าบริการ</th>
+        <th>รหัสบัตร</th>
+        <th>เลขที่ใบกำกับภาษีเต็มรูป</th>
+        <th>เลขที่อย่างย่อ</th>
+        <th>วันที่ชำระเงิน</th>
+        <th>ช่องทางชำระเงิน</th>
+        <th>ประเภทบริการ</th>
+        <th>ประเภทรายการ</th>
+        <!-- <th>อีเมล</th> -->
+      </tr>
+    </thead>
+    <tbody>
+      {% for row in datas %}
+      <tr>
+        <td>{{row.0}}</td>
+        <td>{{row.1}}</td>
+        <td>{{row.2}}</td>
+        <td>{{row.3}}</td>
+        <td>{{row.4}}</td>
+        <td>{{row.5}}</td>
+        <td>{{row.6}}</td>
+        <td>{{row.7}}</td>
+        <td>{{row.8}}</td>
+        <td>{{row.9}}</td>
+        <td>{{row.10}}</td>
+        <td>{{row.11}}</td>
+        <td>{{row.12}}</td>
+        {% if row.13 == '1' %}
+        <td>เงินสด</td>
+        {% elif row.13 == '2' %}
+        <td>บัตรเครดิต</td>
+        {% elif row.13 == '3' %}
+        <td>QR Code</td>
+        {% elif row.13 == '4' %}
+        <td>ผูกบัญชี</td>
+        {% elif row.13 == '5' %}
+        <td>TRUE</td>
+        {% else %}
+        <td>ยังไม่ได้ชำระ</td>
+        {% endif %} {% if row.14 == '1' %}
+        <td>Application</td>
+        {% elif row.14 == '2' %}
+        <td>Contact Site</td>
+        {% else %}
+        <td>- Blank -</td>
+        {% endif %} {% if row.15 == '1' %}
+        <td>สมัครใหม่</td>
+        {% elif row.15 == '2' %}
+        <td>ต่ออายุ</td>
+        {% else %}
+        <td>จองที่จอด</td>
+        {% endif %}
+        <!-- <td>{{row.17}}</td> field email-->
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</body>
+
+<script>
+  $(document).ready(function () {
+    $("#capacity2").DataTable({
+      dom: "Btip",
+      processing: true,
+      pageLength: 10,
+      scrollY: 500,
+      scrollX: true,
+      oLanguage: {
+        sLengthMenu: "แสดง _MENU_ ลำดับ ต่อหน้า",
+        sZeroRecords: "ไม่พบข้อมูลที่ค้นหา",
+        sInfo: "แสดง _START_ ถึง _END_ ของ _TOTAL_ ลำดับ",
+        sInfoEmpty: "แสดง 0 ถึง 0 ของ 0 ลำดับ",
+        sInfoFiltered: "(แสดงค้นหาทั้งหมด _MAX_ รายการ)",
+        oPaginate: {
+          sFirst: "หน้าแรก",
+          sLast: "หน้าสุดท้าย",
+          sNext: "ถัดไป",
+          sPrevious: "ก่อนหน้า",
+        },
+      },
+    });
+
+    oTable = $("#capacity2").DataTable();
+    oTable.buttons(".buttons-csv").nodes().css("display", "none");
+    oTable.buttons(".buttons-excel").nodes().css("display", "none");
+    oTable.buttons(".buttons-print").nodes().css("display", "none");
+    oTable.buttons(".buttons-pdf").nodes().css("display", "none");
+    oTable.buttons(".buttons-copy").nodes().css("display", "none");
+    $("#tag2").keyup(function () {
+      oTable.search($(this).val()).draw();
+    });
+    $("#excel").on("click", function () {
+      oTable.button(".buttons-excel").trigger();
+    });
+
+    $("#reportselectorlist").change(function () {
+      table.columns(15).search(this.value).draw();
+    });
+
+
+    $.fn.dataTable.ext.search.push(function (settings, data, dataIndex) {
+      var min = $("#date_start").datepicker("getDate");
+      var max = $("#date_end").datepicker("getDate");
+      var startDate = new Date(data[12]);
+      if (min == null && max == null) {
+        return true;
+      }
+      if (min == null && startDate <= max) {
+        return true;
+      }
+      if (max == null && startDate >= min) {
+        return true;
+      }
+      if (startDate <= max && startDate >= min) {
+        return true;
+      }
+      return false;
+    });
+
+    $("#parkingselect").on("change", function () {
+      oTable.columns(3).search(this.value).draw();
+    });
+
+    $("#date_start").datepicker({
+      onSelect: function () {
+        table.draw();
+      },
+      changeMonth: true,
+      changeYear: true,
+      dateFormat: "yy-mm-dd",
+    });
+    $("#date_end").datepicker({
+      onSelect: function () {
+        table.draw();
+      },
+      changeMonth: true,
+      changeYear: true,
+      dateFormat: "yy-mm-dd",
+    });
+    var table = $("#capacity2").DataTable();
+    // Event listener to the two range filtering inputs to redraw on input
+    $("#date_start, #date_end").change(function () {
+      table.draw();
+    });
+  });
+</script>

@@ -1,0 +1,137 @@
+[
+    {
+        "no": "BL380",
+        "name":"อาคารจอดแล้วจร สถานีหลักสอง",
+        "image_source":"https://www.mrta.co.th/media/546529/bangraknoithait.jpg",
+        "mrline":"button-1",
+        "allfreeparking": "100",
+        "nfreeparking": "1",
+        "card_hover_detail_color": "blueline"
+    },
+    {
+        "no": "BL270",
+        "name":"ลานจอดแล้วจร สถานีสามย่าน",
+        "image_source":"https://www.mrta.co.th/media/546529/bangraknoithait.jpg",
+        "mrline":"button-1",
+        "allfreeparking": "100",
+        "nfreeparking": "1",
+        "card_hover_detail_color": "blueline"
+    },
+    {
+        "no": "BL230",
+        "name":"ลานจอดแล้วจร สถานีศูนย์การประชุมแห่งชาติสิริกิติ์",
+        "image_source":"https://www.mrta.co.th/media/546529/bangraknoithait.jpg",
+        "mrline":"button-1",
+        "allfreeparking": "100",
+        "nfreeparking": "1",
+        "card_hover_detail_color": "blueline"
+    },
+    {
+        "no": "BL231",
+        "name":"ลานจอดแล้วจรฝั่งตรงข้าม สถานีศูนย์การประชุมแห่งชาติสิริกิติ์",
+        "image_source":"https://www.mrta.co.th/media/546529/bangraknoithait.jpg",
+        "mrline":"button-1",
+        "allfreeparking": "100",
+        "nfreeparking": "1",
+        "card_hover_detail_color": "blueline"
+    },
+    {
+        "no": "BL200",
+        "name":"ลานจอดแล้วจร สถานีพระราม 9",
+        "image_source":"https://www.mrta.co.th/media/546529/bangraknoithait.jpg",
+        "mrline":"button-1",
+        "allfreeparking": "100",
+        "nfreeparking": "1",
+        "card_hover_detail_color": "blueline"
+    },
+    {
+        "no": "BL160",
+        "name":"ลานจอดแล้วจร สถานีรัชดาภิเษก",
+        "image_source":"https://www.mrta.co.th/media/546529/bangraknoithait.jpg",
+        "mrline":"button-1",
+        "allfreeparking": "100",
+        "nfreeparking": "1",
+        "card_hover_detail_color": "blueline"
+    },
+    {
+        "no": "BL150",
+        "name":"อาคารจอดแล้วจร สถานีลาดพร้าว",
+        "image_source":"https://www.mrta.co.th/media/546529/bangraknoithait.jpg",
+        "mrline":"button-1",
+        "allfreeparking": "100",
+        "nfreeparking": "1",
+        "card_hover_detail_color": "blueline"
+    },
+    {
+        "no": "BL220",
+        "name":"ลานจอดแล้วจร สถานีสุขุมวิท",
+        "image_source":"https://www.mrta.co.th/media/546529/bangraknoithait.jpg",
+        "mrline":"button-1",
+        "allfreeparking": "100",
+        "nfreeparking": "1",
+        "card_hover_detail_color": "blueline"
+    },
+    {
+        "no": "PP010",
+        "name":"อาคารจอดแล้วจร สถานีคลองบางไผ่",
+        "image_source":"https://www.mrta.co.th/media/546529/bangraknoithait.jpg",
+        "mrline":"button-2",
+        "allfreeparking": "100",
+        "nfreeparking": "1",
+        "card_hover_detail_color": "purpleline"
+    },
+    {
+        "no": "PP030",
+        "name":"อาคารจอดแล้วจร สถานีบางรักน้อยท่าอิฐ",
+        "image_source":"https://www.mrta.co.th/media/546529/bangraknoithait.jpg",
+        "mrline":"button-2",
+        "allfreeparking": "100",
+        "nfreeparking": "1",
+        "card_hover_detail_color": "purpleline"
+    },
+    {
+        "no": "PP060",
+        "name":"อาคารจอดแล้วจรสถานีสามแยกบางใหญ่",
+        "image_source":"https://www.mrta.co.th/media/546529/bangraknoithait.jpg",
+        "mrline":"button-2",
+        "allfreeparking": "100",
+        "nfreeparking": "1",
+        "card_hover_detail_color": "purpleline"
+    },
+    {
+        "no": "PP090",
+        "name":"อาคารจอดแล้วจร สถานีแยกนนทบุรี 1",
+        "image_source":"https://www.mrta.co.th/media/546529/bangraknoithait.jpg",
+        "mrline":"button-2",
+        "allfreeparking": "100",
+        "nfreeparking": "1",
+        "card_hover_detail_color": "purpleline"
+    },
+    {
+        "no": "E2300",
+        "name":"อาคารจอดแล้วจร สถานีเคหะสมุทรปราการ",
+        "image_source":"https://www.mrta.co.th/media/546529/bangraknoithait.jpg",
+        "mrline":"button-3",
+        "allfreeparking": "100",
+        "nfreeparking": "1",
+        "card_hover_detail_color": "greenline"
+    },
+    {
+        "no": "N2300",
+        "name":"อาคารจอดแล้วจร สถานีแยกคปอ. (ยังไม่เปิดใช้บริการ)",
+        "image_source":"https://www.mrta.co.th/media/546529/bangraknoithait.jpg",
+        "mrline":"button-3",
+        "allfreeparking": "100",
+        "nfreeparking": "1",
+        "card_hover_detail_color": "greenline"
+    },
+    {
+        "no": "N2400",
+        "name":"อาคารจอดแล้วจร สถานีคูคต (ยังไม่เปิดใช้บริการ)",
+        "image_source":"https://www.mrta.co.th/media/546529/bangraknoithait.jpg",
+        "mrline":"button-3",
+        "allfreeparking": "100",
+        "nfreeparking": "1",
+        "card_hover_detail_color": "greenline"
+    }
+]

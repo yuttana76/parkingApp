@@ -1,0 +1,209 @@
+.bg-slide {
+  background: #ffffff;
+  box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.25);
+}
+
+.carousel {
+  width: 90%;
+  margin: 0px auto;
+}
+.slick-slide {
+  margin: 10px;
+}
+/* .slick-slide img {
+  width: 100%;
+  border: 2px solid #fff;
+} */
+
+.slick-prev:before,
+.slick-next:before {
+  color: #053273;
+}
+/* ------------------------------------------------------------------------------------------- */
+.pagination {
+  display: inline-flex;
+  margin-top: 2px;
+  margin-bottom: 10px;
+}
+
+.pagination__button {
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #ccc;
+  background: #fff;
+  width: 40px;
+  height: 40px;
+  margin-left: 2px;
+  border-radius: 10px;
+  z-index: 2;
+}
+
+.pagination__button:hover {
+  color: #fff;
+  background: #2aa1c0;
+}
+
+.pagination__button.slick-disabled {
+  cursor: not-allowed;
+  background: #ccc;
+  color: #fff;
+}
+/* -------------------------------------------------------------------------------------------- */
+
+.pagination2 {
+  display: inline-flex;
+  margin-top: 2px;
+  margin-bottom: 10px;
+}
+
+.pagination2__button {
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #ccc;
+  background: #fff;
+  width: 40px;
+  height: 40px;
+  margin-left: 2px;
+  border-radius: 10px;
+  z-index: 2;
+}
+
+.pagination2__button:hover {
+  color: #fff;
+  background: #2aa1c0;
+}
+
+.pagination2__button.slick-disabled {
+  cursor: not-allowed;
+  background: #ccc;
+  color: #fff;
+}
+/* ---------------------------------------------------------------------------------------------- */
+.paginationpk1 {
+  display: inline-flex;
+  margin-top: 2px;
+  margin-bottom: 10px;
+}
+
+.paginationpk1__button {
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #ccc;
+  background: #fff;
+  width: 40px;
+  height: 40px;
+  margin-left: 2px;
+  border-radius: 10px;
+  z-index: 2;
+}
+
+.paginationpk1__button:hover {
+  color: #fff;
+  background: #2aa1c0;
+}
+
+.paginationpk1__button.slick-disabled {
+  cursor: not-allowed;
+  background: #ccc;
+  color: #fff;
+}
+/* --------------------------------------------------------------------------------------- */
+.paginationpk2 {
+  display: inline-flex;
+  margin-top: 2px;
+  margin-bottom: 10px;
+}
+
+.paginationpk2__button {
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #ccc;
+  background: #fff;
+  width: 40px;
+  height: 40px;
+  margin-left: 2px;
+  border-radius: 10px;
+  z-index: 2;
+}
+
+.paginationpk2__button:hover {
+  color: #fff;
+  background: #2aa1c0;
+}
+
+.paginationpk2__button.slick-disabled {
+  cursor: not-allowed;
+  background: #ccc;
+  color: #fff;
+}
+/* ----------------------------------------------------------------------------------------------- */
+.paginationpk3 {
+  display: inline-flex;
+  margin-top: 2px;
+  margin-bottom: 10px;
+}
+
+.paginationpk3__button {
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #ccc;
+  background: #fff;
+  width: 40px;
+  height: 40px;
+  margin-left: 2px;
+  border-radius: 10px;
+  z-index: 2;
+}
+
+.paginationpk3__button:hover {
+  color: #fff;
+  background: #2aa1c0;
+}
+
+.paginationpk3__button.slick-disabled {
+  cursor: not-allowed;
+  background: #ccc;
+  color: #fff;
+}
+/* ---------------------------------------------------------------------------------- */
+
+.paginationpk4 {
+  display: inline-flex;
+  margin-top: 2px;
+  margin-bottom: 10px;
+}
+
+.paginationpk4__button {
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #ccc;
+  background: #fff;
+  width: 40px;
+  height: 40px;
+  margin-left: 2px;
+  border-radius: 10px;
+  z-index: 2;
+}
+
+.paginationpk4__button:hover {
+  color: #fff;
+  background: #2aa1c0;
+}
+
+.paginationpk4__button.slick-disabled {
+  cursor: not-allowed;
+  background: #ccc;
+  color: #fff;
+}

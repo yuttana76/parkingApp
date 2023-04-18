@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>บริการรายเดือน</title>
+    {% include "include/customer-css.html" %} {% include
+    "include/customer-js.html" %}
+  </head>
+  <style>
+    body {
+      background-color: #f8fafb;
+    }
+    div.sticky {
+      position: -webkit-sticky;
+      position: sticky;
+      bottom: 0;
+    }
+  </style>
+  <body>
+    {% include "comps/navbar-2.html" %}
+
+    <div class="container pt-5">
+      <form>
+        <div class="mt-3">
+          <!-- GoBack -->
+          <div class="py-3 h4">
+            <a href="javascript: history.go(-1)"
+              ><i class="fa fa-chevron-left mr-2" aria-hidden="true"></i
+              >กลับหน้าแรก</a
+            >
+          </div>
+
+          <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+            {% for qrcode in data %}
+            <center>
+              <div class="panel panel-default">
+              <div class="panel-heading" role="tab" id="headingOne">
+                <h4 class="panel-title">
+                <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" 
+                aria-controls="collapseOne">
+                  QR Code </a>
+              </h4>
+              </div>
+            </center>
+              <div id="collapseOne" class="panel-collapse collapse show" role="tabpanel" aria-labelledby="headingOne">
+                <div class="panel-body">
+                  <div class="card-body">
+                    <div class="main-qrcode">
+                      <div class="text-center">
+                        <h5 class="mb-0 py-2">{{reserve_station_detail}}</h5>
+                      <!-- ภาพ QR Code -->
+                      <img
+                        src='https://api.qrserver.com/v1/create-qr-code/?data={{text_qrcode}}'
+                        class="my-2 img-fluid"
+                        style="max-width: 305px"
+                      />
+        
+                      <h6>สำหรับเปิดไม้กั้นเข้า/ออก พื้นที่จอด (จอง)</h6>
+                      </div>
+                      
+                      <div class="py-3">
+                        <div class="row py-2">
+                          <div class="col-6">เข้าใช้บริการภายใน</div>
+                          <div class="col-6 text-right">{{qrcode.1}}</div>
+                        </div>
+                        <div class="row py-2">
+                          <div class="col-6">เวลาคงเหลือ</div>
+                          <div class="col-6 text-right">
+                            <h4 class="mb-0 text-red" id="text-time">{{qrcode.2}}</h4>
+                          </div>
+                        </div>
+                      </div>
+                      <!-- <h6>หมายเลขอ้างอิง : 26017426565656</h6> -->
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            {%endfor%}
+
+          </div>
+
+          
+        </div>
+      </form>
+    </div>
+
+    {% include "comps/footer.html" %}
+
+    <script>
+      window.onload = ()=>{
+          fetch('/api/check-qr-status').then(res => res.json())
+          .then(data => {
+              console.log(data.message)
+              if (data.message === 'success'){
+                document.getElementById("text-time").style.color = "grey"
+                document.getElementById("text-time").innerHTML = '00:00:00'
+              }
+          })
+      }
+    </script>
+    <script>
+      let interval = setInterval(()=>{
+        let qrtimerlist = document.getElementsByClassName('text-red')
+        for (let i=0;i<=qrtimerlist.length;i++){
+          if (qrtimerlist[i].innerHTML !== '00:00:00'){
+            let timelist = qrtimerlist[i].innerHTML.split(':')
+            let hours = parseInt(timelist[0])
+            let minute = parseInt(timelist[1])
+            let seconds = parseInt(timelist[2])
+            seconds -- 
+            if (seconds < 0){
+              seconds = 59
+              if (minute > 0){
+                minute --
+              }else{
+                if (hours > 0){
+                  minute = 59
+                  hours--
+                }
+              }
+            }
+            qrtimerlist[i].innerHTML = zerofill(hours,2) + ':' + zerofill(minute,2) + ':' + zerofill(seconds,2)
+          }
+          }
+      },1000)
+      
+      function zerofill(number, length) {
+        // Setup
+        var result = number.toString();
+        var pad = length - result.length;
+    
+        while(pad > 0) {
+            result = '0' + result;
+            pad--;
+        }
+    
+        return result;
+    }
+    </script>
+  </body>
+</html>

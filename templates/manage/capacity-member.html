@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  {% include "include/manage-css.html" %}
+  {% include "include/manage-js.html" %}
+  <title>MRTA จัดการข่าวสาร</title>
+  <link href="//cdn.datatables.net/1.10.20/css/jquery.dataTables.min.css" rel="stylesheet" />
+  <link href="//cdn.datatables.net/buttons/1.6.2/css/buttons.dataTables.min.css" rel="stylesheet" />
+
+  <script src="//code.jquery.com/jquery-3.5.1.js"></script>
+  <script src="//cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script>
+
+  <script src="//cdn.datatables.net/buttons/1.6.2/js/dataTables.buttons.min.js"></script>
+  <script src="//cdn.datatables.net/buttons/1.6.2/js/buttons.flash.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
+  <script src="//cdn.datatables.net/buttons/1.6.2/js/buttons.html5.min.js"></script>
+  <script src="//cdn.datatables.net/buttons/1.6.2/js/buttons.print.min.js"></script>
+  
+</head>
+
+<body class="hold-transition sidebar-mini layout-fixed">
+  <div class="wrapper">
+    {% include "manage/comps/header.html" %}
+    {% include "manage/comps/sidebar.html" %}
+
+    <!-- Messenger ปลั๊กอินแชท Code -->
+    <div id="fb-root"></div>
+
+    <!-- Your ปลั๊กอินแชท code -->
+    <div id="fb-customer-chat" class="fb-customerchat"></div>
+
+    <div class="content-wrapper">
+      <div class="content-header">
+        <div class="container-fluid">
+          <div class="row mb-3">
+            <div class="col-sm-12 mb-3">
+              <h1 class="m-0" style="color: #1a086e; font-size: 38px; font-weight: bold;">การจัดการ Capacity Member
+              </h1>
+            </div>
+
+            <div class="col-sm 24">
+              <div class="card">
+                <div class="card-body">
+                  <table id="capacity" class="table table-bordered table-striped nowrap" width="100%">
+
+                    <!--Start search -->
+                    <div class="input-group row">
+                      <form method="POST">
+                        <div class="col-sm-4 input-group">
+                          <input type="text" id="tag" class="form-control" placeholder="ค้นหา" name="search" />
+                          <div class="input-group-btn">
+                            <button class="btn btn-primary " type="submit">
+                              <i class="fas fa-search"></i></button>
+                          </div>
+                        </div>
+                      </form>
+
+                      <button class="btn btn-success mb-2 ml-3" id="excel"><i class="far fa-file-excel"></i> Export to
+                        Excel</button>
+
+                      <!-- <button class="btn btn-primary mb-2" data-toggle="modal" data-target="#exampleModal-add"
+                        style="margin-left: auto;">
+                        <i class="fas fa-plus"></i> เพิ่มข้อมูล
+                      </button> -->
+                      <!--button add -->
+                    </div>
+                </div>
+                <!--end search -->
+
+                <thead>
+                  <tr>
+                    <th>NO.</th>
+                    <!--Topic No-->
+                    <th>รหัสตัวย่อ</th>
+                    <th>ชื่อลานจอดรถ</th>
+                    <!--Topic image-->
+                    <th>Member limit</th>
+                    <!--Topic news-->
+                    <th>Count online</th>
+                    <!--Topic detail-->
+                    <th>Count contact site</th>
+                    <!--Adjust integer-->
+                    <th>Adjust member</th>
+                    <!--Topic news_status-->
+                    <th>Member Remaining</th>
+                    <!--Topic date create-->
+                    <th>วันที่แก้ไข</th>
+                    <!--Topic date edit-->
+                    <th>User แก้ไข</th>
+                    <!--Topic date edit-->
+                    <th>การจัดการ</th>
+                    <!--Topic manage edit and delete-->
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for row in datas %}
+                  <tr>
+                    <td>{{row.Id}}</td>
+                    <td>{{row.parking_code}}</td>
+                    <td>{{row.parking_name}}</td>
+                    <td>{{row.member_limit}}</td>
+                    <td>{{row.count_online}}</td>
+                    <td>{{row.count_contect_site}}</td>
+                    <td>{{row.adjust_member}}</td>
+                    <td>{{row.member_remaining}}</td>
+                    <td>{{row.user_edit_date}}</td>
+                    <td>{{row.user_edit}}</td>
+                    <td class="textbox">
+                      <!--Button edit and delete in table -->
+                      <button class="btn btn-warning-del" data-toggle="modal" data-target="#Modaledit{{row.Id}}"><i
+                          class="fas fa-edit"></i>แก้ไข</button>
+                    </td>
+                    <!--end button edit and delete in table-->
+                  </tr>
+
+                  <div class="modal fade" id="Modaledit{{row.Id}}" tabindex="-1" role="dialog"
+                    aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                          <button type="button" class="close" data-dismiss="modal">&times;</button>
+                          <h4 class="modal-title">อัปเดตข้อมูล</h4>
+                        </div>
+                        <div class="modal-body">
+                          <form action="{{url_for('update_capacity_manage')}}" method="POST">
+                            <div class="form-group">
+                              <label></label>
+                              <input type="hidden" name="id" value="{{row.Id}}">
+                            </div>
+                            <div class="form-group">
+                              <label>Member limit:</label>
+                              <input type="text" class="form-control" id="member_limit" name="member_limit" value="{{row.member_limit}}" >
+                              <label>Adjust member:</label>
+                              <input type="text" class="form-control" id="adjust_member" name="adjust_member" value="{{row.adjust_member}}">
+                            </div>
+                            <div class="form-group">
+                              <button class="btn btn-primary" type="submit">อัปเดต</button>
+                            </div>
+                          </form>
+                        </div>
+                        <div class="modal-footer">
+                          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  {% endfor %}
+                </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  </div>
+
+  <!--modal Add-->
+  <div class="card-body">
+    <table id="example" class="table table-bordered table-striped">
+      <div class="modal fade bd-example-modal-lg " id="exampleModal-add" tabindex="-1" role="dialog"
+        aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">เพิ่มข้อมูล</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+
+            <div class="container py-5">
+              <div class="row">
+                <div class="col-md-10 mx-auto">
+
+                  <form action="">
+
+                    <!--ให้ทำทึบไม่ให้แก้ไขได้-->
+                    <!-- <label for="">No: </label>
+                <input class="modalinput" type="text" id="" name=""> -->
+
+                    <!-- <div class="col-sm-12 mt-2">
+                <label for="">รหัสตัวย่อ: </label>
+                <input class="form-control" type="text" id="" name="">
+                </div> -->
+                    <div class="form-group row">
+                    <div class="col-sm-12 mt-2">
+                      <label for="parking_name">ชื่อลานจอด: </label>
+                      <select name="status" id="status-select" class="form-control">
+                        <option value="">--ลานจอด--</option>
+                        <option value="อาคารจอดรถ 9 ชั้น สถานีลาดพร้าว" id="">อาคารจอดรถ 9 ชั้น สถานีลาดพร้าว</option>
+                        <option value="ลานจอดรถ สถานีรัชดาภิเษก"  id="">ลานจอดรถ สถานีรัชดาภิเษก</option>
+                        <option value="ลานจอดรถ สถานีศูนย์วัฒนธรรมแห่งประเทศไทย (ลาน 1)"  id="">ลานจอดรถสถานีศูนย์วัฒนธรรมแห่งประเทศไทย (ลาน 1)</option>
+                        <option value="ลานจอดรถ สถานีศูนย์วัฒนธรรมแห่งประเทศไทย (รัชดาภิเษกซอย 6)"  id="">ลานจอดรถ สถานีศูนย์วัฒนธรรมแห่งประเทศไทย (รัชดาภิเษกซอย 6)</option>
+                        <option value="ลานจอดรถ สถานีพระราม 9"  id="">ลานจอดรถ สถานีพระราม 9</option>
+                        <option value="ลานจอดรถ สถานีสุขุมวิท"  id="">ลานจอดรถ สถานีสุขุมวิท</option>
+                        <option value="ลานจอดรถ สถานีศูนย์การประชุมแห่งชาติสิริกิติ์"  id="">ลานจอดรถ สถานีศูนย์การประชุมแห่งชาติสิริกิติ์</option>
+                        <option value="ลานจอดรถ ฝั่งตรงข้ามศูนย์การประชุมแห่งชาติสิริกิติ์"  id="">ลานจอดรถ ฝั่งตรงข้ามศูนย์การประชุมแห่งชาติสิริกิติ์</option>
+                        <option value="ลานจอดรถ สถานีสามย่าน"  id="">ลานจอดรถ สถานีสามย่าน</option>
+                        <option value="อาคารจอดรถ สถานีหลักสอง"  id="">อาคารจอดรถ สถานีหลักสอง</option>
+                        <option value="อาคารจอดแล้วจร สถานีคลองบางไผ่"  id="">อาคารจอดแล้วจร สถานีคลองบางไผ่</option>
+                        <option value="อาคารจอดแล้วจร สถานีสามแยกบางใหญ่"  id="">อาคารจอดแล้วจร สถานีสามแยกบางใหญ่</option>
+                        <option value="อาคารจอดแล้วจร สถานีบางรักน้อยท่าอิฐ"  id="">อาคารจอดแล้วจร สถานีบางรักน้อยท่าอิฐ</option>
+                        <option value="อาคารจอดแล้วจร สถานีแยกนนทบุรี 1"  id="">อาคารจอดแล้วจร สถานีแยกนนทบุรี 1</option>
+                        <option value="ลานจอดรถสถานีเคหะสมุทราปราการ (E23)"  id="">ลานจอดรถสถานีเคหะสมุทราปราการ (E23)</option>
+                        <option value="สถานีแยก คปอ. (N23) *ยังไม่เปิดรายเดือน"  id="">สถานีแยก คปอ. (N23) *ยังไม่เปิดรายเดือน</option>
+                        <option value="สถานีคูคต (N24) *ยังไม่เปิดรายเดือน"  id="">สถานีคูคต (N24) *ยังไม่เปิดรายเดือน</option>       
+                        <!-- {% for row1 in datas1 %}
+                        <select class="muti_select" id="parking_name" name="parking_name" value="">
+                          <option value={{row1.2}}>{{row1.2}}</option>
+                        </select>
+                        {% endfor %} -->
+                      </select>
+                    </div>
+                  </div>
+
+
+                    <div class="col-sm-12 mt-2">
+                      <label for="">Member limit: </label>
+                      <input class="form-control" type="text" id="" name="">
+                    </div>
+
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-primary float-right"><i class="fas fa-save"></i>
+                        บันทึกข้อมูล</button>
+                      <button type="button" class="btn btn-secondary ml-2" data-dismiss="modal">ยกเลิก</button>
+                    </div>
+                  </form>
+                </div>
+
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </table>
+  </div>
+  {% include "manage/comps/footer.html" %}
+</body>
+
+
+<script>
+  $(document).ready(function () {
+    $('#capacity').DataTable({
+      "dom": 'Btip',
+      "processing": true,
+      "pageLength": 10,
+      "scrollY": 300,
+      "order": [[ 0, "desc" ]],
+      "scrollX": true,
+      "scrollCollape" : true,
+      "oLanguage": {
+        "sLengthMenu": "แสดง _MENU_ ลำดับ ต่อหน้า",
+        "sZeroRecords": "ไม่พบข้อมูลที่ค้นหา",
+        "sInfo": "แสดง _START_ ถึง _END_ ของ _TOTAL_ ลำดับ",
+        "sInfoEmpty": "แสดง 0 ถึง 0 ของ 0 ลำดับ",
+        "sInfoFiltered": "(แสดงค้นหาทั้งหมด _MAX_ รายการ)",
+        "oPaginate": {
+          "sFirst": "หน้าแรก",
+          "sLast": "หน้าสุดท้าย",
+          "sNext": "ถัดไป",
+          "sPrevious": "ก่อนหน้า"
+        }
+      }
+    });
+
+    oTable = $('#capacity').DataTable();
+    oTable.buttons('.buttons-csv').nodes().css("display", "none");
+    oTable.buttons('.buttons-excel').nodes().css("display", "none");
+    oTable.buttons('.buttons-print').nodes().css("display", "none");
+    oTable.buttons('.buttons-pdf').nodes().css("display", "none");
+    oTable.buttons('.buttons-copy').nodes().css("display", "none");
+    $('#tag').keyup(function () {
+      oTable.search($(this).val()).draw();
+    });
+    $('#excel').on('click', function () {
+      oTable.button('.buttons-excel').trigger();
+    })
+  });
+</script>
+
+<script>
+  var chatbox = document.getElementById('fb-customer-chat');
+  chatbox.setAttribute("page_id", "106927381737911");
+  chatbox.setAttribute("attribution", "biz_inbox");
+
+  window.fbAsyncInit = function() {
+    FB.init({
+      xfbml            : true,
+      version          : 'v11.0'
+    });
+  };
+
+  (function(d, s, id) {
+    var js, fjs = d.getElementsByTagName(s)[0];
+    if (d.getElementById(id)) return;
+    js = d.createElement(s); js.id = id;
+    js.src = 'https://connect.facebook.net/th_TH/sdk/xfbml.customerchat.js';
+    fjs.parentNode.insertBefore(js, fjs);
+  }(document, 'script', 'facebook-jssdk'));
+</script>
+
+
+
+</html>

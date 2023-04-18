@@ -1,0 +1,66 @@
+@import url("https://fonts.googleapis.com/css?family=Encode+Sans");
+
+.debit-card {
+  width: 336px;
+  height: 214px;
+  border-radius: 10px;
+  background-color: #022c6a;
+  box-shadow: 0 6px 10px -2px rgba(0, 0, 0, 0.25);
+  padding: 30px;
+  margin: 50px auto;
+}
+
+.debit-card .master-card-logo {
+  width: 50px;
+}
+
+.debit-card .card-number-block {
+  display: flex;
+  flex-wrap: wrap;
+  padding: 23px 0;
+}
+
+.debit-card .card-number-block .number-block {
+  text-align: center;
+  background-color: #022c6a;
+  border: none;
+  outline: none;
+  margin: 7px;
+  width: 58px;
+  color: #fff;
+  font-family: "Encode Sans", sans-serif;
+  letter-spacing: 3px;
+  font-size: 18px;
+}
+
+.debit-card .card-number-block .number-block::placeholder {
+  color: #607d8b;
+}
+
+.debit-card .card-number-block .number-block:nth-child(1) {
+  margin-left: 0px;
+}
+.debit-card .card-number-block .number-block:nth-child(4) {
+  margin-right: 0px;
+}
+
+.debit-card .card-holder-block .block-lebel {
+  color: #607d8b;
+  font-family: "Encode Sans", sans-serif;
+  font-size: 10px;
+}
+
+.debit-card .card-holder-block .card-holder-name {
+  font-family: "Encode Sans", sans-serif;
+  color: #fff;
+  background-color: #022c6a;
+  border: none;
+  outline: none;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  font-size: 12px;
+}
+
+.debit-card .card-holder-block .card-holder-name::placeholder {
+  color: #607d8b;
+}

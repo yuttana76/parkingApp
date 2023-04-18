@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ค้นหารถของคุณ</title>
+    {% include "include/customer-css.html" %}
+    {% include "include/customer-js.html" %}
+</head>
+<style>
+   body{
+       background-color: #F0F0F0;
+   }
+
+   .font-color{
+       color: #091E78;
+   }
+
+   .card-out{
+    position: relative;
+    width: 286px;
+    height: 100px;
+    background: #053273;
+    border-radius: 10px;
+   }
+
+   .card-in{
+    position: relative;
+    width: auto;
+    height: 41px;
+    background: #FFFFFF;
+    border-radius: 8px;
+   }
+</style>
+
+<body>
+    {% include "comps/navbar-1.html" %}
+
+    <div class="container pt-5">
+
+        <div class="picture-car text-center my-3 mx-auto d-block" style="background-repeat: no-repeat;">
+            
+                <img src="../static/image/ลานจอดรถ MRT ตรงข้ามศูนย์การประชุมแห่งชาติสิริกิติ์.jpg" class="img-fluid" alt="Responsive image" width="" height="">         
+   
+        </div>
+
+        <h4 class="font-color text-center pb-3" name="license_plate">กข1011</h4>
+
+        <h5 class="font-color text-center" name="car_name">ลานจอดบางรักน้อยท่าอิฐ</h5>
+
+        <div class="card-reserve my-3">
+            <div class="card-body"> 
+                <div class="row py-2  mb-0">
+                    <div class="font-color col-7">เวลาเข้า</div>
+                    <div class="font-color col-5 text-right">14:12</div>
+                    <div class="font-color col-7 ">เวลาจอดรวมปัจจุบัน</div>
+                    <div class="font-color col-5 text-right">03:49</div>
+                </div>          
+            </div>
+        </div>
+
+        <div class="row pt-2 pb-5">
+            <div class="col-2">
+
+            </div>
+            <div class="card-out text-center col-8 ">
+
+                    <h5 class="pt-3 pb-1" style="color: #FFFFFF;"> ชั้น 2 </h5>
+
+                <div class="card-in text-center col-12">
+                    <h5 class="font-weight-bold pt-2"> A02 </h5>
+                </div>
+
+            </div>
+
+            <div class="col-2">
+                
+            </div>
+        </div>
+            
+    </div>
+
+     
+    {% include "comps/popup-cookie.html" %}
+    {% include "comps/fivemenu.html" %}
+
+
+</body>
+
+</html>

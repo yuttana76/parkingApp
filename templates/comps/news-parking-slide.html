@@ -1,0 +1,71 @@
+<body>
+    <div class="col-md-12" data-aos="fade-right" data-aos-delay="300">
+        <div class="carousel2">
+            <div class="mrta-parking-news">
+                {%for i in news%}
+                        <div class="row">
+                            <form method="POST" >
+                            <div class="d-flex align-items-stretch">
+                                <button  class="card-news"  >
+                                    <input type="hidden" name="newid" value="{{i.Id}}"readonly>
+                                    <div class="card-news__img-wrapper">
+                                        <div class="card-news__img"
+                                            style="background-image:url(/static/image/allnews/news/{{i.news_image}})">
+                                        </div>
+                                    </div>
+                                    <div class="card-body-2 d-flex flex-column">
+                                        <p class="card-news__text"><span>{{i.news_date}}</span>
+                                            {{i.news_name}}
+                                        </p>
+                                    </div>
+                                </button>
+                            </div>
+                            </form>
+                        </div>
+                {%endfor%}
+            </div>
+        </div>
+        <div class="col-md-12 text-center">
+            <div class="pagination"></div>
+        </div>
+    </div>
+</body>
+<script>
+    $('.mrta-parking-news').slick({
+        slidesToShow: 4,
+        slidesToScroll: 1,
+        dots: false,
+        centerMode: false,
+        arrows: true,
+        loop: false,
+        infinite: true,
+        autoplay: true,
+        autoplaySpeed: 3000,
+        appendArrows: $('.pagination'),
+        prevArrow: '<div class="pagination__button"><i class="fas fa-arrow-left"></i></div>',
+        nextArrow: '<div class="pagination__button"><i class="fas fa-arrow-right"></i></div>',
+        responsive: [
+            {
+                breakpoint: 1024,
+                settings: {
+                    slidesToShow: 2,
+                    slidesToScroll: 1,
+                }
+            },
+            {
+                breakpoint: 600,
+                settings: {
+                    slidesToShow: 2,
+                    slidesToScroll: 1
+                }
+            },
+            {
+                breakpoint: 480,
+                settings: {
+                    slidesToShow: 1,
+                    slidesToScroll: 1
+                }
+            }
+        ]
+    });
+</script>

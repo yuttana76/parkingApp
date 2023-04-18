@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+  <style>
+    .coin-float {
+      position: fixed;
+      bottom: 50px;
+      right: 50px;
+      width: 75px;
+      height: 75px;
+      display: -webkit-box;
+      display: -webkit-flex;
+      display: -moz-box;
+      display: -ms-flexbox;
+      display: flex;
+      -webkit-box-align: center;
+      -webkit-align-items: center;
+      -moz-box-align: center;
+      -ms-flex-align: center;
+      align-items: center;
+      -webkit-box-pack: center;
+      -webkit-justify-content: center;
+      -moz-box-pack: center;
+      -ms-flex-pack: center;
+      justify-content: center;
+      -webkit-border-radius: 50%;
+      -moz-border-radius: 50%;
+      border-radius: 50%;
+      /* background-color: #fff; */
+      -webkit-transition: 0.3s all ease;
+      -o-transition: 0.3s all ease;
+      -moz-transition: 0.3s all ease;
+      transition: 0.3s all ease;
+      cursor: pointer;
+      text-decoration: none;
+      color: #fff;
+      z-index: 1000;
+    }
+
+    .coin-float:hover {
+      -webkit-transform: translateY(-5px);
+      -moz-transform: translateY(-5px);
+      -ms-transform: translateY(-5px);
+      -o-transform: translateY(-5px);
+      transform: translateY(-5px);
+      -webkit-box-shadow: 0 5px 15px 2px rgba(37, 211, 102, 0.3);
+      -moz-box-shadow: 0 5px 15px 2px rgba(37, 211, 102, 0.3);
+      box-shadow: 0 5px 15px 2px rgba(37, 211, 102, 0.3);
+    }
+
+    .coin-float .icon {
+      width: 50%;
+      height: 50%;
+      display: block;
+      fill: #fff;
+      -webkit-transform: translateX(1px);
+      -moz-transform: translateX(1px);
+      -ms-transform: translateX(1px);
+      -o-transform: translateX(1px);
+      transform: translateX(1px);
+    }
+
+    .coin-float .icon {
+      width: 100%;
+      height: 90%;
+      background-image: url("../../static/image/thai-baht-thailand.png");
+      background-repeat: no-repeat;
+      background-position: center;
+      background-size: 90%;
+    }
+
+    .text-float2 {
+      position: fixed;
+      bottom: 10px;
+      right: 30px;
+      color: white;
+      z-index: 2000;
+      text-shadow: 0px 2px 6px rgb(0 0 0 / 50%);
+    }
+  </style>
+
+  <body>
+    <div id="coin-redirect" style="display: none;">
+      <h5 class="text-float2">จ่ายเงิน (จอง)</h5>
+      <div>
+        <a href="{{ url_for('payment_reserve')}}" class="coin-float">
+          <span class="icon"></span>
+        </a>
+      </div>
+    </div>
+  </body>
+</html>

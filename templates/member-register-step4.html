@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>บริการรายเดือน</title>
+    {% include "include/customer-css.html" %}
+    {% include "include/customer-js.html" %}
+</head>
+<style>
+    body {
+        background-color: #f8fafb;
+    }
+</style>
+
+<body>
+    {% include "comps/navbar-2.html" %}
+
+    <div class="container pt-5">
+
+        <div class="row mt-3">
+            <div class="col-lg-12 text-center">
+                <div class="order-progress-stepper">
+                    <div class="step completed">เลือกอาคาร<br>ลานจอดรถ</div>
+                    <div class="step completed">ตรวจสอบ<br>ยอมรับเงื่อนไข</div>
+                    <div class="step completed">กรอกรายละเอียด</div>
+                    <div class="step active">ตรวจสอบ<br>ยืนยันการสมัคร</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Step 4 กรอกรายละเอียดผู้สมัครรายเดือน -->
+        <div class="container">
+            <form class="needs-validation" onsubmit="apiCit()" method="POST" novalidate>
+                <h4 class="text-center mt-5">ตรวจสอบข้อมูล</h4>
+                <div class="row my-3">
+                    <div class="col-md-12">
+                        <div class="card">
+                            <div class="card-header card-header-mrta">
+                                <img src="{{url_for('static', filename='image/book.svg')}}" class="mr-2" width="30">
+                                รายละเอียดข้อมูลผู้สมัครรายเดือน
+                            </div>
+                            <div class="card-body">
+                                <div class="form-row align-items-center">
+                                    <div class="col-md-6 mb-3">
+                                        <div class="row">
+                                            <div class="col-md-10 form-group">
+                                                <label for="validationCustom02">เลขประจำตัวประชาชน/Passport <span
+                                                        class="text-valid">*</span></label>
+                                                <input type="text" class="form-control" name="id_card"
+                                                    id="validationCustom02" value="{{identity_card}}" readonly>
+                                            </div>
+                                            <input type="hidden" id="parking_code" value="{{parking_code}}">
+                                            <div class="col-md-6 form-group">
+                                                <label for="validationCustom03">ชื่อ (TH) <span
+                                                        class="text-valid">*</span></label>
+                                                <input type="text" class="form-control" name="first_name_th"
+                                                    id="validationCustom03" value="{{first_name_th}}" readonly>
+                                            </div>
+                                            <div class="col-md-6 form-group">
+                                                <label for="validationCustom04">นามสกุล (TH) <span
+                                                        class="text-valid">*</span></label>
+                                                <input type="text" class="form-control" name="last_name_th"
+                                                    id="validationCustom04" value="{{last_name_th}}" readonly>
+                                            </div>
+                                            <div class="col-md-6 form-group">
+                                                <label for="validationCustom032">ชื่อ (EN)<span
+                                                        class="text-valid">*</span></label>
+                                                <input type="text" class="form-control" name="first_name_en"
+                                                    id="validationCustom032" value="{{first_name_en}}" readonly>
+                                            </div>
+                                            <div class="col-md-6 form-group">
+                                                <label for="validationCustom042">นามสกุล (EN) <span
+                                                        class="text-valid">*</span></label>
+                                                <input type="text" class="form-control" name="last_name_en"
+                                                    id="validationCustom042" value="{{last_name_en}}" readonly>
+                                            </div>
+                                            <div class="col-md-4 form-group">
+                                                <label for="validationCustom05">วัน/เดือน/ปีเกิด <span
+                                                        class="text-valid">*</span></label>
+                                                <input type="text-valid" class="form-control" name="birth_date"
+                                                    id="validationCustom05" value="{{birth_date}}" readonly>
+                                            </div>
+                                            <div class="col-md-8 form-group">
+                                                <label for="validationCustom06">เบอร์โทรศัพท์ <span
+                                                        class="text-valid">*</span></label>
+                                                <input type="text" class="form-control" name="phone"
+                                                    id="validationCustom06" value="{{phone}}" readonly>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {% if vcard_type == 'AFC'%}
+                                        <div class="col-md-6 mb-3">
+                                            <div class="blank-card">
+                                                <!-- <h4>แสดงบัตร</h4> -->
+                                                {% include "comps/card-afc.html" %}
+                                            </div>
+                                        </div>
+                                    {% elif vcard_type == 'TAFF'%}
+                                        <div class="col-md-6 mb-3">
+                                            <div class="blank-card">
+                                
+                                                {% include "comps/card-taff.html" %}
+                                            </div>
+                                        </div>
+                                    {% elif vcard_type == 'CIT'%}
+                                        <div class="col-md-6 mb-3">
+                                            <div class="blank-card">
+                                
+                                                {% include "comps/card-cit.html" %}
+                                            </div>
+                                        </div>
+                                    {% elif vcard_type == 'JOWIT'%}
+                                        <div class="col-md-6 mb-3">
+                                            <div class="blank-card">
+                                
+                                                {% include "comps/card-jowit.html" %}
+                                            </div>
+                                        </div>
+                                    {%endif%} 
+                                </div>
+                                <div class="form-row">
+                                    <div class="col-md-12">
+                                        <div class="mb-3 tab-sub">
+                                            ข้อมูลป้ายทะเบียน คันที่ 1
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-2 mb-3">
+                                                <label for="validationCustom07">ทะเบียนรถ <span
+                                                        class="text-valid">*</span></label>
+                                                <input type="text" class="form-control" name="license_plate"
+                                                    id="validationCustom07" value="{{license_plate1}}" readonly>
+                                            </div>
+                                            <div class="col-md-4 mb-3">
+                                                <label for="validationCustom08">จังหวัดบนป้ายทะเบียน <span
+                                                        class="text-valid">*</span></label>
+                                                <input type="text" class="form-control" name="province"
+                                                    id="validationCustom08" value="{{province_car1}}" readonly>
+                                            </div>
+                                            <div class="col-md-2 mb-3">
+                                                <label for="validationCustom09">ยี่ห้อรถ <span
+                                                        class="text-valid">*</span></label>
+                                                <input type="text" class="form-control" name="brand"
+                                                    id="validationCustom09" value="{{brand_name1}}" readonly>
+                                            </div>
+                                            <div class="col-md-4 mb-3">
+                                                <label for="validationCustom10">สีรถ <span
+                                                        class="text-valid">*</span></label>
+                                                <input type="text" class="form-control" name="color"
+                                                    id="validationCustom10" value="{{color1}}" readonly>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                {%if license_plate2 != ''%} 
+                                <div class="form-row">
+                                    <div class="col-md-12">
+                                        <div class="mb-3 tab-sub">
+                                            ข้อมูลป้ายทะเบียน คันที่ 2
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-2 mb-3">
+                                                <label for="validationCustom11">ทะเบียนรถ</label>
+                                                <input type="text" class="form-control" name="license_plate"
+                                                    id="validationCustom11" value="{{license_plate2}}" readonly>
+                                            </div>
+                                            <div class="col-md-4 mb-3">
+                                                <label for="validationCustom12">จังหวัดบนป้ายทะเบียน</label>
+                                                <input type="text" class="form-control" name="province"
+                                                    id="validationCustom12" value="{{province_car2}}" readonly>
+                                            </div>
+                                            <div class="col-md-2 mb-3">
+                                                <label for="validationCustom13">ยี่ห้อรถ</label>
+                                                <input type="text" class="form-control" name="brand"
+                                                    id="validationCustom13" value="{{brand_name2}}" readonly>
+                                            </div>
+                                            <div class="col-md-4 mb-3">
+                                                <label for="validationCustom14">สีรถ</label>
+                                                <input type="text" class="form-control" name="color"
+                                                    id="validationCustom14" value="{{color2}}" readonly>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                {%endif%} 
+
+                                <!--เพิ่มใหม่ ที่อยู่ปัจจุบัน-->
+                                <div class="form-row">
+                                    <div class="col-md-12">
+                                        <div class="mb-3 tab-sub">
+                                            ข้อมูลที่อยู่ปัจจุบัน
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-4 mb-3">
+                                                <label for="validationCustom16">เลขที่ <span
+                                                        class="text-valid">*</span></label>
+                                                        <input type="text" class="form-control" name="other"
+                                                        id="validationCustom16" value="{{address_no}}" readonly>
+                                            </div>
+                                            <div class="col-md-4 mb-3">
+                                                <label for="validationCustom17">อาคาร/หมู่บ้าน<span
+                                                    class="text-valid"></span></label>
+                                                    <input type="text" class="form-control" name="unit_home"
+                                                    id="validationCustom99" value="{{unit_home}}" readonly>
+                                            </div>
+                                            <div class="col-md-4 mb-3">
+                                                <label for="validationCustom17">หมู่<span
+                                                    class="text-valid">*</span></label>
+                                                    <input type="text" class="form-control" name="other"
+                                                    id="validationCustom17" value="{{village_home}}" readonly>
+                                            </div>
+                                            <div class="col-md-4 mb-3">
+                                                <label for="validationCustom17">ซอย<span
+                                                    class="text-valid"></span></label>
+                                                    <input type="text" class="form-control" name="other"
+                                                    id="validationCustom17" value="{{alley_home}}" readonly>
+                                            </div>
+                                            <div class="col-md-4 mb-3">
+                                                <label for="validationCustom17">ถนน<span
+                                                    class="text-valid"></span></label>
+                                                    <input type="text" class="form-control" name="other"
+                                                    id="validationCustom17" value="{{road_home}}" readonly>
+                                            </div>                                         
+                                            <div class="col-md-4 mb-3">
+                                                <label for="validationCustom22">จังหวัด <span
+                                                        class="text-valid">*</span></label>
+                                                        <input type="text" class="form-control" name="province"
+                                                        id="validationCustom22" value="{{province_home}}" readonly> 
+                                            </div>                                                                  
+                                            <div class="col-md-4 mb-3">
+                                                <label for="validationCustom20">อำเภอ/เขต <span
+                                                        class="text-valid">*</span></label>
+                                                        <input type="text" class="form-control" 
+                                                        id="validationCustom20" value="{{district_home}}" readonly>                                                     
+                                            </div>
+                                            <div class="col-md-4 mb-3">
+                                                <label for="validationCustom21">ตำบล/แขวง <span
+                                                    class="text-valid">*</span></label>
+                                                    <input type="text" class="form-control" 
+                                                    id="validationCustom21" value="{{sub_district_home}}" readonly>
+                                            </div>
+                                            <div class="col-md-4 mb-3">
+                                                <label for="validationCustom19">รหัสไปรษณีย์ <span
+                                                    class="text-valid">*</span></label>
+                                                    <input type="text" class="form-control" 
+                                                    id="validationCustom19" value="{{postal_code_home}}" readonly>                                                   
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                 <!--เพิ่มใหม่ ที่อยู่ที่ทำงาน-->
+                                 {% if company_name != '' or company_no != ''%} 
+                                 <div class="form-row">
+                                    <div class="col-md-12">
+                                        <div class="mb-3 tab-sub">
+                                            ข้อมูลสถานที่ทำงาน
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-5 mb-3">
+                                                <label for="validationCustom16">เลขที่ผู้เสียภาษี <span
+                                                        class="text-valid">*</span></label>
+                                                        <input type="text" class="form-control" name="other"
+                                                        id="validationCustom16" value="{{identity_com}}" readonly>
+                                            </div>
+                                            <div class="col-md-4 mb-3">
+                                                <label for="validationCustom16">บริษัท <span
+                                                        class="text-valid">*</span></label>
+                                                        <input type="text" class="form-control" name="other"
+                                                        id="validationCustom16" value="{{company_name}}" readonly>
+                                            </div>
+                                            <div class="col-md-3 mb-3">
+                                                <label for="validationCustom17">อาคาร/หมู่บ้าน<span
+                                                    class="text-valid"></span></label>
+                                                    <input type="text" class="form-control" name="company_unit"
+                                                    id="validationCustom99" value="{{company_unit}}" readonly>
+                                            </div>
+                                            <div class="col-md-3 mb-3">
+                                                <label for="validationCustom17">เลขที่<span
+                                                    class="text-valid">*</span></label>
+                                                    <input type="text" class="form-control" name="other"
+                                                    id="validationCustom17" value="{{company_no}}" readonly>
+                                            </div>
+                                            <div class="col-md-2 mb-3">
+                                                <label for="validationCustom17">หมู่<span
+                                                    class="text-valid"></span></label>
+                                                    <input type="text" class="form-control" name="other"
+                                                    id="validationCustom17" value="{{company_village}}" readonly>
+                                            </div>
+                                            <div class="col-md-3 mb-3">
+                                                <label for="validationCustom17">ซอย<span
+                                                    class="text-valid"></span></label>
+                                                    <input type="text" class="form-control" name="other"
+                                                    id="validationCustom17" value="{{company_alley}}" readonly>
+                                            </div>
+                                            <div class="col-md-3 mb-3">
+                                                <label for="validationCustom17">ถนน<span
+                                                    class="text-valid"></span></label>
+                                                    <input type="text" class="form-control" name="other"
+                                                    id="validationCustom17" value="{{company_street}}" readonly>
+                                            </div>
+                                          
+
+                                            <div class="col-md-4 mb-3">
+                                                <label for="validationCustom22">จังหวัด <span
+                                                        class="text-valid">*</span></label>
+                                                        <input type="text" class="form-control" name="province"
+                                                        id="validationCustom22" value="{{company_province}}" readonly>
+                                                        
+                                            </div>
+
+                                            <div class="col-md-4 mb-3">
+                                                <label for="validationCustom20">อำเภอ/เขต <span
+                                                        class="text-valid">*</span></label>
+                                                        <input type="text" class="form-control" name="district"
+                                                        id="validationCustom20" value="{{company_district}}" readonly>
+                                            </div>
+                                            <div class="col-md-4 mb-3">
+                                                <label for="validationCustom21">ตำบล/แขวง <span
+                                                    class="text-valid">*</span></label>
+                                                    <input type="text" class="form-control" name="sub_district"
+                                                        id="validationCustom21" value="{{company_sub_district}}" readonly>
+                                            </div>
+                                            <div class="col-md-4 mb-3">
+                                                <label for="validationCustom19">รหัสไปรษณีย์ <span
+                                                    class="text-valid">*</span></label>
+                                                    <input type="text" class="form-control" name="postal_code"
+                                                        id="validationCustom19" value="{{company_postal_code}}" readonly>
+                                                    
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                {%endif%} 
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-12 my-3">
+                        <div class="card">
+                            <div class="card-header card-header-mrta">
+                                <img src="{{url_for('static', filename='image/attachment.svg')}}" class="mr-2"
+                                    width="35"> แนบไฟล์เอกสาร
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-xl-3 col-md-6 my-2 text-center">
+                                        <div class="card ">
+                                            <div class="card-body">
+                                                <h6>สำเนาบัตรประชาชน</h6>
+                                                <button type="button" class="btn btn-mrta-light btn-sm"
+                                                    data-toggle="modal" data-target="#view1Step4Modal"><i
+                                                        class="fas fa-eye"></i>
+                                                    เรียกดู</button>
+                                                <div class="modal fade" id="view1Step4Modal" tabindex="-1"
+                                                    aria-labelledby="view1Step4Label" aria-hidden="true">
+                                                    <div class="modal-dialog">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                                <h5 class="modal-title" id="view1Step4Label">เรียกดู :
+                                                                    สำเนาบัตรประชาชน</h5>
+                                                                <button type="button" class="close" data-dismiss="modal"
+                                                                    aria-label="Close">
+                                                                    <span aria-hidden="true">&times;</span>
+                                                                </button>
+                                                            </div>
+                                                            <div class="modal-body">
+                                                                <!-- modify by ittipon 23/6/2564-->
+                                                                <img src="{{copy_id_card}}" width="450" alt="user image">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-xl-3 col-md-6 my-2 text-center">
+                                        <div class="card">
+                                            <div class="card-body">
+                                                <h6>สำเนาทะเบียนรถยนต์ คันที่ 1</h6>
+                                                <button type="button" class="btn btn-mrta-light btn-sm"
+                                                    data-toggle="modal" data-target="#view2Step4Modal"><i
+                                                        class="fas fa-eye"></i>
+                                                    เรียกดู</button>
+                                                <div class="modal fade" id="view2Step4Modal" tabindex="-1"
+                                                    aria-labelledby="view2Step4Label" aria-hidden="true">
+                                                    <div class="modal-dialog">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                                <h5 class="modal-title" id="view2Step4Label">เรียกดู :
+                                                                    สำเนาทะเบียนรถยนต์ คันที่ 1</h5>
+                                                                <button type="button" class="close" data-dismiss="modal"
+                                                                    aria-label="Close">
+                                                                    <span aria-hidden="true">&times;</span>
+                                                                </button>
+                                                            </div>
+                                                            <div class="modal-body">
+                                                                <!--modify by ittipon 23/6/2564-->
+                                                                <img src="{{copy_doc_car1}}" width="450"
+                                                                    alt="user image2">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-xl-3 col-md-6 my-2 text-center">
+                                        <div class="card">
+                                            <div class="card-body">
+                                                <h6>สำเนาทะเบียนรถยนต์ คันที่ 2</h6>
+                                                {%if copy_doc_car2 != '../static/image-manage/document/'%}
+                                                <button type="button" class="btn btn-mrta-light btn-sm"
+                                                    data-toggle="modal" data-target="#view3Step4Modal"><i
+                                                        class="fas fa-eye"></i>
+                                                    เรียกดู</button>
+                                                {%else%} 
+                                                <button type="button" class="btn btn-mrta-light btn-sm"
+                                                    data-toggle="modal" onclick="alert('กรุณาเพิ่มข้อมูลก่อนเรียกดู')"><i
+                                                        class="fas fa-eye"></i>
+                                                    เรียกดู</button>
+                                                {%endif%} 
+                                                <div class="modal fade" id="view3Step4Modal" tabindex="-1"
+                                                    aria-labelledby="view3Step4Label" aria-hidden="true">
+                                                    <div class="modal-dialog">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                                <h5 class="modal-title" id="view2Step4Label">เรียกดู :
+                                                                    สำเนาทะเบียนรถยนต์ คันที่ 2</h5>
+                                                                <button type="button" class="close" data-dismiss="modal"
+                                                                    aria-label="Close">
+                                                                    <span aria-hidden="true">&times;</span>
+                                                                </button>
+                                                            </div>
+                                                            <div class="modal-body">
+                                                                <!--modify by ittipon 23/6/2564-->
+                                                                <img src="{{copy_doc_car2}}" width="450"
+                                                                    alt="user image3">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-xl-3 col-md-6 my-2 text-center">
+                                        <div class="card">
+                                            <div class="card-body">
+                                                <h6>รูปบัตรสมาชิกลานจอด</h6>
+                                                {%if card_member_copy !='../static/image-manage/document/'%} 
+                                                <button type="button" class="btn btn-mrta-light btn-sm"
+                                                    data-toggle="modal" data-target="#view4Step4Modal"><i
+                                                        class="fas fa-eye"></i>
+                                                    เรียกดู</button>
+                                                {%else%} 
+                                                <button type="button" class="btn btn-mrta-light btn-sm"
+                                                    data-toggle="modal" onclick="alert('กรุณาเพิ่มข้อมูลก่อนเรียกดู')"><i
+                                                        class="fas fa-eye"></i>
+                                                    เรียกดู</button>
+                                                {%endif%}
+                                                <div class="modal fade" id="view4Step4Modal" tabindex="-1"
+                                                    aria-labelledby="view4Step4Label" aria-hidden="true">
+                                                    <div class="modal-dialog">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                                <h5 class="modal-title" id="view4Step4Label">เรียกดู :
+                                                                    รูปบัตรสมาชิกลานจอด</h5>
+                                                                <button type="button" class="close" data-dismiss="modal"
+                                                                    aria-label="Close">
+                                                                    <span aria-hidden="true">&times;</span>
+                                                                </button>
+                                                            </div>
+                                                            <div class="modal-body">
+                                                                <!--modify by ittipon 23/6/2564-->
+                                                                <img src="{{card_member_copy}}" width="450"
+                                                                    alt="user image4">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-12 my-3">
+                        <div class="card">
+                            <div class="card-header card-header-mrta">
+                                <img src="{{url_for('static', filename='image/park 2.svg')}}" class="mr-2" width="35">
+                                อาคาร/ลานจอดรถที่ต้องการสมัคร
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <img src="../../static/image/manage/station/{{station_image}}"
+                                            class="w-100" style="height: 9rem;">
+                                    </div>
+                                    <div class="col-md-9">
+                                        <div class="row">
+                                            <div class="col-2 col-lg-1">
+                                                <img src="{{url_for('static', filename='image/check-in.svg')}}"
+                                                    width="55">
+                                            </div>
+                                            <div class="col-10 col-lg-11">
+                                                <h5 class="mb-1">{{station_name}}</h5>
+                                                <h5 class="mb-1">{{station_name_en}}</h5>
+
+                                                <p class="my-3">ที่ตั้ง : {{location}}</p>
+                                            </div>
+                                        </div>
+                                        <div class="row bg-sub-mrta">
+                                            <div class="col-2 col-lg-1">
+                                            </div>
+                                            <div class="col-10 col-lg-11">
+                                                <h4 class="my-2">ค่าบริการ : {{price}} บาท/เดือน</h4>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row text-center">
+                    <div class="col-12 mb-4 text-center">
+                        <button type="submit" onclick="alert('บันทึกข้อมูลเรียบร้อย')"
+                            class="btn btn-accept-shadow col-md-12 col-8 animate">ยืนยันการสมัคร</button>
+                    </div>
+                    <div class="col-md-12 mb-3">
+                        <a href="{{url_for('member_register_step3')}}" class="a-link">ย้อนกลับ</a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    {% include "comps/scroll-top.html" %}
+    {% include "comps/popup-cookie.html" %}
+    {% include "comps/footer.html" %}
+
+<script>
+    function apiRegister(){
+        
+        const stationCode = document.getElementById('parking_code').value
+        const stationName = document.getElementById('station_name').value
+        const memberCode = document.getElementById('identity_card').value
+        const memberFirstname = document.getElementById('first_name_th').value
+        const memberLastname = document.getElementById('last_name_th').value
+        const memberCardname= document.getElementById('card_id').value
+        const approvedate= document.getElementById('service_start_date').value
+        
+        const requestOption = {
+            method:"POST",
+            headers:{'Content-Type':'application/json'},
+            body:JSON.stringify({
+                'stationCode':stationCode,
+                'stationName':stationName,
+                'memberCode' :memberCode,
+                'memberFirstname' :memberFirstname,
+                'memberLastname' :memberLastname,
+                'memberCardname' :memberCardname,
+                'approvedate' :approvedate,
+            })
+        }
+        fetch('/v1/member/register',requestOption)
+        .then(res=>res.json())
+        .then(data=>console.log(data))
+        }
+
+    </script>
+</body>
+<script>
+    function apiNewmemberCit(){
+        const stationcode = document.getElementById('parking_code').value 
+        const identity_card = document.getElementById('validationCustomer02').value 
+        
+        const requestOption = {
+            method:"POST",
+            headers:{'Content-Type':'application/json'},
+            body:JSON.stringify({
+                stationcode:stationcode,
+                identitycard:identity_card
+            })
+        }
+        fetch('url',requestOption)
+        .then(res=>res.json())
+        .then(data=>console.log(data))
+    }
+</script>
+</html>

@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ข้อมูลลานจอดรถ</title>
+    {% include "include/customer-css.html" %}
+    {% include "include/customer-js.html" %}
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/parking-info.css') }}">
+</head>
+<style>
+    .btn-q {
+        position: relative;
+        margin-top: -15px;
+        right: 15px;
+       background: linear-gradient(90deg, #fff 50%, rgb(209, 14, 14) 50%);;
+       color: black;
+    }
+    .number-2 {
+        margin-top: -20px;
+    }
+
+    hr{
+        border-top: 2px solid black
+    }
+</style>
+<body style="overflow-x: hidden;">
+    {% include "comps/navbar-2.html" %}
+
+    <img class="bg-data" src="/static/image/manage/station/{{parking_image}}">
+
+    
+    <div class="row ">
+        <div class="col-md-10"></div>
+        <div class="icon-1 text-right container-fluid col-lg-2 ">
+            <div class="circle-1 text-right">
+                {%if availability.ncarrem != 0%}
+                <p class="number-1 text-center h3 mb-0">{{availability.ncarrem}}</p>
+                {%else%}
+                <p class="number-1 text-center h3 mb-0" style="color:red;">เต็ม</p>
+                {%endif%}
+                <hr class="m-0">
+                <p class="number-1 text-center h3 mb-0">{{parking_all}}</p>
+                <button class="button1 text-center h6">จำนวนที่จอดว่าง <br>
+                    <h6 class="mb-1" style="font-size: 10px;">{{availability.date}}</h6></button>
+            </div>
+        </div>
+        <br>
+        <div class="col-md-10"></div>
+        <div class="icon-2 text-right container-fluid col-lg-2">
+             <div class="circle-2 text-right">
+                {%if remaining != 0 %}
+                <p class="number-3 text-center h3">{{remaining}}</p>
+                {%else%} 
+                <p class="number-3 text-center h3" style="color:red;">เต็ม</p>
+                {%endif%}
+                <button class="button2 text-center h6">จำนวนสิทธิ์<br>รายเดือนว่าง</button>
+            </div> 
+        </div>
+        <br>
+        <div class="col-md-10"></div>
+        <div class="icon-3 text-right container-fluid col-lg-2">
+            <div class="circle-3 text-right">
+                <p class="number-3 text-center h3"> <img class="bg-data"
+                        src="{{ url_for('static', filename='image/map-icon.svg') }}"></p>
+                <a class="button3 text-center h6" href="{{map_}}" style="margin-right:18px;" target="_blank">แผนที่</a>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- ชื่ออาคาร -->
+    <div class="py-1">
+        <div class="container">
+            <h4 class="mb-0 text-center">{{station}}</h4>
+            
+        </div>
+    </div>
+
+    <div class="bg-detail-line"></div>
+    <div class="bg-detail-mrta">
+        <div class="container">
+            
+            <div class="bg-detail-footer text-white " style="margin-top: -50px;">
+                <h5 class="mb-0 ">เวลาเปิดให้บริการจอดรถ</h5>
+                <h5 class="p-1">05.00 - 01.00 น.</h5>
+                <br>
+                <h5 class="mb-0 p-1">เวลาเปิดให้บริการ Office</h5>
+                <h5 class="mb-0 p-1">{{des_date}}</h5>
+                <h5 class="mb-0 p-1">{{des_date2}}</h5>
+                
+            </div>
+
+            <div class="tabs">
+                <div class="tab-button-outer">
+                    <ul id="tab-button">
+                        <li><a href="#tab02">ค่าบริการทั่วไป</a></li>
+                        <li><a href="#tab01">ค่าจอดรถเกินเวลา</a></li>
+                        <li><a href="#tab03">ค่าปรับบัตรจอดรถชำรุด/สูญหาย</a></li>
+                    </ul>
+                </div>
+                <div class="tab-select-outer">
+                    <select id="tab-select" class="form-control">
+                        <option value="#tab02">ค่าบริการทั่วไป</option>
+                        <option value="#tab01">ค่าจอดรถเกินเวลา</option>
+                        <option value="#tab03">ค่าปรับบัตรจอดรถชำรุด/สูญหาย</option>
+                    </select>
+                </div>
+
+                <div id="tab02" class="tab-contents">
+                    <div class="row mt-3">
+                        <div class="col-md-4 mb-3">
+                            <div class="card">
+                                <div class="card-header text-center">
+                                    ผู้ใช้บริการรถไฟฟ้า
+                                </div>
+                                <div class="card-body text-center">
+                                    <h5 class="mb-0">{{visitor_price}}</h5>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <div class="card">
+                                <div class="card-header text-center">
+                                    ผู้ไม่ใช้บริการรถไฟฟ้า
+                                </div>
+                                <div class="card-body text-center">
+                                    <h5 class="mb-0">{{novisitor}}</h5>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <div class="card">
+                                <div class="card-header text-center">
+                                    ค่าบริการจอดรถรายเดือน
+                                </div>
+                                <div class="card-body text-center">
+                                    <h5 class="mb-0">{{parking_price + ' บาท/เดือน' if parking_price != '0' else
+                                        '-'}} </h5>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="tab01" class="tab-contents">
+                    <div class="row mt-3">
+                        <div class="col-md-4 mb-3">
+                            <div class="card">
+                                <div class="card-header text-center">
+                                    จอดเกิน (เวลา {{close_date}})
+                                </div>
+                                <div class="card-body text-center">
+                                    <h5 class="mb-0">{{over_night + ' บาท/วัน' if over_night != '0' else
+                                        '-'}}</h5>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="tab03" class="tab-contents">
+                    <div class="row mt-3">
+                        <div class="col-md-4 mb-3">
+                            <div class="card">
+                                <div class="card-header text-center">
+                                    ค่าปรับบัตรจอดรถชำรุด/สูญหาย
+                                </div>
+                                <div class="card-body text-center">
+                                    <h5 class="mb-0">{{card_lost+' บาท' if card_lost != '0' else '-'}}
+                                    </h5>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="bg-detail-line"></div>
+
+    <div class="bg-card">
+        {% if vcard_type == 'CIT' %}
+        <br />
+        <div class="container">
+            <div>
+                <div class="bg-detail-card2">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <img class="img-fluid-portrait border"
+                                src="{{ url_for('static', filename='image/cards/mrta-cit.png') }}">
+                        </div>
+                        <div class="col-md-8 mt-2">
+                            <h5 class="mb-1">บัตรจอดรถยนต์รายเดือน สำหรับลานจอดรถสถานีสุขุมวิท</h5>
+                            <p class="scroll-mobile">บัตรจอดรถยนต์รายเดือน สำหรับลานจอดรถสถานีสุขุมวิท
+                                สามารถสมัครสมาชิกจอดรถรายเดือนได้ที่ห้องทำจอดรถรายเดือน
+                                อาคารจอดแล้วจรสถานีลาดพร้าว
+                                หรือสมัครผ่าน Application MRTA Parking
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% elif vcard_type == 'TAFF' %}
+        <br />
+        <div class="container">
+            <div>
+                <div class="bg-detail-card2">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <img class="img-fluid-portrait border"
+                                src="{{ url_for('static', filename='image/cards/bts_taff.bmp') }}">
+                        </div>
+                        <div class="col-md-8 mt-2">
+                            <h5 class="mb-1">
+                                บัตรจอดรถยนต์รายเดือน สำหรับลานจอดรถ โครงการรถไฟฟ้ามหานคร สายเฉลิมรัชมงคล (สายสีน้ำเงิน)
+                            </h5>
+                            <p class="scroll-mobile">
+                                สามารถสมัครสมาชิกจอดรถรายเดือนได้ที่ห้องทำจอดรถรายเดือน
+                                อาคารจอดแล้วจรสถานีศูนย์วัฒนธรรมแห่งประเทศไทย
+                                หรือสมัครผ่าน Application MRTA Parking
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% elif vcard_type == 'AFC' %}
+        <br />
+        <div class="container">
+            <div>
+                <div class="bg-detail-card2">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <img class="img-fluid-portrait border"
+                                src="{{ url_for('static', filename='image/cards/mrt_plus_afc.svg') }}">
+                        </div>
+                        <div class="col-md-8 mt-2">
+                            <h5 class="mb-1">บัตรโดยสารรถไฟฟ้า MRT</h5>
+                            <p class="scroll-mobile">จำหน่ายที่ห้องออกตั๋วโดยสารบริเวณสถานีรถไฟฟ้า MRT ทุกแห่ง
+                                สามารถเติมมูลค่าบัตรโดยสารเพื่อใช้เดินทางในระบบรถไฟฟ้า MRT
+                                และเข้าใช้บริการจอดรถที่อาคารจอดแล้วจร
+                                รวมทั้งสามารถนำมาสมัครใช้บริการจอดรถรายเดือนที่อาคารจอดแล้วจร
+                                โครงการรถไฟฟ้ามหานคร สายเฉลิมรัชมงคล (สายสีน้ำเงิน) และสายฉลองรัชธรรม (สายสีม่วง)
+                                หรือสมัครผ่าน Application MRTA Parking
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% elif vcard_type == 'JOWIT' %}
+        <br />
+        <div class="container">
+            <div>
+                <div class="bg-detail-card2">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <img class="img-fluid-portrait border"
+                                src="{{ url_for('static', filename='image/cards/mrta_jowit.svg') }}">
+                        </div>
+                        <div class="col-md-8 mt-2">
+                            <h5 class="mb-1">บัตรจอดรถยนต์รายเดือน สำหรับลานจอดรถสถานีเคหะฯ</h5>
+                            <p class="scroll-mobile">บัตรจอดรถยนต์รายเดือน สำหรับลานจอดรถ สถานีเคหะฯ
+                                โครงการรถไฟฟ้าสายสีเขียว ช่วงแบริ่ง - สมุทรปราการ
+                                สามารถสมัครสมาชิกจอดรถรายเดือนได้ที่ห้องทำจอดรถรายเดือนสถานะฯ
+                                หรือสมัครผ่าน Application MRTA Parking
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- {% else %}
+        <div class="container">
+            <div class="slider">
+                <div>
+                    <div class="bg-detail-card">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <img class="img-fluid-portrait"
+                                    src="{{ url_for('static', filename='image/cards/card1_1.svg') }}">
+                            </div>
+                            <div class="col-md-8 mt-2">
+                                <h5 class="mb-1">บัตรจอดรถรายวัน สำหรับอาคารจอดแล้วจร</h5>
+                                <p class="scroll-mobile">บัตรจอดรถรายวันสำหรับผู้ใช้บริการที่ไม่มีบัตรโดยสารรถไฟฟ้า
+                                    ใช้สำหรับจอดรถที่อาคารจอดแล้วจรโครงการรถไฟฟ้ามหานคร
+                                    สายเฉลิมรัชมงคล (สายสีน้ำเงิน) และสายฉลองรัชธรรม (สายสีม่วง)
+                                    สามารถนำไปใช้โดยสารรถไฟฟ้าโดยไม่ต้องเติมเงิน หรือออกตั๋วโดยสาร
+                                    โดยชำระค่าบริการจอดรถและค่าโดยสารรถไฟฟ้า เมื่อนำรถยนต์ออกจากอาคารจอดแล้วจร
+                                    โดยบัตรมีมูลค่าที่ใช้โดยสารได้สูงสุด 200 บาท หรือตามที่ รฟม. กำหนด
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <div class="bg-detail-card2">
+                        <div class="row align-items-center">
+                            <div class="col-md-4">
+                                <img class="img-fluid w-75"
+                                    src="{{ url_for('static', filename='image/cards/mrta-plus-all.png') }}">
+                            </div>
+                            <div class="col-md-8 mt-2">
+                                <h5 class="mb-1">บัตรโดยสารรถไฟฟ้า MRT</h5>
+                                <p class="scroll-mobile">จำหน่ายที่ห้องออกตั๋วโดยสารบริเวณสถานีรถไฟฟ้า MRT ทุกแห่ง
+                                    สามารถเติมมูลค่าบัตรโดยสารเพื่อใช้เดินทางในระบบรถไฟฟ้า MRT
+                                    และเข้าใช้บริการจอดรถที่อาคารจอดแล้วจร
+                                    รวมทั้งสามารถนำมาสมัครใช้บริการจอดรถรายเดือนที่อาคารจอดแล้วจร
+                                    โครงการรถไฟฟ้ามหานคร สายเฉลิมรัชมงคล (สายสีน้ำเงิน) และสายฉลองรัชธรรม (สายสีม่วง)
+                                    หรือสมัครผ่าน Application MRTA Parking
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <div class="bg-detail-card2">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <img class="img-fluid"
+                                    src="{{ url_for('static', filename='image/cards/bts_taff.bmp') }}">
+                            </div>
+                            <div class="col-md-8 mt-2">
+                                <h5 class="mb-1">
+                                    บัตรจอดรถยนต์รายเดือน สำหรับลานจอดรถ โครงการรถไฟฟ้ามหานคร สายเฉลิมรัชมงคล
+                                    (สายสีน้ำเงิน)
+                                </h5>
+                                <p class="scroll-mobile">
+                                    สามารถสมัครสมาชิกจอดรถรายเดือนได้ที่ห้องทำจอดรถรายเดือน
+                                    อาคารจอดแล้วจรสถานีศูนย์วัฒนธรรมแห่งประเทศไทย
+                                    หรือสมัครผ่าน Application MRTA Parking
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <div class="bg-detail-card2">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <img class="img-fluid-portrait"
+                                    src="{{ url_for('static', filename='image/cards/mrta_jowit.svg') }}">
+                            </div>
+                            <div class="col-md-8 mt-2">
+                                <h5 class="mb-1">บัตรจอดรถยนต์รายเดือน สำหรับลานจอดรถสถานีเคหะฯ</h5>
+                                <p class="scroll-mobile">บัตรจอดรถยนต์รายเดือน สำหรับลานจอดรถ สถานีเคหะฯ
+                                    โครงการรถไฟฟ้าสายสีเขียว ช่วงแบริ่ง - สมุทรปราการ
+                                    สามารถสมัครสมาชิกจอดรถรายเดือนได้ที่ห้องทำจอดรถรายเดือนสถานะฯ
+                                    หรือสมัครผ่าน Application MRTA Parking
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <div class="bg-detail-card2">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <img class="img-fluid-portrait border"
+                                    src="{{ url_for('static', filename='image/cards/mrta-cit.png') }}">
+                            </div>
+                            <div class="col-md-8 mt-2">
+                                <h5 class="mb-1">บัตรจอดรถยนต์รายเดือน สำหรับลานจอดรถสถานีสุขุมวิท</h5>
+                                <p class="scroll-mobile">บัตรจอดรถยนต์รายเดือน สำหรับลานจอดรถสถานีสุขุมวิท
+                                    สามารถสมัครสมาชิกจอดรถรายเดือนได้ที่ห้องทำจอดรถรายเดือน
+                                    อาคารจอดแล้วจรสถานีลาดพร้าว
+                                    หรือสมัครผ่าน Application MRTA Parking
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div> -->
+        {% endif %}
+    </div>
+
+
+
+    <!-- <div class="bg-detail-footer">
+        <h5 class="mb-0 ">เวลาเปิดให้บริการจอดรถ</h5>
+        <h5 class="p-1">05.00 - 01.00 น.</h5>
+        <br>
+        <h5 class="mb-0 p-1">เวลาเปิดให้บริการ Office</h5>
+        <h5 class="mb-0 p-1">{{des_date}}</h5>
+        <h5 class="mb-0 p-1">{{des_date2}}</h5>
+        
+    </div> -->
+
+    <div class="bg-detail-line"></div>
+    {% include "comps/scroll-top.html" %}
+    {% include "comps/popup-cookie.html" %}
+    {% include "comps/footer.html" %}
+</body>
+
+<script>
+    $('.slider').slick({
+        slidesToShow: 1,
+        slidesToScroll: 1,
+        autoplay: true,
+        autoplaySpeed: 3000,
+        dots: true,
+        infinite: true,
+        cssEase: 'linear'
+    });
+</script>
+<script>
+    $(function () {
+        var $tabButtonItem = $('#tab-button li'),
+            $tabSelect = $('#tab-select'),
+            $tabContents = $('.tab-contents'),
+            activeClass = 'is-active';
+
+        $tabButtonItem.first().addClass(activeClass);
+        $tabContents.not(':first').hide();
+
+        $tabButtonItem.find('a').on('click', function (e) {
+            var target = $(this).attr('href');
+
+            $tabButtonItem.removeClass(activeClass);
+            $(this).parent().addClass(activeClass);
+            $tabSelect.val(target);
+            $tabContents.hide();
+            $(target).show();
+            e.preventDefault();
+        });
+
+        $tabSelect.on('change', function () {
+            var target = $(this).val(),
+                targetSelectNum = $(this).prop('selectedIndex');
+
+            $tabButtonItem.removeClass(activeClass);
+            $tabButtonItem.eq(targetSelectNum).addClass(activeClass);
+            $tabContents.hide();
+            $(target).show();
+        });
+    });
+</script>
+</html>

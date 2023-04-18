@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>รายการชำระเงิน</title>
+    {% include "include/customer-css.html" %}
+    {% include "include/customer-js.html" %}
+</head>
+<style>
+  body {
+      background-color: #f8fafb;
+    }
+    div.sticky {
+      position: -webkit-sticky;
+      position: sticky;
+      bottom: 0;
+    }
+
+
+    .bg-money {
+      background: linear-gradient(90deg, #172F54 0%, #306AC2 98.53%);
+    }
+</style>
+
+<body>
+    {% include "comps/navbar-1.html" %}
+
+    <div class="container pt-5">
+     
+  
+        <div class="mt-3">
+          <!-- GoBack -->
+          <div class="py-3 h4">
+            <a href=""
+              ><i class="fa fa-chevron-left mr-2" aria-hidden="true"></i>กลับ</a
+            >
+          </div>
+          <div class="row">
+            <div class="col-5">
+              <img
+                src="../static/image/manage/station/ท่าอิฐ.jpg"
+                class="image-fluid img-thumbnail border"
+                alt="image"
+                loading="lazy"
+              />
+            </div> 
+            <div class="col-7 py-3">
+                <h6>สถานีบางรักน้อยท่าอิฐ</h6>
+                <h6>วันที่ 10/11/2564</h6>
+                <h6>ค่าที่จอด 4 ชั่วโมง / 100 บาท</h6>      
+            </div>         
+          </div>
+
+         
+        </div>
+
+      
+  
+        <div class="card-reserve my-3">
+            <div class="card-body"> 
+                <div class="row py-2  mb-0">
+                    <div class="col-7 h5 font-weight-bold">กท1011</div>
+                    <div class="col-7">เวลาเข้า</div>
+                    <div class="col-5 text-right">11.00</div>
+                    <div class="col-7 ">เวลาจอดรวม</div>
+                    <div class="col-5 text-right">03.00.00</div>
+                </div>          
+            </div>
+        </div>
+        <div class="card-reserve my-3">
+            <div class="card-body">
+                <div class="row py-2 mb-0">
+                    <div class="col-7">ค่าบริการรวมภาษี</div>
+                    <div class="col-5 text-right">100.00</div>
+                    <div class="col-7">ส่วนลด</div>
+                    <div class="col-5 text-right">-</div>
+                    <div class="col-7 h5 font-weight-bold ">ค่าบริการทั้งหมด</div>
+                    <div class="col-5 text-right">100.00</div>
+                </div>
+            </div>
+        </div>
+            
+        <h5>ชำระเงิน</h5>
+        
+        <div class="inputGroup">
+          <input id="radio1" name="radio" type="radio" onclick="submitDebit()">
+          <form name="payFormCcard" id="payFormCcard" method="post" action="https://ktbfastpay.ktb.co.th/KTB/eng/payment/payForm.jsp"
+          <input type="hidden" name="merchantId" value="900000303">
+          <input type="hidden" name="amount" value="{{total}}">
+          <input type="hidden" name="orderRef" value="{{ref2}}">
+          <input type="hidden" name="currCode" value="764">
+          <input type="hidden" name="successUrl" value="https://parking.mrta.co.th/pay/success">
+          <input type="hidden" name="failUrl" value="https://parking.mrta.co.th/pay/fail">
+          <input type="hidden" name="cancelUrl" value="https://parking.mrta.co.th/pay/cancel">
+          <input type="hidden" name="payType" value="N">
+          <input type="hidden" name="lang" value="E">
+          <input type="hidden" name="orderRef1" value={{ref1}}>
+          <input type="hidden" name="securityKey" value={{securityKey}}>                                                       
+          </form>
+
+
+          <label for="radio1" id="creditcard" name="radio" type="radio">
+            <img class="mr-3" src="../static/image/creditcard.png">บัตรเครดิต/บัตรเดบิต</label>
+          
+        </div>
+
+        <div class="inputGroup">
+          <input id="qrcode" name="radio" type="radio"/>
+          <label for="qrcode"> <img class="mr-3" src="../static/image/qrcode.png"> QR Code Payment</label>        
+        </div>
+        <div class="inputGroup">
+            <input id="accountbank" name="radio" type="radio"/>
+            <label for="accountbank"> <img class="mr-3" src="../static/image/accountbank.png"> ผูกบัญชีธนาคาร</label>        
+          </div>
+
+        <br />
+        <!-- <div class="text-center" style="color:red">เวลาที่เหลือในการชำระเงิน <span class="text" value="remaining"></span></div> -->
+
+        <div class="bottom-reserve ">
+          <div class="row  bg-money py-2 h5 mb-3">
+            <div class="col-7 text-light">ยอดชำระ</div>
+            <div class="col-5 text-right" value="total">100 บาท</div>
+          </div>
+          <button type="submit" class="btn mrta-btn-primary-1 btn-block btn-lg" onclick="submitPayment()" >
+            ยืนยันการชำระเงิน
+          </button>
+        </div>
+        
+    
+    </div>
+    {% include "comps/popup-cookie.html" %}
+    {% include "comps/fivemenu.html" %}
+
+
+</body>
+
+<script>
+    function submitPayment(){
+      if (document.getElementById("creditcard").checked == true){
+        document.getElementById("payFormCcard").submit();}
+      else if (document.getElementById("qrcode").checked == true ){
+        // window.location.href = "/qr-code-reserve"
+        window.open('/', '_blank')}
+      else if  (document.getElementById("accountbank").checked == true ){
+       // window.location.href = "/qr-code-reserve"
+      window.open('/', '_blank')}
+    }
+
+
+    let interval = setInterval(()=>{
+        let qrtimerlist = document.getElementsByClassName('text')
+        if (qrtimerlist[0].innerHTML !== '00:00:00'){
+          let timelist = qrtimerlist[0].innerHTML.split(':')
+          let hours = parseInt(timelist[0])
+          let minute = parseInt(timelist[1])
+          let seconds = parseInt(timelist[2])
+          seconds -- 
+          if (seconds < 0){
+            seconds = 59
+            if (minute > 0){
+              minute --
+            }else{
+              if (hours > 0){
+                minute = 59
+                hours--
+              }
+            }
+          }
+          qrtimerlist[0].innerHTML = zerofill(hours,2) + ':' + zerofill(minute,2) + ':' + zerofill(seconds,2)
+        }
+        else{
+          clearInterval(interval)
+          window.location.reload(true)
+          alert('หมดเวลาการชำระเงิน')
+          window.location.href = "/reserve-step1"
+        }
+        
+      },1000)
+      
+      function zerofill(number, length) {
+        // Setup
+        var result = number.toString();
+        var pad = length - result.length;
+    
+        while(pad > 0) {
+            result = '0' + result;
+            pad--;
+        }
+    
+        return result;}
+
+  </script>
+
+</html>

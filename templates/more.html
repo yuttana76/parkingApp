@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>เพิ่มเติม</title>
+    {% include "include/customer-css.html" %}
+    {% include "include/customer-js.html" %}
+</head>
+<style>
+   header {
+      cursor: pointer;
+      border-bottom: 1px solid #D1D5DB;
+      padding: 15px;
+      box-sizing: border-box;
+      display: flex;
+      align-items: center;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+    }
+
+
+    /* language toggle */
+
+input[type="checkbox"] {
+  position: relative;
+  width: 90px;
+  height: 35px;
+  background: #333;
+  -webkit-appearance: none;
+  border-radius: 20px;
+  outline: none;
+  transition: .4s;
+  box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+}
+
+input:checked[type="checkbox"] {
+  background: #053273;
+}
+
+input[type="checkbox"]::before {
+  z-index: 2;
+  position: absolute;
+  content: "";
+  left: 0;
+  width: 35px;
+  height: 35px;
+  background: #fff;
+  border-radius: 50%;
+  transform: scale(1.1);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  transition: .3s;
+}
+
+input:checked[type="checkbox"]::before {
+  left: 55px;
+}
+
+.toggle {
+  position: relative;
+  display: inline;
+}
+
+label {
+  position: absolute;
+  color: #fff;
+  font-weight: 600;
+  font-size: 18px;
+  pointer-events: none;
+}
+
+.onbtn {
+  top: -18px;
+  left: 15px;
+}
+
+.ofbtn {
+  top: -18px;
+  right: 14px;
+  color: rgb(255, 255, 255);
+}
+</style>
+
+<body>
+    {% include "comps/navbar-1.html" %}
+
+    <div class="container" style="margin: 70px auto;">
+
+        <!--#list1-->
+        <div class="card-reserve my-1">
+            <div class="card-body ">
+              <div class="row mt-2">   
+                   <div class="col-9" style="color: #053273" >
+                     <img  src="../static/image/profile-more.png" 
+                    class="text-weight-bold h5"> ข้อมูลผู้ใช้งาน </div>
+                  <a href="" class="text-weight-bold text-right col-3"> <i class="fas fa-chevron-right"></i></a>     
+              </div>
+            </div>
+        </div>
+        <div class="line pb-2" style="margin-top: -20px;">
+            <header>
+               
+            </header>
+        </div>
+        
+
+        <!--#group2-->
+        <div class="card-reserve my-1">
+            <div class="card-body ">
+              <div class="row mt-2">   
+                   <div class="col-9" style="color: #053273" ><img  src="../static/image/detailprofile-more.png" 
+                    class="text-weight-bold h5"> บริการรายเดือน </div>
+                    <div class="col-3" > </div>
+                    <div class="text-gray-dark col-12" style="right: -24px; color: #053273;">สมัครสมาชิกรายเดือน</div>
+                    <div class="line col-12" style="margin-top: -23px;">
+                        <header>
+                           
+                        </header>
+                    </div>
+                    <div class="text-gray-dark pt-2 col-9" style="right: -24px; color: #053273;">ข้อมูลสมาชิกจอดรถรายเดือน</div>
+                    <a href="" class="text-weight-bold text-right pt-2 col-3"> <i class="fas fa-chevron-right"></i></a>     
+              </div>
+            </div>
+        </div>
+        <div class="line pb-2" style="margin-top: -20px;">
+            <header>
+               
+            </header>
+        </div>
+
+        <!--#list3-->
+        <div class="card-reserve my-1 mb-3">
+            <div class="card-body ">
+              <div class="row mt-2">   
+                   <div class="col-9" style="color: #053273" ><img  src="../static/image/reserv-more.png" 
+                    class="text-weight-bold h5"> จองที่จอดรถ </div>
+                  <a href="/reserve-step1" class="text-weight-bold text-right col-3"> <i class="fas fa-chevron-right"></i></a>     
+              </div>
+            </div>
+        </div>
+        <!--#list4-->
+        <div class="card-reserve my-1 mb-3">
+            <div class="card-body ">
+              <div class="row mt-2">   
+                   <div class="col-9" style="color: #053273" ><img  src="../static/image/searchcar-more.png" 
+                    class="text-weight-bold h5"> ค้นหาที่จอดรถของคุณ </div>
+                  <a href="/car-list" class="text-weight-bold text-right col-3"> <i class="fas fa-chevron-right"></i></a>     
+              </div>
+            </div>
+        </div>
+        <!--#list5-->
+        <div class="card-reserve my-1">
+            <div class="card-body ">
+              <div class="row mt-2">   
+                   <div class="col-9" style="color: #053273" ><img  src="../static/image/parkingempty-more.png" 
+                    class="text-weight-bold h5"> ที่จอดว่าง </div>
+                  <a href="/orangeparking-spaces" class="text-weight-bold text-right col-3"> <i class="fas fa-chevron-right"></i></a>     
+              </div>
+            </div>
+        </div>
+        <div class="line pb-2" style="margin-top: -20px;">
+            <header>
+               
+            </header>
+        </div>
+
+         <!--#list6-->
+         <div class="card-reserve my-1 mb-3">
+            <div class="card-body ">
+              <div class="row mt-2">   
+                   <div class="col-9" style="color: #053273" ><img  src="../static/image/contact-more.png" 
+                    class="text-weight-bold h5"> ติดต่อ รฟม. </div>
+                  <a href="/contact" class="text-weight-bold text-right col-3"> <i class="fas fa-chevron-right"></i></a>     
+              </div>
+            </div>
+        </div>
+
+         <!--#list7-->
+         <div class="card-reserve my-1 mb-3">
+            <div class="card-body ">
+              <div class="row mt-2">   
+                   <div class="pt-2 col-9" style="color: #053273" ><img  src="../static/image/global-more.png                         " 
+                    class="text-weight-bold h5"> ภาษา </div>
+                  <a href="" class="text-weight-bold text-right col-3"> 
+                    <div class="toggle">
+                      <input type="checkbox">
+                      <label for="" class="onbtn">EN</label>
+                      <label for="" class="ofbtn">TH</label>
+                    </div>           
+              </div>
+            </div>
+        </div>
+
+        <div class="logout text-center col-12" style="margin-bottom: -55px; padding-top: 30px;">
+          <a href="" style="color: #6F737A"> ออกจากระบบ </a>
+        </div>
+
+    </div>
+
+     
+    {% include "comps/popup-cookie.html" %}
+    {% include "comps/fivemenu.html" %}
+
+
+</body>
+
+</html>
