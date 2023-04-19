@@ -1,6 +1,6 @@
 import json
 
-with open(r"C:\D\project_mrta_parkingApp\mrta-app\ProvinceTH.json", encoding="utf-8") as json_data:
+with open(r"./ProvinceTH.json", encoding="utf-8") as json_data:
             data = json.load(json_data)
 
 def get_province():

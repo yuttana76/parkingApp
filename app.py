@@ -8,6 +8,8 @@ from apscheduler.schedulers.background import BackgroundScheduler
 import datetime
 from flask_bcrypt import Bcrypt
 from flask_cors import CORS
+from dotenv import load_dotenv
+import os
 
 def reset_invoice_number():
     dt = datetime.datetime.today()
@@ -21,12 +23,12 @@ def reset_invoice_number():
         return 'SUCCESS'
 
 
-
+load_dotenv()
 app = Flask(__name__, template_folder='templates', static_folder='static')
 cors = CORS(app)
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app,session_options={"autoflush": False})
-app.config['SQLALCHEMY_DATABASE_URI']="mysql://root:mrta2021@localhost/mrtaparking"
+app.config['SQLALCHEMY_DATABASE_URI']=f"mysql://{os.environ['DB_USER']}:{os.environ['DB_PASSWORD']}@{os.environ['DB_HOST']}/{os.environ['DB_NAME']}"
 app.config['SQLALCHEMY_POOL_RECYCLE'] = 60
 db.Model.metadata.reflect(db.engine)
 app.secret_key = "NdesKWazqD-TDocYq4u7qw"

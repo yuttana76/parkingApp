@@ -1,6 +1,6 @@
 from PIL import ImageFont
 
-font = ImageFont.truetype(r'C:\D\project_mrta_parkingApp\mrta-app\static\fonts\sarabun\Sarabun-Light.ttf', 14)
+font = ImageFont.truetype(r'./static/fonts/sarabun/Sarabun-Light.ttf', 14)
 def create_address(obj):
     address = ''
     keys = [('address_no',''),('unit_home',''),
