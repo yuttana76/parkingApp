@@ -2175,70 +2175,82 @@ def generate_term_seq():  # passachon #ขาpayment=pay_ref
     return term_seq
 
 
-@app.route('/uat/payment-methods/')  # passachon
+@app.route('/uat/payment-methods/')
 def payment_methods_uat():
     ref1 = current_user.identity_card
-    print('cus',ref1)
     session['identity_card'] = ref1
     encrypt_ref1 = encryptuat(ref1)
-    find = find_last_log(ref1)
-    ref2 = find[0].orderNumber
+    
+    latest_log = find_last_log(ref1)[0]
+    ref2 = latest_log.orderNumber
+    
     termS = generate_term_seq()
     term_seq = encryptuat(termS)
     session['payRef'] = termS
-    total = find[0].total
-
-    session['transaction_type'] = find[0].transaction_type
-    print(total, "KTB****************")
+    
+    total = latest_log.total
+    session['transaction_type'] = latest_log.transaction_type
+    
     securityKey = gen_securityKey_uat(ref2, total)
-    deposit_amount = find[0].deposit_amount
-    total2 = f'{int(find[0].total)-int(deposit_amount):,}'
-    total3 = f'{int(find[0].total):,}'
-    service_start_date = find[0].service_start_date.strftime('%d/%m/%Y')
+    deposit_amount = latest_log.deposit_amount
+    
     if deposit_amount is None:
         amount = total
-        deposit_amount = f'0'
+        deposit_amount = 0
     else:
-     amount = total - deposit_amount
-     deposit_amount = f"{int(deposit_amount):,}"
-    month = find[0].month
-    address_type = find[0].address_type
-    id_ = find[0].Id
+        amount = total - deposit_amount
+        deposit_amount = int(deposit_amount)
+    
+    month = latest_log.month
+    address_type = latest_log.address_type
+    id_ = latest_log.Id
+    
     session['total'] = str(total)
     session['ref2'] = ref2
-    park = find[0].parking_name
-    cardid = find[0].card_id
+    
+    park = latest_log.parking_name
+    cardid = latest_log.card_id
 
     cursor = mysql.connection.cursor()
-    sql = "UPDATE parking_log SET term_seq= %s WHERE orderNumber = %s"
-    val = (termS, ref2)
-    cursor.execute(sql, val)
+    cursor.execute("UPDATE parking_log SET term_seq = %s WHERE orderNumber = %s", (termS, ref2))
     mysql.connection.commit()
 
     cur = mysql.connection.cursor()
-    cur.execute(
-        'select accountNumber from account_number_ktb where identity_card =%s AND accountStatus = "Active" ', (ref1,))
+    cur.execute("SELECT accountNumber FROM account_number_ktb WHERE identity_card = %s AND accountStatus = 'Active'", (ref1,))
     result = cur.fetchone()
-    if result:  # กรณีผูกบัญชีแล้ว สามารถกดชำระเงินได้เลยเพื่อตัดผ่านบัญชี
+    
+    parking_code = latest_log.parking_code
+    line = Parking_manage.query.filter_by(parking_code=parking_code).first().line_name
+    ktb_detail = Ktb_detail.query.filter_by(line=line).first()
+    
+    transaction_type = latest_log.transaction_type
+    merchant_id_dict = {
+        '1': ktb_detail.mid_register,
+        '2': ktb_detail.mid_renew,
+        '4': ktb_detail.mid_reserve,
+        '5': ktb_detail.mid_daily
+    }
+    merchant_id = merchant_id_dict.get(transaction_type)
+    if not merchant_id:
+        raise Exception('Invalid transaction type')
+    
+    if result:
         ktb_ac = result[0]
-        ktb_ac = "XXXX-X-XX"+ktb_ac[7:11]
-        print(1)
-        return render_template('payment-methods-2.html', securityKey=securityKey, total=total, total3=total3, ref2=ref2, ref1=ref1, ktb_ac=ktb_ac, service_start_date=service_start_date, amount=amount, month=month, parkname=park, card_id=cardid, term_seq=term_seq, address_type=address_type, id_=id_, total2=total2, deposit_amount=deposit_amount)
+        ktb_ac = f"XXXX-X-XX{ktb_ac[7:11]}"
+        return render_template('payment-methods-2.html',
+                               securityKey=securityKey, total=total, total3=total, ref2=ref2, ref1=ref1, 
+                               ktb_ac=ktb_ac, service_start_date=latest_log.service_start_date.strftime('%d/%m/%Y'), 
+                               amount=amount, month=month, parkname=park, card_id=cardid, term_seq=term_seq, 
+                               address_type=address_type, id_=id_, total2=f"{total-deposit_amount:,}", 
+                               deposit_amount=f"{deposit_amount:,}",merchant_id=merchant_id)
     else:
-        print('mechantId :',900000303)
-        print('amount :',total)
-        print('orderRef :',ref2)
-        print('currCode :',764)
-        print('successUrl :',"https://parking.mrta.co.th/payment/success")
-        print('failUrl :',"https://parking.mrta.co.th/payment/fail")
-        print('cancelUrl :',"https://parking.mrta.co.th/payment/cancel")
-        print('payType :','N')
-        print('lang :','E')
-        print('orderRef1 :',ref1)
-        print('securityKey :',securityKey)
-        print('ref1',encrypt_ref1)
-        print('term_seq',term_seq)
-        return render_template('payment-methodsuat.html', securityKey=securityKey, total=total, total3=total3, ref2=ref2, ref1=ref1, service_start_date=service_start_date, amount=amount, month=month, parkname=park, card_id=cardid, term_seq=term_seq, encrypt_ref1=encrypt_ref1, address_type=address_type, id_=id_, total2=total2, deposit_amount=deposit_amount)
+        return render_template('payment-methodsuat.html',
+                               securityKey=securityKey, total=total, total3=total, ref2=ref2, ref1=ref1, 
+                               service_start_date=latest_log.service_start_date.strftime('%d/%m/%Y'), amount=amount, 
+                               month=month, parkname=park, card_id=cardid, term_seq=term_seq, encrypt_ref1=encrypt_ref1, 
+                               address_type=address_type, id_=id_, total2=f"{total-deposit_amount:,}", 
+                               deposit_amount=f"{deposit_amount:,}",merchant_id=merchant_id)
+
 
 # ยืนยันการชำระค่าบริการ
 
@@ -2291,21 +2303,6 @@ def payment_methods():
         ktb_ac = "XXXX-X-XX"+ktb_ac[7:11]
         return render_template('payment-methods-2.html', securityKey=securityKey, total=total, ref2=ref2, ref1=ref1, ktb_ac=ktb_ac, service_start_date=service_start_date, amount=amount, month=month, parkname=park, card_id=cardid, term_seq=term_seq, address_type=address_type, id_=id_, total2=total2, deposit_amount=deposit_amount, total3=total3)
     else:
-
-        print('mechantId :',900000303)
-        print('amount :',total)
-        print('orderRef :',ref2)
-        print('currCode :',764)
-        print('successUrl :',"https://parking.mrta.co.th/payment/success")
-        print('failUrl :',"https://parking.mrta.co.th/payment/fail")
-        print('cancelUrl :',"https://parking.mrta.co.th/payment/cancel")
-        print('payType :','N')
-        print('lang :','E')
-        print('orderRef1 :',ref1)
-        print('securityKey :',securityKey)
-        print('ref1',encrypt_ref1)
-        print('term_seq',term_seq)
-
         return render_template('payment-methods.html', securityKey=securityKey, total=total, ref2=ref2, ref1=ref1, service_start_date=service_start_date, amount=amount, month=month, parkname=park, card_id=cardid, term_seq=term_seq, encrypt_ref1=encrypt_ref1, address_type=address_type, id_=id_, total2=total2, deposit_amount=deposit_amount, total3=total3)
 
 

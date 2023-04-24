@@ -167,7 +167,7 @@
                                     <div class="choose form-group">
                                         <input type="radio" name="payment_method" id="credit_card"onclick="submitDebit()">
                                         <form name="payFormCcard" id="payFormCcard" method="post" action="https://ktbfastpay.ktb.co.th/KTB/eng/payment/payForm.jsp">  <!--  UAT ->>action="https://uatktbfastpay.ktb.co.th/SIT/eng/payment/payForm.jsp"-->
-                                            <input type="hidden" name="merchantId" value="900000303"> 
+                                            <input type="hidden" name="merchantId" value="{{merchant_id}}"> 
                                             <input type="hidden" name="amount" value="{{total}}" >
                                             <input type="hidden" name="orderRef" value="{{ref2}}">
                                             <input type="hidden" name="currCode" value="764" >

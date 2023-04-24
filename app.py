@@ -123,3 +123,7 @@ class Parking_logvisitor(db.Model):
 class Estamp(db.Model):
     __table__ = db.Model.metadata.tables['estamp']
 
+class Ktb_detail(db.Model):
+    __table__ = db.Model.metadata.tables['ktb_detail_uat']
+    
+

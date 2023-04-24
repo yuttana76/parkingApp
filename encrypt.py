@@ -1,34 +1,25 @@
 import os
-# cert = chilkat.CkCert()
-# rsa = chilkat.CkRsa()
 
-# success = cert.LoadFromFile("C:/D/certEncrypt/prod/parkandlive.mrta_98427_prod.cer")
-# if (success == False):
-#     print(1,cert.lastErrorText())
-#     sys.exit()
+from cryptography.hazmat.primitives import serialization
+from cryptography.hazmat.primitives.asymmetric import padding, rsa
+from cryptography.x509 import load_pem_x509_certificate
 
-# pubKey = cert.ExportPublicKey()
-
-# if (cert.get_LastMethodSuccess() != True):
-#     print(2,cert.lastErrorText())
-#     sys.exit()
-
-# publicKey = pubKey.getXml()
-# print('pub',publicKey)
-# success = rsa.ImportPublicKey(publicKey)
-# usePrivateKey = False
 CERT_PATH = os.environ['KTB_CERT_PATH']
+
 def encrypt(plainText):
-    import  chilkat
-    cert = chilkat.CkCert()
-    rsa = chilkat.CkRsa()
-    success = cert.LoadFromFile("C:/D/certEncrypt/prod/parkandlive.mrta_98427_prod.cer")
-    pubKey = cert.ExportPublicKey()
-    publicKey = pubKey.getXml()
-    success = rsa.ImportPublicKey(publicKey)
-    usePrivateKey = False
-    rsa.put_EncodingMode("base64")
-    encrypted = rsa.encryptStringENC(plainText,usePrivateKey)
-    return encrypted
+    with open(CERT_PATH, 'rb') as f:
+        cert_data = f.read()
 
+    cert = load_pem_x509_certificate(cert_data)
+    public_key = cert.public_key()
 
+    ciphertext = public_key.encrypt(
+        plainText.encode('utf-8'),
+        padding.OAEP(
+            mgf=padding.MGF1(algorithm=cert.signature_hash_algorithm),
+            algorithm=cert.signature_hash_algorithm,
+            label=None
+        )
+    )
+
+    return ciphertext.hex()
