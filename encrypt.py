@@ -1,25 +1,16 @@
 import os
-
-from cryptography.hazmat.primitives import serialization
-from cryptography.hazmat.primitives.asymmetric import padding, rsa
-from cryptography.x509 import load_pem_x509_certificate
+from Crypto.PublicKey import RSA
+from Crypto.Cipher import PKCS1_v1_5
+from base64 import b64encode
 
 CERT_PATH = os.environ['KTB_CERT_PATH']
+# Load the public key from file in PEM format
+with open(CERT_PATH, 'rb') as f:
+    public_key = RSA.importKey(f.read())
 
 def encrypt(plainText):
-    with open(CERT_PATH, 'rb') as f:
-        cert_data = f.read()
-
-    cert = load_pem_x509_certificate(cert_data)
-    public_key = cert.public_key()
-
-    ciphertext = public_key.encrypt(
-        plainText.encode('utf-8'),
-        padding.OAEP(
-            mgf=padding.MGF1(algorithm=cert.signature_hash_algorithm),
-            algorithm=cert.signature_hash_algorithm,
-            label=None
-        )
-    )
-
-    return ciphertext.hex()
+    # Use PKCS1_v1_5 to perform RSA encryption with ECB and PKCS1 padding
+    cipher = PKCS1_v1_5.new(public_key)
+    cipher_text = cipher.encrypt(plainText.encode('utf-8'))
+    # Base64 encode the cipher text and return it
+    return b64encode(cipher_text).decode('utf-8')

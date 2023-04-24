@@ -1,34 +1,18 @@
 import os
-# cert = chilkat.CkCert()
-# rsa = chilkat.CkRsa()
+from Crypto.PublicKey import RSA
+from Crypto.Cipher import PKCS1_v1_5
+from base64 import b64encode
 
-# success = cert.LoadFromFile("C:/D/certEncrypt/uat/parkandlive.mrta_98427.cer")
-# if (success == False):
-#     print(1,cert.lastErrorText())
-#     sys.exit()
-
-# pubKey = cert.ExportPublicKey()
-
-# if (cert.get_LastMethodSuccess() != True):
-#     print(2,cert.lastErrorText())
-#     sys.exit()
-
-# publicKey = pubKey.getXml()
-# print('pub',publicKey)
-# success = rsa.ImportPublicKey(publicKey)
-# usePrivateKey = False
 CERT_PATH = os.environ['KTB_UAT_CERT_PATH']
-def encryptuat(plainText):
-    import  chilkat
-    cert = chilkat.CkCert()
-    rsa = chilkat.CkRsa()
-    success = cert.LoadFromFile("C:/D/certEncrypt/uat/parkandlive.mrta_98427.cer")
-    pubKey = cert.ExportPublicKey()
-    publicKey = pubKey.getXml()
-    success = rsa.ImportPublicKey(publicKey)
-    usePrivateKey = False
-    rsa.put_EncodingMode("base64")
-    encrypted = rsa.encryptStringENC(plainText,usePrivateKey)
-    return encrypted
+# Load the public key from file in PEM format
+with open(CERT_PATH, 'rb') as f:
+    public_key = RSA.importKey(f.read())
+
+def encrypt(plainText):
+    # Use PKCS1_v1_5 to perform RSA encryption with ECB and PKCS1 padding
+    cipher = PKCS1_v1_5.new(public_key)
+    cipher_text = cipher.encrypt(plainText.encode('utf-8'))
+    # Base64 encode the cipher text and return it
+    return b64encode(cipher_text).decode('utf-8')
 
 
