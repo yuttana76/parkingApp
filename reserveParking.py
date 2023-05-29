@@ -1,5 +1,5 @@
 from app import (
-    Parking_manage, Policy, app,Parking_log as pl
+    Parking_manage, Policy, app,Parking_log as pl,Ktb_detail
 )
 from flask_login import login_required, current_user
 from flask import render_template,request,session,redirect, jsonify,url_for
@@ -13,7 +13,7 @@ import multiprocessing as mp
 from apiBooking import api_bookin_log, api_bookout_log
 from form import Reserve_step3
 from province import get_district, get_postcode, get_province, get_subdistrict
-
+from find_log import find_last_log
 
 #ploy
 @app.route('/reserve-step1', methods=['GET', 'POST'])
@@ -89,7 +89,20 @@ def qrcode_reserve_pay():
 #    payment_exp = payment_exp_date(ref2, station)
 #    now = datetime.datetime.now()
 #    if now < payment_exp:
-    qrcode = text_qr(total, ref1, ref2)  # (money,ref1,ref2)
+    latest_log = find_last_log(ref1)[0]
+    parking_code = latest_log.parking_code
+    line = Parking_manage.query.filter_by(parking_code=parking_code).first().line_name
+    ktb_detail = Ktb_detail.query.filter_by(line=line).first()
+    transaction_type = latest_log.transaction_type
+    qrcode_detail = {
+        '1': (ktb_detail.bid_register,ktb_detail.suffix_register),
+        '2': (ktb_detail.bid_renew,ktb_detail.suffix_renew),
+        '4': (ktb_detail.bid_reserve,ktb_detail.suffix_reserve),
+        '5': (ktb_detail.bid_daily,ktb_detail.suffix_daily)
+    }
+    bid,suffix = qrcode_detail.get(transaction_type)
+
+    qrcode = text_qr(total, ref1, ref2, bid=bid, suffix=suffix)  # (money,ref1,ref2)
     reserve_station_detail = session.get('reserve_station_detail')
     remaining = remaining_time(ref2,reserve_station_detail['reserve_payment_period'])
     # print(qrcode)

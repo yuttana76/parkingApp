@@ -2039,11 +2039,27 @@ def parking_account_en():
 @app.route('/en/qr-code')  # passachon
 def qrcode_en():
     ref1 = current_user.identity_card
-    data = find_last_log(ref1)
-    ref2 = data[0].orderNumber
-    total = str(data[0].total)
-    identity_card = data[0].identity_card
-    qrcode = text_qr(total, identity_card, ref2)  # (money,ref1,ref2)
+    latest_log = find_last_log(ref1)[0]
+    
+    parking_code = latest_log.parking_code
+    line = Parking_manage.query.filter_by(parking_code=parking_code).first().line_name
+    ktb_detail = Ktb_detail.query.filter_by(line=line).first()
+    transaction_type = latest_log.transaction_type
+    qrcode_detail = {
+        '1': (ktb_detail.bid_register,ktb_detail.suffix_register),
+        '2': (ktb_detail.bid_renew,ktb_detail.suffix_renew),
+        '4': (ktb_detail.bid_reserve,ktb_detail.suffix_reserve),
+        '5': (ktb_detail.bid_daily,ktb_detail.suffix_daily)
+    }
+    bid,suffix = qrcode_detail.get(transaction_type)
+    
+    
+    ref2 = latest_log.orderNumber
+    total = str(latest_log.total)
+    identity_card = latest_log.identity_card
+    qrcode = text_qr(total, identity_card, ref2, bid=bid, suffix=suffix)  # (money,ref1,ref2)
+    latest_log.payment_name = '3'
+    db.session.commit()
 
     return render_template('eng/qr-code.html', qrcode=qrcode)
 

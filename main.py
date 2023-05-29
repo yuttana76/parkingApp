@@ -2225,13 +2225,13 @@ def payment_methods_uat():
     
     transaction_type = latest_log.transaction_type
     merchant_id_dict = {
-        '1': ktb_detail.mid_register,
-        '2': ktb_detail.mid_renew,
-        '4': ktb_detail.mid_reserve,
-        '5': ktb_detail.mid_daily
+        '1': (ktb_detail.mid_register,ktb_detail.tid_register),
+        '2': (ktb_detail.mid_renew,ktb_detail.tid_register),
+        '4': (ktb_detail.mid_reserve,ktb_detail.tid_reserve),
+        '5': (ktb_detail.mid_daily,ktb_detail.tid_daily)
     }
-    merchant_id = merchant_id_dict.get(transaction_type)
-    if not merchant_id:
+    merchant_id,terminal_id = merchant_id_dict.get(transaction_type)
+    if not merchant_id or not terminal_id:
         raise Exception('Invalid transaction type')
     
     if result:
@@ -2242,14 +2242,14 @@ def payment_methods_uat():
                                ktb_ac=ktb_ac, service_start_date=latest_log.service_start_date.strftime('%d/%m/%Y'), 
                                amount=amount, month=month, parkname=park, card_id=cardid, term_seq=term_seq, 
                                address_type=address_type, id_=id_, total2=f"{total-deposit_amount:,}", 
-                               deposit_amount=f"{deposit_amount:,}",merchant_id=merchant_id)
+                               deposit_amount=f"{deposit_amount:,}",merchant_id=merchant_id,terminal_id=terminal_id)
     else:
         return render_template('payment-methodsuat.html',
                                securityKey=securityKey, total=total, total3=total, ref2=ref2, ref1=ref1, 
                                service_start_date=latest_log.service_start_date.strftime('%d/%m/%Y'), amount=amount, 
                                month=month, parkname=park, card_id=cardid, term_seq=term_seq, encrypt_ref1=encrypt_ref1, 
                                address_type=address_type, id_=id_, total2=f"{total-deposit_amount:,}", 
-                               deposit_amount=f"{deposit_amount:,}",merchant_id=merchant_id)
+                               deposit_amount=f"{deposit_amount:,}",merchant_id=merchant_id,terminal_id=terminal_id)
 
 
 # ยืนยันการชำระค่าบริการ
@@ -2438,19 +2438,30 @@ def cgp_payment():
 # เลือกชำระเงิน qr-code
 
 
-@app.route('/qr-code')  # passachon
+@app.route('/qr-code')  
 def qrcode():
     ref1 = current_user.identity_card
-    data = find_last_log(ref1)
-    ref2 = data[0].orderNumber
-    total = str(data[0].total)
-    identity_card = data[0].identity_card
-    qrcode = text_qr(total, identity_card, ref2)  # (money,ref1,ref2)
-    cursor = mysql.connection.cursor()
-    sql = "UPDATE parking_log SET payment_name = %s WHERE orderNumber = %s"
-    val = ('3', ref2)
-    cursor.execute(sql, val)
-    mysql.connection.commit()
+    latest_log = find_last_log(ref1)[0]
+    
+    parking_code = latest_log.parking_code
+    line = Parking_manage.query.filter_by(parking_code=parking_code).first().line_name
+    ktb_detail = Ktb_detail.query.filter_by(line=line).first()
+    transaction_type = latest_log.transaction_type
+    qrcode_detail = {
+        '1': (ktb_detail.bid_register,ktb_detail.suffix_register),
+        '2': (ktb_detail.bid_renew,ktb_detail.suffix_renew),
+        '4': (ktb_detail.bid_reserve,ktb_detail.suffix_reserve),
+        '5': (ktb_detail.bid_daily,ktb_detail.suffix_daily)
+    }
+    bid,suffix = qrcode_detail.get(transaction_type)
+    
+    
+    ref2 = latest_log.orderNumber
+    total = str(latest_log.total)
+    identity_card = latest_log.identity_card
+    qrcode = text_qr(total, identity_card, ref2, bid=bid, suffix=suffix)  # (money,ref1,ref2)
+    latest_log.payment_name = '3'
+    db.session.commit()
     return render_template('qr-code.html', qrcode=qrcode)
 
 ################fastpay#########################################

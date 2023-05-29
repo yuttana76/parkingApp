@@ -1,7 +1,7 @@
 import libscrc
 
 
-def text_qr(money,ref1,ref2):
+def text_qr(money,ref1,ref2,bid,suffix):
     Version = "0002"+"01"
     one_time="010212" # 12 ใช้ครั้งเดียว Dynamic Qr payment 
     # (11) แบบ Static : QR Code จะไม่เปล
@@ -16,7 +16,7 @@ def text_qr(money,ref1,ref2):
     merchant_account_information="3078" # ข้อมูลผู้ขาย
     merchant_account_information+="0016"+"A000000677010112" # ภายในประเทศ
     #******************************************************************************************************
-    merchant_account_information+="0115"+"0994000165706"+"11" #Biller ID tax_id = 0994000165706 suffix = 11  
+    merchant_account_information+= bid + "0994000165706" + suffix #Biller ID tax_id = 0994000165706 suffix  
     #******************************************************************************************************
     merchant_account_information+="0213" + ref1 #Ref1
     merchant_account_information+="0318" + ref2 #Ref2
