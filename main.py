@@ -51,6 +51,7 @@ from getReserveParking import qr_opengate_timeout
 from apiMember import ApiMember
 from threading import Thread
 from encryptuat import encryptuat
+from senddatatolocal import send_data_to_publish_service_with_ordernumber
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
@@ -2565,6 +2566,8 @@ def fastpay_datafeed_uat():
                 re_log.reexpire_after_void = card_expire_date
             renew_card_TAFF_orAll(cid, count_month, '0',
                                   identity_card, parking_code)
+            db.session.commit()
+            send_data_to_publish_service_with_ordernumber(orderRef)
             print("success")
     else:
         print("fail")
@@ -2620,6 +2623,7 @@ def fastpay_datafeed():
             renew_card_TAFF_orAll(cid, count_month, '0',
                                   identity_card, parking_code)
             print("success")
+            
         if log_update.transaction_type == "4":
             reserve_checkin_period = Parking_manage.query.filter_by(parking_name=log_update.parking_name).first(
             ).reserve_checkin_period

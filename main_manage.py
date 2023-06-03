@@ -36,6 +36,7 @@ from greenline.returncard.usecase import send_card_return_data_to_cit
 #ittipon#####################
 from user_owned_card import checkCardNotRandom
 from apiMember import ApiMember
+from senddatatolocal import send_data_to_publish_service_with_ordernumber
 
 
 @app.route('/manage/', methods=['GET', 'POST'])
@@ -213,6 +214,7 @@ def dashboard():
             check_user = 0
         if service_type == 'สมัครใหม่':
             if payment_status == '1':
+                
                 card_expire_date = datetime.datetime.strptime(service_start_date,'%Y-%m-%d') + datetime.timedelta(genday(int(months),service_start_date))
                 capacity_count(parking_code,None)
                 last_invoice = station.start_inv_no
@@ -362,6 +364,7 @@ def dashboard():
             api.from_orm(new_member)
             res = api.request_insert()[0]
             print('response Api: ',res)
+            # send_data_to_publish_service_with_ordernumber(new_log.orderNumber)
             if res.get('status') == False:
                 return jsonify(res)
             db.session.commit()        
@@ -369,6 +372,7 @@ def dashboard():
         elif service_type == 'ต่ออายุ':
             
             if payment_status == '1':
+                
                 card_expire_date = datetime.datetime.strptime(service_start_date,'%Y-%m-%d') + datetime.timedelta(genday(int(months),service_start_date))
                 capacity_count(parking_code,None)
                 last_invoice = station.start_inv_no
@@ -464,6 +468,7 @@ def dashboard():
             db.session.flush()
             new_log.orderNumber = genRef2(a=1, id_=new_log.Id,station=parking_code)
             db.session.commit()
+            # send_data_to_publish_service_with_ordernumber(new_log.orderNumber)
             
         #RENEWAL_API
         #    renewal_api = {
@@ -479,6 +484,7 @@ def dashboard():
         #    return response_api()    
             
         elif service_type == 'ยกเลิก':
+            
             update_member = Parking_member.query.filter_by(card_id=card_id).filter(
                 Parking_member.parking_code == parking_code)\
                 .filter(Parking_member.identity_card==identity_card).first()
@@ -510,7 +516,8 @@ def dashboard():
                 verify_status=verify_status,
                 payment_name=payment_name,
                 payment_status=payment_status,
-                payment_date=payment_date,comments=comment
+                payment_date=payment_date,comments=comment,
+                orderNumber=id_
             )
             
             update_member.card_status = '0'
@@ -521,8 +528,10 @@ def dashboard():
             update_member.return_card = return_card
             db.session.add(new_log)
             db.session.commit()
+            # send_data_to_publish_service_with_ordernumber(new_log.orderNumber)
 
         elif service_type == 'บัตรหาย':
+            
             old_id = request.form.get('search')
             old_log = Parking_log.query.filter_by(card_id=old_id).filter(Parking_log.parking_code==parking_code)\
                 .order_by(Parking_log.Id.desc()).first()
@@ -659,6 +668,8 @@ def dashboard():
             db.session.add(new_member)
             db.session.add(new_log)
             db.session.commit()
+            # send_data_to_publish_service_with_ordernumber(old_log.orderNumber)
+            # send_data_to_publish_service_with_ordernumber(new_log.orderNumber)
             
         return jsonify({'status':True, 'message':'บันทึกเรียบร้อย'})
 

@@ -8,6 +8,7 @@ import base64
 from updatecapacity import capacity_count
 import multiprocessing as mp
 from getReserveParking import qr_opengate_timeout
+from senddatatolocal import send_data_to_publish_service_with_ordernumber
 
 user = 'ktbuat'
 password = 'Ktb5491*'
@@ -241,7 +242,7 @@ def update_payment_status(orderNumber, parking_code):
     # mysql.connection.commit()
     id_ = Parking_log.query.filter_by(orderNumber=orderNumber).first().Id
     capacity_count(parking_code, id_)
-
+    send_data_to_publish_service_with_ordernumber(log_update.orderNumber)
     if log_update.transaction_type == "4":
         print("transaction_type == 4")
         reserve_checkin_period = int(Parking_manage.query.filter_by(parking_name=log_update.parking_name).first(

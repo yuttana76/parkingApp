@@ -269,6 +269,7 @@ def update_payment_status(orderNumber,parking_code):
     # cursor.execute(sql, val)
     # mysql.connection.commit()
     id_ = Parking_log.query.filter_by(orderNumber=orderNumber).first().Id
+    
     capacity_count(parking_code,id_)
 
     if log_update.transaction_type == "4":

@@ -2,6 +2,7 @@ import requests,datetime
 from flask import session
 import xml.etree.ElementTree as ET
 from db_config import mysql
+from senddatatolocal import send_data_to_publish_service_with_ordernumber
 
 bundle="C:/D/certFor_CGP_payment/production/ca_cert.pem"
 client_key = "C:/D/certFor_CGP_payment/production/clientws1.pem"
@@ -30,6 +31,8 @@ def update_status(code,ref2,today):
       sql = "UPDATE parking_log SET error_payment= %s ,payment_status = %s,payment_date=%s WHERE orderNumber = %s"
       val = (code,status,today,ref2)
       cursor.execute(sql, val)
+     #  send_data_to_publish_service_with_ordernumber(ref2)
+      
      else:
       sql = "UPDATE parking_log SET error_payment= %s ,payment_status = %s WHERE orderNumber = %s"
       val = (code,status,ref2)
