@@ -4,7 +4,7 @@ from app import Parking_manage
 import requests
 from bs4 import BeautifulSoup as bs
 import json
-
+import os 
 
 url = 'https://bds.mrta.co.th/BDS/service/SvcPRt.asmx/GetParkRT?AccessKey=gqQPvm29Sf.pOPEtlQSr9.7dvYSKLe2A=='
 def get_button(line):
@@ -15,7 +15,7 @@ def get_button(line):
     elif line == 'สายสีเขียว':
         return 'box-parking3'
     
-with open(r"./ncarrem.json",'r',encoding='utf-8') as ncarrem_json:
+with open(r"{}".format(os.environ['NCARREM_FILE']),'r',encoding='utf-8') as ncarrem_json:
     read_carrem_json = json.load(ncarrem_json)
     
     
@@ -95,7 +95,7 @@ def get_api_parking():
                     station_dict = retrieveNcarrem(station_dict,data_to_json)
                 data.append(station_dict)
         if data_to_json != read_carrem_json:
-            with open(r"./ncarrem.json",'w',encoding='utf-8') as write_to_ncarrem_json:
+            with open(r"{}".format(os.environ['NCARREM_FILE']),'w',encoding='utf-8') as write_to_ncarrem_json:
                 json.dump(data_to_json,write_to_ncarrem_json,ensure_ascii=False)
         return data
     except Exception as e:
@@ -177,7 +177,7 @@ def get_api_parking_eng():
                     station_dict = retrieveNcarrem(station_dict,data_to_json)
                 data.append(station_dict)
         if data_to_json != read_carrem_json:
-            with open(r"./ncarrem.json",'w',encoding='utf-8') as write_to_ncarrem_json:
+            with open(r"{}".format(os.environ['NCARREM_FILE']),'w',encoding='utf-8') as write_to_ncarrem_json:
                 json.dump(data_to_json,write_to_ncarrem_json,ensure_ascii=False)
         return data
     except:
