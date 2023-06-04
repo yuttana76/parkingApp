@@ -1,4 +1,5 @@
-from abc import abstractclassmethod,ABC, abstractmethod 
+from abc import ABC, abstractmethod 
+from smartparking.payment.domain.base.aggregate import AggregateBase
 
 class PaymentLogAbstrct(ABC):
     
@@ -7,7 +8,7 @@ class PaymentLogAbstrct(ABC):
         pass 
     
     @abstractmethod
-    def from_owner(self):
+    def from_owner(self) -> AggregateBase:
         pass 
     
     @abstractmethod
@@ -29,6 +30,10 @@ class PaymentLogAbstrct(ABC):
     @abstractmethod
     def get_number_of_success_transaction_in_this_day(self,parking_code) -> str:
         pass
+    
+    @abstractmethod
+    def from_ordernumber(self,ordernumber:str) -> AggregateBase:
+        pass 
     
     
     

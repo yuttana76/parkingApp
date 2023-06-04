@@ -1,11 +1,10 @@
-from email import message
 from app import app
 from smartparking.parking.domain.base.aggregate import AggregateBase 
 from smartparking.parking.domain.model.car import Car
 from flask import request ,jsonify
 from smartparking.parking.authen import authenApikey,authenticateSV
 from smartparking.parking.domain.registry import Registry
-from datetime import datetime
+
 @app.route('/api/lprin/seperateauthority',methods=['POST'])
 @authenApikey
 def seperateauthorityfromlprin():

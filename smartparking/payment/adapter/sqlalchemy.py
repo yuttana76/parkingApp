@@ -4,6 +4,7 @@ from smartparking.payment.domain.base.aggregate import AggregateBase
 from smartparking.payment.domain.model.payment import Transaction
 from sqlalchemy import func,cast,Float
 from datetime import date
+from smartparking.payment.domain.base import exception
 
 class PaymentLogInSQLalchemy(PaymentLogAbstrct):
     def __init__(self):
@@ -29,6 +30,14 @@ class PaymentLogInSQLalchemy(PaymentLogAbstrct):
         transaction = Transaction.from_orm(latest_transaction)
         return transaction
     
+    def from_ordernumber(self, ordernumber: str) -> AggregateBase:
+        row = self.log.query.filter_by(orderNumber=ordernumber).first()
+        if row:
+            transaction = Transaction.from_orm(row)
+            return transaction
+        else:
+            raise exception.InvalidOrdernumber
+        
     def get_number_of_transaction_today(self,today):
         number_of_transaction = self.log.query.filter(
             self.log.parking_register_date == today

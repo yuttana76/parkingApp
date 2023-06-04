@@ -67,3 +67,7 @@ class AggregateBase(BaseModel,ABC):
     @abstractmethod
     def get_invoice_no(self):
         pass 
+    
+    @abstractmethod
+    def from_ordernumber(self,ordernumber:str):
+        pass

@@ -1,0 +1,2 @@
+class InvalidOrdernumber(Exception):
+    pass 

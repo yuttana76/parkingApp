@@ -91,3 +91,7 @@ class Transaction(AggregateBase):
         invoice = self.parking_code + datetime.today().strftime('%d%m%Y') + Registry().paymentlog.get_number_of_success_transaction_in_this_day(self.parking_code)
         self.invoice_no = invoice
         return invoice
+    
+    def from_ordernumber(self,ordernumber:str) -> AggregateBase:
+        transaction = Registry().paymentlog.from_ordernumber(ordernumber)
+        return transaction

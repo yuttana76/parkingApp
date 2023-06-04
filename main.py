@@ -1,6 +1,7 @@
 from smartparking.parking.inject import inject
 import smartparking.payment.rest
 import smartparking.parking.rest
+import smartparking.parking.rest_blue_line
 from pickle import NONE
 from posixpath import join
 # from flask.typing import AppOrBlueprintKey
@@ -52,6 +53,9 @@ from apiMember import ApiMember
 from threading import Thread
 from encryptuat import encryptuat
 from senddatatolocal import send_data_to_publish_service_with_ordernumber
+import random 
+import string
+
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
@@ -3706,6 +3710,20 @@ def check_reserve():
     elif Parking.qr_show_exp > today :
         return jsonify({'message':'qrcode'})
     return jsonify({'message':None})
+
+@app.route('/api/v1/create-myqrcode-for-dev')
+def create_myqrcode_for_dev():
+    request_body = request.get_json()
+    identity_card = request_body.get('identity_card')
+    mockqrcode = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(20))
+    new_logvisitor = Parking_logvisitor(
+        qrcode=mockqrcode,
+        identity_card = identity_card,
+        deactivate='0'
+    )
+    db.session.add(new_logvisitor)
+    db.session.commit()
+    return jsonify({'id':new_logvisitor.id,'qrcode':mockqrcode})
 
 @app.errorhandler(500)
 def handle_bad_request(e):
