@@ -3,7 +3,7 @@ from Crypto.PublicKey import RSA
 from Crypto.Cipher import PKCS1_v1_5
 from base64 import b64encode
 
-CERT_PATH = os.environ['KTB_CERT_PATH']
+CERT_PATH = os.environ.get('KTB_CERT_PATH','C:/D/certEncrypt/prod/parkandlive.mrta_98427_prod.cer')
 # Load the public key from file in PEM format
 with open(CERT_PATH, 'rb') as f:
     public_key = RSA.importKey(f.read())

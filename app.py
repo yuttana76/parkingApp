@@ -28,7 +28,7 @@ app = Flask(__name__, template_folder='templates', static_folder='static')
 cors = CORS(app)
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app,session_options={"autoflush": False})
-app.config['SQLALCHEMY_DATABASE_URI']=f"mysql://{os.environ['DB_USER']}:{os.environ['DB_PASSWORD']}@{os.environ['DB_HOST']}/{os.environ['DB_NAME']}"
+app.config['SQLALCHEMY_DATABASE_URI']=f"mysql://{os.environ.get('DB_USER','owner')}:{os.environ.get('DB_PASSWORD','jpark1234*')}@{os.environ.get('DB_HOST','localhost')}/{os.environ.get('DB_NAME','mrtaparking')}"
 app.config['SQLALCHEMY_POOL_RECYCLE'] = 60
 db.Model.metadata.reflect(db.engine)
 app.secret_key = "NdesKWazqD-TDocYq4u7qw"

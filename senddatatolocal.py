@@ -104,7 +104,7 @@ def send_data_to_publish_service_with_ordernumber(ordernumber:str) -> None :
                 return 
             command['table'] = 'parking_member'
             command['data'] = member_model.dict()
-            url = os.environ['CLOUD_PUBLISH_URL']
+            url = os.environ.get('CLOUD_PUBLISH_URL','https://test.mrta.cloud-publish-service.ittiponk.com/api/v1/add-command-to-income-queue')
             response = requests.post(url=url,json=command)
             if response.status_code != 200:
                 print(f"can not send ordernumber : {ordernumber}")
