@@ -1,7 +1,7 @@
 import json
 import os
 
-with open(r"{}".format(os.environ.get('PROVINCE_FILE','C:\D\project_mrta_parkingApp\mrta-app\ProvinceTH.json')), encoding="utf-8") as json_data:
+with open(r"{}".format(os.environ.get('PROVINCE_FILE',r'C:\D\project_mrta_parkingApp\mrta-app\ProvinceTH.json')), encoding="utf-8") as json_data:
             data = json.load(json_data)
 
 def get_province():
