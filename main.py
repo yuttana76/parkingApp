@@ -3712,7 +3712,7 @@ def check_reserve():
         return jsonify({'message':'qrcode'})
     return jsonify({'message':None})
 
-@app.route('/api/v1/create-myqrcode-for-dev')
+@app.route('/api/v1/blue-line/create-myqrcode-for-dev',methods=["POST"])
 def create_myqrcode_for_dev():
     request_body = request.get_json()
     identity_card = request_body.get('identity_card')
