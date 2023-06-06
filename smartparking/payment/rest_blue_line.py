@@ -26,7 +26,7 @@ def blueline_query_payment_status():
     try:
         request_body = request.get_json()
         ordernumber = request_body.get('ordernumber')
-        transaction:AggregateBase = Transaction.from_ordernumber(ordernumber)
+        transaction:AggregateBase = Transaction().from_ordernumber(ordernumber)
         if transaction.payment_status == '1':
             return jsonify({'status':True})
         return jsonify({'status':False})
