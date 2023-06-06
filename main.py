@@ -2,6 +2,7 @@ from smartparking.parking.inject import inject
 import smartparking.payment.rest
 import smartparking.parking.rest
 import smartparking.parking.rest_blue_line
+import smartparking.payment.rest_blue_line
 from pickle import NONE
 from posixpath import join
 # from flask.typing import AppOrBlueprintKey
