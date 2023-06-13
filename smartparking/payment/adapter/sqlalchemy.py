@@ -47,14 +47,18 @@ class PaymentLogInSQLalchemy(PaymentLogAbstrct):
     def update_from_object(self,transaction:AggregateBase):
         log = self.log.query.filter_by(Id = transaction.Id).first()
         if log :
+            update_status = False
             for key,value in transaction.dict().items():
                 if value and getattr(log,key) != value:
                     setattr(log,key,value)
+                    update_status = True
                 elif value in [0,1] and getattr(log,key) != value:
                     setattr(log,key,value)
+                    update_status = True
                 else:
                     continue
-            self.db.session.commit()
+            if update_status:
+                self.db.session.commit()
             return True 
         return False
     
