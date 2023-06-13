@@ -11,15 +11,15 @@ def blueline_getpromptpayqrcode():
         latest_transaction:AggregateBase = transaction.get_owner_latest_transaction()
         latest_transaction.update_service_charge(transaction)
         latest_transaction.add_termseq_to_transaction()
-        latest_transaction.update()
         qrcode = latest_transaction.get_prompt_qrcode()
-        return jsonify({'promptpayqrcode':qrcode})
+        latest_transaction.update()
+        return jsonify({'promptpayqrcode':qrcode,'ordernumber':transaction.orderNumber})
     transaction.save_to_database()
     transaction.add_ordernumber_to_trasaction()
     transaction.add_termseq_to_transaction()
-    transaction.update()
     qrcode = transaction.get_prompt_qrcode()
-    return jsonify({'promptpayqrcode':qrcode})
+    transaction.update()
+    return jsonify({'promptpayqrcode':qrcode,'ordernumber':transaction.orderNumber})
 
 @app.route('/api/v1/blue-line/query-payment-status',methods=['POST'])
 def blueline_query_payment_status():
@@ -32,3 +32,21 @@ def blueline_query_payment_status():
         return jsonify({'status':False})
     except InvalidOrdernumber:
         return jsonify({'message':'invalid ordernumber'}),422
+    
+@app.route('/api/v1/blue-line/update/payment-status',methods=['POST'])
+def blueline_update_payment_status():
+    try:
+        request_body = request.get_json()
+        ordernumber = request_body.get('ordernumber')
+        payment_status = request_body.get('payment_status')
+        transaction:AggregateBase = Transaction().from_ordernumber(ordernumber)
+        if payment_status:
+            transaction.payment_status = '1'
+        else:
+            transaction.payment_status = '0'
+        transaction.update()
+        return jsonify({'message':'success'}),200
+    except InvalidOrdernumber:
+        return jsonify({'message':'invalid ordernumber'}),422
+            
+        
