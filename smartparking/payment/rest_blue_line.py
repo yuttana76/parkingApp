@@ -13,7 +13,7 @@ def blueline_getpromptpayqrcode():
         latest_transaction.add_termseq_to_transaction()
         qrcode = latest_transaction.get_prompt_qrcode()
         latest_transaction.update()
-        return jsonify({'promptpayqrcode':qrcode,'ordernumber':transaction.orderNumber})
+        return jsonify({'promptpayqrcode':qrcode,'ordernumber':latest_transaction.orderNumber})
     transaction.save_to_database()
     transaction.add_ordernumber_to_trasaction()
     transaction.add_termseq_to_transaction()
