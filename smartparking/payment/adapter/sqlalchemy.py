@@ -48,11 +48,12 @@ class PaymentLogInSQLalchemy(PaymentLogAbstrct):
         log = self.log.query.filter_by(Id = transaction.Id).first()
         if log :
             for key,value in transaction.dict().items():
-                if value:
-                    if getattr(log,key) != value:
-                        setattr(log,key,value)
-                    pass 
-                pass 
+                if value and getattr(log,key) != value:
+                    setattr(log,key,value)
+                elif value in [0,1] and getattr(log,key) != value:
+                    setattr(log,key,value)
+                else:
+                    continue
             self.db.session.commit()
             return True 
         return False

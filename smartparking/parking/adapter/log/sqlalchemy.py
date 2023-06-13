@@ -58,12 +58,14 @@ class LogInSqlAlchemy(LogAbstract):
         if log :
             update_status = False
             for key,value in car.dict().items():
-                if value:
-                    if getattr(log,key) != value:
-                        setattr(log,key,value)
-                        update_status = True 
-                    pass 
-                pass 
+                if value and getattr(log,key) != value:
+                    setattr(log,key,value)
+                    update_status = True
+                elif value in [0,1] and getattr(log,key) != value:
+                    setattr(log,key,value)
+                    update_status = True
+                else:
+                    continue
             if update_status:
                 self.db.session.commit()
             return True 
