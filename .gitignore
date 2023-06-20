@@ -130,6 +130,6 @@ venv.bak/
 .mypy_cache/
 .dmypy.json
 dmypy.json
-
+mock.cer
 # Pyre type checker
 .pyre/
