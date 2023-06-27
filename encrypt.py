@@ -14,4 +14,4 @@ def encrypt(plainText):
     cipher = PKCS1_v1_5.new(public_key)
     cipher_text = cipher.encrypt(plainText.encode('utf-8'))
     # Base64 encode the cipher text and return it
-    return b64encode(cipher_text).decode('utf-8')
+    return b64encode(cipher_text).decode('utf-8').replace('/','%2F').replace('+','%2B').replace('=','%3D')
