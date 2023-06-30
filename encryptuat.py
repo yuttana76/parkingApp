@@ -3,7 +3,7 @@ from Crypto.PublicKey import RSA
 from Crypto.Cipher import PKCS1_v1_5
 from base64 import b64encode
 
-CERT_PATH = os.environ.get('KTB_UAT_CERT_PATH','C:/D/certEncrypt/uat/cgpinapp_99246_uat.ce')
+CERT_PATH = os.environ.get('KTB_UAT_CERT_PATH','C:/D/certEncrypt/uat/cgpinapp_99246_uat.cer')
 
 
 def encryptuat(plainText):
