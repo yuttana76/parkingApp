@@ -107,10 +107,10 @@
                             ...
                         </a>
                         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                            <a class="dropdown-item {% if request.endpoint=='reserve_step1' %}active{%endif %}"
-                                href="{{ url_for('reserve_step1')}}">จองที่จอด</a>
                             <!-- <a class="dropdown-item {% if request.endpoint=='reserve_step1' %}active{%endif %}"
-                                onclick="{alert('บริการนี้ยังไม่เปิดให้ใช้งาน ขออภัยในความไม่สะดวกค่ะ')}">จองที่จอด</a> -->
+                                href="{{ url_for('reserve_step1')}}">จองที่จอด</a> -->
+                            <a class="dropdown-item {% if request.endpoint=='reserve_step1' %}active{%endif %}"
+                                onclick="{alert('บริการนี้ยังไม่เปิดให้ใช้งาน ขออภัยในความไม่สะดวกค่ะ')}">จองที่จอด</a>
                             <a class="dropdown-item {% if request.endpoint=='contact_2' %}active{%endif %}"
                                 href="{{ url_for('contact_2')}}">ติดต่อรฟม.</a>
                         </div>
