@@ -69,7 +69,7 @@ def paymentCGP(ref1,total,ref2,payRef): #payRef gen from term_seq gen ใหม�
      response = requests.get(url, params=params, cert=cert)
      encoded = (response.text).encode("utf8")
      print(response.status_code)
-     print(response.json())
+     print(response.raw)
      print('response from cgp payment')
      root = ET.fromstring(encoded)
      for child in  root.iter():
