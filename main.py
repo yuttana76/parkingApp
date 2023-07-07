@@ -2386,7 +2386,7 @@ def cgp_payment():
     card_type = find[0].parking_type_name
     id_ = find[0].Id
     # paymentCGP(ref1,total,ref2,payRef)
-    response = paymentCGP(ref1, total, ref2, payRef)
+    response = paymentCGP_PD(ref1, total, ref2, payRef)
     print(response)
     cursor = mysql.connection.cursor()
     sql = "UPDATE parking_log SET payment_name = %s WHERE orderNumber = %s"
