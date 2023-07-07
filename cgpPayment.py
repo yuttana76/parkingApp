@@ -2,6 +2,8 @@ import requests,datetime
 from flask import session
 import xml.etree.ElementTree as ET
 from db_config import mysql
+from find_log import find_last_log
+from app import Parking_manage,Ktb_detail
 
 cert_file_path = "C:/D/certFor_CGP_payment/clientuatws1.crt"
 key_file_path = "C:/D/certFor_CGP_payment/clientuatws1_key.pem"
@@ -64,7 +66,22 @@ def paymentCGP(ref1,total,ref2,payRef): #payRef gen from term_seq gen ใหม�
      # “Y” = Resend transaction กรณี Time out
      #isp_id, vendor_id :ธนาคารกำหนดให้ 98427
      # ########################################################################################
-     params = {"ac_ref": ac_ref, "amount": amount, "cust_id": ref1, "db_ac_curr_code": "THB", "db_bank_code": "006", "isp_id": "98427", "pay_ref": payRef,"pay_service": "EPAYNET","ref1": ref1,"ref_date":today ,"resend_flag": resend_flag,"tran_sub_type": "M","tran_type": "01","vendor_id": "98427","ref2":ref2 }
+     latest_log = find_last_log(ref1)[0]
+     parking_code = latest_log.parking_code
+     line = Parking_manage.query.filter_by(parking_code=parking_code).first().line_name
+     ktb_detail = Ktb_detail.query.filter_by(line=line).first()
+    
+     transaction_type = latest_log.transaction_type
+     terminal_id_dict = {
+        '1': ktb_detail.tid_register,
+        '2': ktb_detail.tid_renew,
+        '4': ktb_detail.tid_reserve,
+        '5': ktb_detail.tid_daily
+     }
+     terminal_id = terminal_id_dict.get(transaction_type)
+     if not terminal_id:
+        raise Exception('Invalid transaction type')
+     params = {"ac_ref": ac_ref, "amount": amount, "cust_id": ref1, "db_ac_curr_code": "THB", "db_bank_code": "006", "isp_id": terminal_id, "pay_ref": payRef,"pay_service": "EPAYNET","ref1": ref1,"ref_date":today ,"resend_flag": resend_flag,"tran_sub_type": "M","tran_type": "01","vendor_id": terminal_id,"ref2":ref2 }
      cert = (cert_file_path, key_file_path)
      response = requests.get(url, params=params, cert=cert)
      encoded = (response.text).encode("utf8")
