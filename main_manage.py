@@ -1478,7 +1478,7 @@ def update_dashboard():
      
      if verify_status == 'ยกเลิก':
         cursor = mysql.connection.cursor()
-        cursor.execute('INSERT INTO parking_log(card_id,input_type,transaction_type,verify_status,paymet_status,identity_card,parking_code,parking_name,first_name,last_name,phone) VALUES (%s,"2","3","5",%s, %s,%s,%s,%s,%s,%s)',(card_id,check_pay_status,identity_card,parking_code,result[6],result[7],result[8],result[9]))
+        cursor.execute('INSERT INTO parking_log(card_id,input_type,transaction_type,verify_status,payment_status,identity_card,parking_code,parking_name,first_name,last_name,phone) VALUES (%s,"2","3","5",%s, %s,%s,%s,%s,%s,%s)',(card_id,check_pay_status,identity_card,parking_code,result[6],result[7],result[8],result[9]))
         mysql.connection.commit()
         cursor = mysql.connection.cursor()
         cursor.execute('update parking_member set card_status="0" where card_id=%s AND parking_code=%s',(card_id,parking_code))
