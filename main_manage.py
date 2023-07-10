@@ -37,6 +37,7 @@ from greenline.returncard.usecase import send_card_return_data_to_cit
 from user_owned_card import checkCardNotRandom
 from apiMember import ApiMember
 from senddatatolocal import send_data_to_publish_service_with_ordernumber
+from mail_notification import change_verify_status_notification
 
 
 @app.route('/manage/', methods=['GET', 'POST'])
@@ -1453,20 +1454,29 @@ def update_dashboard():
     date = x.date()
     today = date.strftime('%Y-%m-%d')
     #today_time = x.strftime("%Y-%m-%d, %H:%M:%S")
-    id = loaded_data['id']
+    id_ = loaded_data['id']
     comment = loaded_data['comment_verify']
     verify_status = loaded_data['verify_status']
     if verify_status == "รอจองคิว":
         cursor = mysql.connection.cursor()
-        cursor.execute('update parking_log set verify_status="3" where id=%s',(id,))
+        cursor.execute('update parking_log set verify_status="3" where id=%s',(id_,))
         mysql.connection.commit() 
-    if verify_status == 'รอให้คิว':
+        change_verify_status_notification(verify_status=verify_status,id=id_)
+        return 'success'
+    elif verify_status == 'รอให้คิว':
         cursor = mysql.connection.cursor()
-        cursor.execute('update parking_log set verify_status="6" where id=%s',(id,))
+        cursor.execute('update parking_log set verify_status="6" where id=%s',(id_,))
         mysql.connection.commit() 
+        change_verify_status_notification(verify_status=verify_status,id=id_)
+        return 'success'
+    elif verify_status == 'ไม่ผ่านการตรวจสอบ':
+        cursor = mysql.connection.cursor()
+        cursor.execute('update parking_log set verify_status="2" where id=%s',(id_,))
+        mysql.connection.commit() 
+        change_verify_status_notification(verify_status=verify_status,id=id_)
         return 'success'
     cursor = mysql.connection.cursor()
-    cursor.execute('select verify_status,card_id,payment_status,month,identity_card,parking_code,parking_name,first_name,last_name,phone,service_start_date from parking_log where id=%s',(id,))
+    cursor.execute('select verify_status,card_id,payment_status,month,identity_card,parking_code,parking_name,first_name,last_name,phone,service_start_date from parking_log where id=%s',(id_,))
     result = cursor.fetchone()
     if result:
      verify = result[0]
@@ -1487,14 +1497,14 @@ def update_dashboard():
         lastdate_pay = date+timedelta(days=7) #หมดอายุเมื่อลูกค้าไม่จ่ายหลังวันอนุมัติ7วัน
         newcursor = mysql.connection.cursor()
         if verify_status == "ผ่านการตรวจสอบ":
-         newcursor.execute('update parking_log set approve_date =%s,lastdate_pay=%s,verify_status=%s where id=%s',(today,lastdate_pay,'1',id)) #ผ่าน
+         newcursor.execute('update parking_log set approve_date =%s,lastdate_pay=%s,verify_status=%s where id=%s',(today,lastdate_pay,'1',id_)) #ผ่าน
          mysql.connection.commit()
         else:
           if comment != "":
-             newcursor.execute('update parking_log set verify_status=%s,comment=%s where id=%s',("2",comment,id)) #ไม่ผ่าน
+             newcursor.execute('update parking_log set verify_status=%s,comment=%s where id=%s',("2",comment,id_)) #ไม่ผ่าน
              mysql.connection.commit() 
           else: 
-               newcursor.execute('update parking_log set verify_status=%s where id=%s',('2',id)) #ไม่ผ่าน
+               newcursor.execute('update parking_log set verify_status=%s where id=%s',('2',id_)) #ไม่ผ่าน
                mysql.connection.commit() 
      else:
         payment_name = loaded_data['payment_name']
@@ -1517,7 +1527,7 @@ def update_dashboard():
             payment_status="0"  
         if payment_name != "xx" and (payment_status =='1'):
             cursor = mysql.connection.cursor()
-            cursor.execute('update parking_log set payment_name=%s, payment_status=%s where id=%s',(payment_name,payment_status,id))
+            cursor.execute('update parking_log set payment_name=%s, payment_status=%s where id=%s',(payment_name,payment_status,id_))
             mysql.connection.commit() 
 
         payment_date = loaded_data['payment_date']
@@ -1526,16 +1536,17 @@ def update_dashboard():
             if len(split_paydate[0]) > 4:
                 payment_date = datetime.datetime.strptime(payment_date,'%Y-%m-%dT%H:%M')
             cursor = mysql.connection.cursor()
-            cursor.execute('update parking_log set payment_date=%s where id=%s',(payment_date,id))
+            cursor.execute('update parking_log set payment_date=%s where id=%s',(payment_date,id_))
             mysql.connection.commit()
 
         card_last_read_date = loaded_data['card_last_read_date']
         if card_last_read_date != "": #พนักงานกรอกวันที่อ่านล่าสุด
-            service_start_date = result[10].date()
-            if date > service_start_date:
-                cursor = mysql.connection.cursor()
-                cursor.execute('update parking_log set service_start_date=%s where id=%s',(date,id))
-                mysql.connection.commit()
+            if result[10]:
+                service_start_date = result[10].date()
+                if date > service_start_date:
+                    cursor = mysql.connection.cursor()
+                    cursor.execute('update parking_log set service_start_date=%s where id=%s',(date,id_))
+                    mysql.connection.commit()
             cur = mysql.connection.cursor()
             cur.execute('select card_expire_date,card_last_read_date from parking_member where card_id=%s AND parking_code=%s  ORDER BY Id DESC',(card_id,parking_code))
             res = cur.fetchone()
@@ -1551,7 +1562,7 @@ def update_dashboard():
             #ต่ออายุบัตร
             if payment_name == '1':
                 if check_pay_status is None or(check_pay_status=='0') and (payment_status=='1') :
-                 capacity_count(parking_code,id)
+                 capacity_count(parking_code,id_)
                  renew_card_TAFF_orAll(card_id,month,'1',identity_card,parking_code)  
            
             else:
@@ -1560,32 +1571,7 @@ def update_dashboard():
             if  check_read is None and (check_expi is None) or (check_expi is None):
                  renew_card_TAFF_orAll(card_id,month,'1',identity_card,parking_code)
             #################################### send email ######################################
-    if loaded_data['payment_status'] != '1':
-        log = Parking_log.query.filter_by(Id=id).first()
-        customer = Customer_register.query.filter_by(identity_card = log.identity_card).first()
-        if customer:
-            msg = Message('Notification Email',sender='parkandride@mrta.co.th',recipients=[customer.email])
-            body = ''
-            if verify_status == 'ผ่านการตรวจสอบ':
-                body = f'เรียนคุณ {customer.first_name} {customer.last_name} \n'
-                body += f'\t\t รหัสบัตร {log.card_id} ได้รับสถานะ "ผ่านการตรวจสอบ" รบกวนคุณ {customer.first_name} ชำระค่าบริการที่เมนู "ข้อมูลสมาชิกรายเดือน" และกดปุ่ม "ชำระเงิน" ด้วยค่ะ\n'
-            elif verify_status == 'ไม่ผ่านการตรวจสอบ':
-                body = f'เรียนคุณ {customer.first_name} {customer.last_name} \n'
-                body += f'\t\t รหัสบัตร {log.card_id} ได้รับสถานะ "ไม่ผ่านการตรวจสอบ" รบกวนตรวจสอบข้อมูลที่เมนู "ข้อมูลผู้ใช้งาน" เพื่อ update แก้ไขข้อมูลส่วนตัวให้ถูกต้อง ด้วยค่ะ\n'
-            elif verify_status == 'รอจองคิว':
-                body = f'เรียนคุณ {customer.first_name} {customer.last_name} \n'
-                body += f'\t\t รหัสบัตร {log.card_id} ได้รับสถานะ "รอจองคิว" รบกวนคุณ {customer.first_name} กดปุ่มจองคิวที่เมนู "ข้อมูลสมาชิกรายเดือน" และ กดปุ่ม "จองคิว" ด้วยค่ะ\n'   
-            elif verify_status == 'ยกเลิก':
-                body = f'เรียนคุณ {customer.first_name} {customer.last_name} \n'
-                body += f'\t\t รหัสบัตร {log.card_id} ได้รับสถานะ "ยกเลิก" ค่ะ\n'   
-            if body != '':
-                notification = Message_box(identity_card=log.identity_card,card_id=log.card_id,des_noti=body,date=datetime.date.today())
-                db.session.add(notification)
-                db.session.commit()
-                msg.body = body
-                mail.send(msg)
-            else:
-                pass
+    change_verify_status_notification(verify_status=verify_status,id=id_)
     return "success"
 
 
