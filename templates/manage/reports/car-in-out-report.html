@@ -1,0 +1,924 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    {% include "include/manage-css.html" %}
+    {% include "include/manage-js.html" %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>รายงานข้อมูลรถเข้า - ออก</title>
+
+    <!-- Include Material-UI CSS -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+
+    <!-- Include MUI CSS -->
+    <link rel="stylesheet" href="https://cdn.muicss.com/mui-0.9.41/css/mui.min.css">
+
+    <!-- Include jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <!-- Include Excel Library -->
+    <script src="https://unpkg.com/xlsx/dist/xlsx.full.min.js"></script>
+
+</head>
+
+<style>
+    .date-time {
+        background-color: white;
+        border-radius: 5px;
+        border: 1px solid #ccc;
+    }
+
+    .date-time-picker {
+        padding-bottom: 9px;
+        padding-top: 7px;
+        padding-left: 15px;
+        padding-right: 15px;
+        margin-bottom: 0px;
+    }
+
+    .collapsed {
+        display: none;
+    }
+
+    td,
+    thead,
+    label,
+    select,
+    input,
+    option {
+        font-size: 14px;
+        /* Adjust the font size as needed */
+    }
+
+    .align-right {
+        display: flex;
+        justify-content: flex-end;
+    }
+
+    #datagrid-body tr:hover {
+        background-color: #e9eaeb;
+        /* Change this color to your desired highlight color */
+    }
+
+    .loader {
+        margin-top: 30px;
+        margin-bottom: 30px;
+        width: 45px;
+        aspect-ratio: 1;
+        --c: no-repeat linear-gradient(#1a086e 0 0);
+        background:
+            var(--c) 0 0,
+            var(--c) 50% 50%,
+            var(--c) 100% 100%;
+        animation:
+            b7 1s infinite alternate;
+    }
+
+    @keyframes b7 {
+
+        0%,
+        10% {
+            background-size: 20% 100%
+        }
+
+        50% {
+            background-size: 20% 20%
+        }
+
+        90%,
+        100% {
+            background-size: 100% 20%
+        }
+    }
+</style>
+
+
+<body class="hold-transition sidebar-mini layout-fixed">
+    <div class="wrapper">
+        {% include "manage/comps/header.html" %}
+        {% include "manage/comps/sidebar.html" %}
+
+        <div class="content-wrapper">
+            <div class="content-header" style="padding-bottom: 0px;">
+                <div class="container-fluid">
+                    <div class="row mb-3">
+                        <div class="col-sm-12 mb-3">
+                            <h1 class="m-0 mui--text-primary"
+                                style="font-size: 28px; font-weight: bold; color: #1a086e">
+                                รายงานข้อมูลรถเข้า - ออก
+                                <button type="button" class="btn btn-link" data-toggle="collapse"
+                                    data-target="#dataSection" aria-expanded="true" aria-controls="dataSection"
+                                    onclick="toggleIcon(this)">
+                                    <i class="fas fa-chevron-up" style="color: #1a086e"></i>
+                                </button>
+                            </h1>
+                        </div>
+                        <div class="col-sm-12 mb-3">
+                            <div id="dataSection" class="collapse show">
+                                <div class="row">
+                                    <div class="col-lg-3">
+                                        <div class="row">
+                                            <div class="col-sm-12">
+                                                <label for="lineSelect">เลือกสายรถไฟฟ้า</label>
+                                                <select id="lineSelect" class="mui-select">
+                                                    <option value="All">ทั้งหมด</option>
+                                                    <option value="สายสีน้ำเงิน">สายสีน้ำเงิน</option>
+                                                    <option value="สายสีม่วง">สายสีม่วง</option>
+                                                    <option value="สายสีเขียว">สายสีเขียว</option>
+                                                    <option value="สายสีส้ม">สายสีส้ม</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-3">
+                                        <div class="row">
+                                            <div class="col-sm-12">
+                                                <label for="parkingSelect">เลือกสถานีรถไฟฟ้า</label>
+                                                <select id="parkingSelect" class="mui-select">
+                                                    <option value="All">ทั้งหมด</option>
+                                                    <option value="สถานีลาดพร้าว 9 ชั้น">สถานีลาดพร้าว 9 ชั้น
+                                                    </option>
+                                                    <option value="สถานีรัชดาภิเษก">สถานีรัชดาภิเษก</option>
+                                                    <option value="สถานีศูนย์วัฒนธรรม (ลาน 1)">
+                                                        สถานีศูนย์วัฒนธรรม (ลาน
+                                                        1)
+                                                    </option>
+                                                    <option value="สถานีศูนย์วัฒนธรรม (รัชดาภิเษกซอย 6)">
+                                                        สถานีศูนย์วัฒนธรรม
+                                                        (รัชดาภิเษกซอย 6)</option>
+                                                    <option value="สถานีพระราม 9">สถานีพระราม 9</option>
+                                                    <option value="สถานีสุขุมวิท">สถานีสุขุมวิท</option>
+                                                    <option value="สถานีศูนย์การประชุมแห่งชาติสิริกิติ์">
+                                                        สถานีศูนย์การประชุมแห่งชาติสิริกิติ์</option>
+                                                    <option value="ฝั่งตรงข้ามศูนย์การประชุมแห่งชาติสิริกิติ์">
+                                                        ฝั่งตรงข้ามศูนย์การประชุมแห่งชาติสิริกิติ์</option>
+                                                    <option value="สถานีสามย่าน">สถานีสามย่าน</option>
+                                                    <option value="สถานีหลักสอง">สถานีหลักสอง</option>
+                                                    <option value="สถานีคลองบางไผ่">สถานีคลองบางไผ่</option>
+                                                    <option value="สถานีสามแยกบางใหญ่">สถานีสามแยกบางใหญ่
+                                                    </option>
+                                                    <option value="สถานีบางรักน้อยท่าอิฐ">สถานีบางรักน้อยท่าอิฐ
+                                                    </option>
+                                                    <option value="สถานีแยกนนทบุรี 1">สถานีแยกนนทบุรี 1</option>
+                                                    <option value="สถานีเคหะฯ">สถานีเคหะฯ</option>
+                                                    <option value="สถานีแยก คปอ.">สถานีแยก คปอ.</option>
+                                                    <option value="สถานีคูคต">สถานีคูคต</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-3">
+                                        <div class="row">
+                                            <div class="col-sm-12">
+                                                <label for="customerTypeSelect">เลือกประเภทผู้ใช้บริการ</label>
+                                                <select id="customerTypeSelect" class="mui-select">
+                                                    <option value="All">ทั้งหมด</option>
+                                                    <option value="Member">Member</option>
+                                                    <option value="Visitor">Visitor</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-3">
+                                        <div class="row">
+                                            <div class="col-sm-12">
+                                                <label for="periodSelect">เลือกช่วงเวลา</label>
+                                                <select id="periodSelect" class="mui-select">
+                                                    <option value="All">ทั้งหมด</option>
+                                                    <option value="วันทำการ">วันทำการ</option>
+                                                    <option value="วันเสาร์-อาทิตย์">วันเสาร์-อาทิตย์</option>
+                                                    <option value="วันหยุดนักขัตฤกษ์">วันหยุดนักขัตฤกษ์</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- Datepicker from date section -->
+                                    <div class="col-lg-3">
+                                        <div class="row">
+                                            <div class="col-sm-12">
+                                                <label for="fromDate">ตั้งแต่วันที่</label>
+                                                <div class="date-time">
+                                                    <div class="mui-textfield mui-datefield date-time-picker">
+                                                        <input type="date" id="fromDate" value="" />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- Datepicker to date section -->
+                                    <div class="col-lg-3">
+                                        <div class="row">
+                                            <div class="col-sm-12">
+                                                <label for="toDate">ถึงวันที่</label>
+                                                <div class="date-time">
+                                                    <div class="mui-textfield mui-datefield date-time-picker">
+                                                        <input type="date" id="toDate" value="" />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- Timepicker from time section -->
+                                    <div class="col-lg-3">
+                                        <div class="row">
+                                            <div class="col-sm-12">
+                                                <label for="fromTime">ตั้งแต่เวลา</label>
+                                                <div class="date-time">
+                                                    <div class="mui-textfield mui-datefield date-time-picker">
+                                                        <input type="time" id="fromTime" value="09:00" />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- Timepicker to time section -->
+                                    <div class="col-lg-3">
+                                        <div class="row">
+                                            <div class="col-sm-12">
+                                                <label for="toTime">ถึงเวลา</label>
+                                                <div class="date-time">
+                                                    <div class="mui-textfield mui-datefield date-time-picker">
+                                                        <input type="time" id="toTime" value="18:00" />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-12" align="right">
+                                        <div class="row">
+                                            <div class="col-sm-12">
+                                                <button id="search-button" class="mui-btn mui-btn--primary"
+                                                    style="margin-top: 10px; border-radius: 5px; background-color: #1a086e;"
+                                                    onclick="sendSearchData()">
+                                                    <i class="fas fa-search"></i> ค้นหา
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="content-header" style="padding-top: 0px;">
+                <div class="container-fluid">
+                    <div class="row mb-3">
+                        <div class="col-lg-4">
+                            <div class="input-group">
+                                <input type="text" id="search-input" class="form-control" placeholder="ค้นหา"
+                                    style="border-radius: 5px;" />
+                                <div class="input-group-btn">
+                                    <button class="btn btn-primary" type="submit" id="search-button2"
+                                        style="border-radius: 5px;">
+                                        <i class="fas fa-search"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-4">
+                            <button id="export-excel-button" class="mui-btn mui-btn--primary"
+                                style="background-color: #185C37; margin-top: 0px; border-radius: 5px;" align="right">
+                                <i class="fas fa-file-excel"></i> Export
+                                Excel
+                            </button>
+                        </div>
+                        <!-- Datagrid Section -->
+                        <div class="col-lg-12" style="margin-top: 10px;">
+                            <div class="mui-panel" style="border-radius: 5px; border: 1px solid #ccc;">
+                                <div class="mui-datagrid" style="border-radius: 5px; border: 1px solid #ccc;">
+                                    <div class="table-container" style="overflow-x: auto;">
+                                        <table class="mui-table" style="white-space: nowrap;" id="datagrid-table">
+                                            <thead>
+                                                <tr
+                                                    style="background-color: #1a086e; color: white; border-radius: 5px;">
+                                                    <th>
+                                                        <div class="sort-icon-container" onclick="sortTable(0)">
+                                                            Tran ID
+                                                            <span id="sort-icon-tranid" class="sort-icon"></span>
+                                                        </div>
+                                                    </th>
+                                                    <th>
+                                                        <div class="sort-icon-container" onclick="sortTable(1)">
+                                                            ประเภทบัตร
+                                                            <span id="sort-icon-cardtype" class="sort-icon"></span>
+                                                        </div>
+                                                    </th>
+                                                    <th>
+                                                        <div class="sort-icon-container" onclick="sortTable(2)">
+                                                            ประเภทรถ
+                                                            <span id="sort-icon-cartype" class="sort-icon"></span>
+                                                        </div>
+                                                    </th>
+                                                    <th>
+                                                        <div class="sort-icon-container" onclick="sortTable(3)">
+                                                            หมายเลขบัตร
+                                                            <span id="sort-icon-cardno" class="sort-icon"></span>
+                                                        </div>
+                                                    </th>
+                                                    <th>
+                                                        <div class="sort-icon-container" onclick="sortTable(4)">
+                                                            ทะเบียน
+                                                            <span id="sort-icon-lisence" class="sort-icon"></span>
+                                                        </div>
+                                                    </th>
+                                                    <th>
+                                                        <div class="sort-icon-container" onclick="sortTable(5)">
+                                                            ประเภทการชำระ
+                                                            <span id="sort-icon-paytype" class="sort-icon"></span>
+                                                        </div>
+                                                    </th>
+                                                    <th>
+                                                        <div class="sort-icon-container" onclick="sortTable(6)">
+                                                            เวลาเข้า
+                                                            <span id="sort-icon-timein" class="sort-icon"></span>
+                                                        </div>
+                                                    </th>
+                                                    <th>
+                                                        <div class="sort-icon-container" onclick="sortTable(7)">
+                                                            เวลาออก
+                                                            <span id="sort-icon-timeout" class="sort-icon"></span>
+                                                        </div>
+                                                    </th>
+                                                    <th>
+                                                        <div class="sort-icon-container" onclick="sortTable(8)">
+                                                            ระยะเวลาจอด
+                                                            <span id="sort-icon-time" class="sort-icon"></span>
+                                                        </div>
+                                                    </th>
+                                                    <th>
+                                                        <div class="sort-icon-container" onclick="sortTable(9)">
+                                                            ประเภทผู้ใช้งาน
+                                                            <span id="sort-icon-custype" class="sort-icon"></span>
+                                                        </div>
+                                                    </th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="datagrid-body">
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                                <div class="col-lg-12" style="margin-top: 15px;">
+                                    <div class="row mb-3">
+                                        <div class="col-lg-6" id="show-index">
+
+                                        </div>
+                                        <div class="col-lg-6 align-right"> <!-- pagination section -->
+                                            <div class="pagination-container" id="pagination-container"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const table = document.querySelector('.mui-table');
+        const tableBody = document.querySelector('#datagrid-body');
+        const rows = tableBody.children;
+        const itemsPerPage = 10;
+        let currentPage = 1;
+        let data;
+
+        function initialLoad() {
+            var fromDateInput = document.getElementById("fromDate");
+            var toDateInput = document.getElementById("toDate");
+
+            var today = new Date();
+            var oneMonthAgo = new Date();
+            oneMonthAgo.setMonth(today.getMonth() - 1);
+
+            // Format the dates as YYYY-MM-DD (required by the date input)
+            var todayFormatted = today.toISOString().split("T")[0];
+            var oneMonthAgoFormatted = oneMonthAgo.toISOString().split("T")[0];
+
+            fromDateInput.value = oneMonthAgoFormatted;
+            toDateInput.value = todayFormatted;
+
+            sendSearchData();
+
+        }
+        document.addEventListener("DOMContentLoaded", initialLoad);
+
+        function assignTableData(resData, rowType = 'Data') {
+            console.log("assignTableData data : ", data)
+            var paginatedData;
+            var startIndex = (currentPage - 1) * itemsPerPage;
+            var endIndex = startIndex + itemsPerPage;
+
+            if (rowType == 'Filters') {
+                filterData = JSON.parse(decodeURIComponent(resData));
+                paginatedData = filterData.slice(startIndex, endIndex);
+            } else {
+                if (resData) {
+                    encodedData = resData;
+                    data = JSON.parse(decodeURIComponent(encodedData));
+                }
+                paginatedData = data.slice(startIndex, endIndex);
+            }
+
+
+            var datagridBody = document.getElementById("datagrid-body");
+            var tableRows = "";
+
+            // Loop through the data and generate HTML for each row
+            paginatedData.forEach(function (row) {
+                tableRows += "<tr>";
+                tableRows += "<td>" + row.tran_id + "</td>";
+                tableRows += "<td>" + row.card_type + "</td>";
+                tableRows += "<td>" + row.vehicle_type + "</td>";
+                tableRows += "<td>" + row.card_id + "</td>";
+                tableRows += "<td>" + row.license_plate_no + "</td>";
+                tableRows += "<td>" + row.payment_type + "</td>";
+                tableRows += "<td>" + row.time_in + "</td>";
+                tableRows += "<td>" + row.time_out + "</td>";
+                tableRows += "<td>" + row.parking_time + "</td>";
+                tableRows += "<td>" + row.visitor_type + "</td>";
+                tableRows += "</tr>";
+            });
+            // Add the generated table rows to the datagrid body
+            datagridBody.innerHTML = tableRows;
+
+            // Update the pagination
+            renderPagination(data.length);
+        }
+
+        function exportToExcel(filename, sheetName) {
+            // Iterate through each row and extract the cell values
+            const rows = data.map(function (row) {
+                const rowData = [];
+
+                rowData.push(row.tran_id);
+                rowData.push(row.card_type);
+                rowData.push(row.vehicle_type);
+                rowData.push(row.card_id);
+                rowData.push(row.license_plate_no);
+                rowData.push(row.payment_type);
+
+                // Convert to datetime format for columns 'G' and 'H' if the value is not null or '-'
+                if (row.time_in !== null && row.time_in !== "-") {
+                    rowData.push(new Date(row.time_in));
+                } else {
+                    rowData.push(row.time_in);
+                }
+                if (row.time_out !== null && row.time_out !== "-") {
+                    rowData.push(new Date(row.time_out));
+                } else {
+                    rowData.push(row.time_out);
+                }
+
+                // Convert to time format for column 'I' if the value is not null or '-' and is a valid number
+                if (
+                    row.parking_time !== null &&
+                    row.parking_time !== "-" &&
+                    !isNaN(row.parking_time)
+                ) {
+                    rowData.push(new Date(row.parking_time));
+                } else {
+                    rowData.push(row.parking_time);
+                }
+
+                rowData.push(row.visitor_type);
+
+                return rowData;
+            });
+
+            // Create a new workbook and worksheet
+            const workbook = XLSX.utils.book_new();
+            const worksheetData = [
+                [
+                    "Tran ID",
+                    "ประเภทบัตร",
+                    "ประเภทรถ",
+                    "หมายเลขบัตร",
+                    "ทะเบียน",
+                    "ประเภทการชำระ",
+                    "เวลาเข้า",
+                    "เวลาออก",
+                    "ระยะเวลาจอด",
+                    "ประเภทผู้ใช้",
+                ],
+                ...rows,
+            ];
+            const worksheet = XLSX.utils.aoa_to_sheet(worksheetData);
+
+            // Set column types for 'G' (time_in), 'H' (time_out), and 'I' (parking_time)
+            const cellRange = XLSX.utils.decode_range(worksheet["!ref"]);
+            for (let col = cellRange.s.c; col <= cellRange.e.c; col++) {
+                const colLetter = XLSX.utils.encode_col(col);
+
+                if (colLetter === "G" || colLetter === "H") {
+                    // Set datetime format for columns 'G' and 'H'
+                    for (let row = cellRange.s.r + 1; row <= cellRange.e.r + 1; row++) {
+                        const cell = worksheet[colLetter + row];
+                        if (cell.v !== null && cell.v !== "-") {
+                            cell.z = "yyyy-mm-dd hh:mm:ss";
+                        }
+                    }
+                } else if (colLetter === "I") {
+                    // Set time format for column 'I'
+                    for (let row = cellRange.s.r + 1; row <= cellRange.e.r + 1; row++) {
+                        const cell = worksheet[colLetter + row];
+                        if (cell.v !== null && cell.v !== "-" && !isNaN(cell.v)) {
+                            cell.z = "hh:mm:ss";
+                        }
+                    }
+                }
+            }
+
+            // Calculate column widths based on the content
+            const columnWidths = [];
+            for (let col = cellRange.s.c; col <= cellRange.e.c; col++) {
+                const colLetter = XLSX.utils.encode_col(col);
+                let maxLength = colLetter.length; // Set the minimum width to the column letter length
+
+                for (let row = cellRange.s.r + 1; row <= cellRange.e.r + 1; row++) {
+                    const cell = worksheet[colLetter + row];
+                    const cellValue = cell.v !== null ? cell.v.toString() : "";
+                    maxLength = Math.max(maxLength, cellValue.length);
+                }
+
+                // Adjust the maximum length if it exceeds a certain value
+                maxLength = Math.min(maxLength, 50);
+
+                // Set the column width to fit the content
+                const width = Math.round((maxLength + 2) * 1.2); // Add some padding and multiply by a factor for a better fit
+                columnWidths.push({ wch: width });
+            }
+            worksheet["!cols"] = columnWidths;
+
+            // Add the worksheet to the workbook
+            XLSX.utils.book_append_sheet(workbook, worksheet, sheetName);
+
+            // Generate the Excel file and initiate the download
+            const excelFile = XLSX.write(workbook, { bookType: "xlsx", type: "array" });
+            const blob = new Blob([excelFile], { type: "application/octet-stream" });
+
+            // Check if the browser supports the "download" attribute
+            if (typeof navigator.msSaveBlob !== "undefined") {
+                // For IE and Edge browsers
+                navigator.msSaveBlob(blob, filename);
+            } else {
+                // For other modern browsers
+                const downloadLink = document.createElement("a");
+                downloadLink.href = URL.createObjectURL(blob);
+                downloadLink.download = filename;
+                document.body.appendChild(downloadLink);
+                downloadLink.click();
+                document.body.removeChild(downloadLink);
+            }
+        }
+
+        document.getElementById('export-excel-button').addEventListener('click', function () {
+            const filename = 'Export-รายงานข้อมูลรถเข้า-ออก.xlsx'; // Specify the filename
+            const sheetName = 'Content'; // Specify the sheet name
+            exportToExcel(filename, sheetName);
+        });
+
+
+        function searchTable(searchText) {
+            let foundMatch = false;
+            let filteredRows = [];
+
+            if (searchText.length > 0) {
+                for (let i = 0; i < data.length; i++) {
+                    const row = data[i];
+                    let rowMatch = false;
+
+                    for (let prop in row) {
+                        const cellValue = row[prop].toString().toLowerCase();
+
+                        if (cellValue.includes(searchText)) {
+                            rowMatch = true;
+                            break;
+                        }
+                    }
+
+                    if (rowMatch) {
+                        foundMatch = true;
+                        filteredRows.push(row);
+                    }
+                }
+
+                if (foundMatch) {
+                    // Update the table data with the filtered rows
+                    currentPage = 1
+                    assignTableData(resData = JSON.stringify(resData = filteredRows), rowType = 'Filters');
+                } else {
+                    // Handle case when no rows match the search
+                    console.log("No matching rows found.");
+                    // Clear the table data
+                    assignTableData("");
+                }
+            } else {
+                assignTableData(resData = JSON.stringify(data))
+            }
+
+
+        }
+
+        document.getElementById('search-button2').addEventListener('click', function () {
+            const searchText = this.value.toLowerCase().trim();
+            searchTable(searchText);
+        });
+
+        document.getElementById('search-input').addEventListener('keyup', function () {
+            const searchText = this.value.toLowerCase().trim();
+            searchTable(searchText);
+        });
+
+        function sendSearchData() {
+            // Retrieve the values from the input fields
+            var lineSelect = document.getElementById('lineSelect').value;
+            var parkingSelect = document.getElementById('parkingSelect').value;
+            var customerTypeSelect = document.getElementById('customerTypeSelect').value;
+            var periodSelect = document.getElementById('periodSelect').value;
+            var fromDate = document.getElementById('fromDate').value;
+            var toDate = document.getElementById('toDate').value;
+            var fromTime = document.getElementById('fromTime').value;
+            var toTime = document.getElementById('toTime').value;
+
+            var searchData = {
+                lineSelect: lineSelect,
+                parkingSelect: parkingSelect,
+                customerTypeSelect: customerTypeSelect,
+                periodSelect: periodSelect,
+                fromDate: fromDate,
+                toDate: toDate,
+                fromTime: fromTime,
+                toTime: toTime
+            };
+
+            tableBody.innerHTML = '<tr rowspan="10"><td colspan="10" align="center"><div class="loader"></div></td></tr>';
+
+            fetch('/manage/car_in_out_report', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(searchData)
+            }).then(response => response.json())
+                .then(data => {
+                    currentPage = 1; // set to first page
+                    // Handle the response data
+                    var encodedData = data.encode_data;
+                    assignTableData(resData = encodedData)
+                })
+                .catch(error => {
+                    // Handle any errors that occurred during the request
+                    console.log(error);
+                });
+        }
+
+        function renderPagination(totalItems) {
+            var paginationContainer = document.getElementById("pagination-container");
+            paginationContainer.innerHTML = "";
+            var showIndexContainer = document.getElementById("show-index");
+
+            var totalPages = Math.ceil(totalItems / itemsPerPage);
+            var visiblePages = 5; // Number of visible pages (including the current page)
+            var startPage = currentPage - Math.floor(visiblePages / 2);
+            var endPage = currentPage + Math.floor(visiblePages / 2);
+
+            if (startPage < 1) {
+                startPage = 1;
+                endPage = Math.min(visiblePages, totalPages);
+            }
+
+            if (endPage > totalPages) {
+                startPage = Math.max(1, totalPages - visiblePages + 1);
+                endPage = totalPages;
+            }
+
+            var startIndex = (currentPage - 1) * itemsPerPage + 1;
+            var endIndex = Math.min(startIndex + itemsPerPage - 1, totalItems);
+            if (totalItems > 0) {
+                showIndexText = "แสดง " + startIndex + " ถึง " + endIndex + " จาก " + totalItems;
+            } else {
+                showIndexText = "ไม่พบข้อมูล";
+            }
+            showIndexContainer.innerText = showIndexText;
+
+            var paginationUl = document.createElement("ul");
+            paginationUl.classList.add("pagination");
+
+            // Create the "First Page" button
+            var firstLi = document.createElement("li");
+            firstLi.classList.add("page-item");
+            var firstButton = document.createElement("button");
+            firstButton.innerHTML = "หน้าแรก";
+            firstButton.classList.add("page-link");
+            firstButton.addEventListener("click", function () {
+                if (currentPage > 1) {
+                    currentPage = 1;
+                    assignTableData(); // Update table data without calling sendSearchData()
+                }
+            });
+            firstButton.style.color = "#1a086e";
+            firstLi.appendChild(firstButton);
+            paginationUl.appendChild(firstLi);
+
+            // Create the "Previous" button
+            var prevLi = document.createElement("li");
+            prevLi.classList.add("page-item");
+            var prevButton = document.createElement("button");
+            prevButton.innerHTML = "&laquo;";
+            prevButton.classList.add("page-link");
+            prevButton.addEventListener("click", function () {
+                if (currentPage > 1) {
+                    currentPage--;
+                    assignTableData(); // Update table data without calling sendSearchData()
+                }
+            });
+            prevButton.style.color = "#1a086e";
+            prevLi.appendChild(prevButton);
+            paginationUl.appendChild(prevLi);
+
+            // Create the pagination buttons
+            for (var i = startPage; i <= endPage; i++) {
+                var paginationLi = document.createElement("li");
+                paginationLi.classList.add("page-item");
+
+                var paginationButton = document.createElement("button");
+                paginationButton.innerText = i;
+                paginationButton.classList.add("page-link");
+
+                if (i === currentPage) {
+                    paginationButton.classList.add("active");
+                    paginationButton.style.backgroundColor = "#1a086e";
+                    paginationButton.style.color = "#ffffff"; // Invert color for the active page
+                } else {
+                    paginationButton.style.color = "#1a086e"; // Set font color for non-active pages
+                    paginationButton.addEventListener("click", function () {
+                        currentPage = parseInt(this.innerText);
+                        assignTableData(); // Update table data without calling sendSearchData()
+                    });
+                }
+
+                paginationLi.appendChild(paginationButton);
+                paginationUl.appendChild(paginationLi);
+            }
+
+            // Create the "Next" button
+            var nextLi = document.createElement("li");
+            nextLi.classList.add("page-item");
+            var nextButton = document.createElement("button");
+            nextButton.innerHTML = "&raquo;";
+            nextButton.classList.add("page-link");
+            nextButton.addEventListener("click", function () {
+                if (currentPage < totalPages) {
+                    currentPage++;
+                    assignTableData(); // Update table data without calling sendSearchData()
+                }
+            });
+            nextButton.style.color = "#1a086e";
+            nextLi.appendChild(nextButton);
+            paginationUl.appendChild(nextLi);
+
+            // Create the "Last Page" button
+            var lastLi = document.createElement("li");
+            lastLi.classList.add("page-item");
+            var lastButton = document.createElement("button");
+            lastButton.innerHTML = "หน้าสุดท้าย";
+            lastButton.classList.add("page-link");
+            lastButton.addEventListener("click", function () {
+                if (currentPage < totalPages) {
+                    currentPage = totalPages;
+                    assignTableData(); // Update table data without calling sendSearchData()
+                }
+            });
+            lastButton.style.color = "#1a086e";
+            lastLi.appendChild(lastButton);
+            paginationUl.appendChild(lastLi);
+
+            paginationContainer.appendChild(paginationUl);
+        }
+
+        function sortTable(columnIndex) {
+            var headers = document.querySelectorAll("#datagrid-table thead th");
+            var sortIcon = document.querySelectorAll(".sort-icon");
+
+            function removeIcons(headers) {
+                // Remove upward triangle icon or downward triangle icon of all headers
+                for (var i = 0; i < headers.length; i++) {
+                    if (headers[i].classList.contains("asc")) {
+                        headers[i].classList.remove("asc");
+                        sortIcon[i].innerHTML = ""; // Remove sort icon
+                    } else if (headers[i].classList.contains("desc")) {
+                        headers[i].classList.remove("desc");
+                        sortIcon[i].innerHTML = ""; // Remove sort icon
+                    }
+                }
+            }
+
+            // Toggle sort order icon
+            if (headers[columnIndex].classList.contains("asc")) {
+                removeIcons(headers)
+                headers[columnIndex].classList.add("desc");
+                sortIcon[columnIndex].innerHTML = "&#9652;"; // Upward triangle icon
+                ascSort(columnIndex);
+            } else if (headers[columnIndex].classList.contains("desc")) {
+                removeIcons(headers)
+                descSort(columnIndex);
+            } else {
+                headers[columnIndex].classList.add("asc");
+                sortIcon[columnIndex].innerHTML = "&#9662;"; // Downward triangle icon
+                descSort(columnIndex);
+            }
+
+            assignTableData(); // Update the table with sorted data
+        }
+
+        function descSort(columnIndex) {
+            switch (columnIndex) {
+                case 0: // tran_id (number)
+                    data.sort((a, b) => b.tran_id - a.tran_id);
+                    break;
+                case 1: // card_type (text)
+                    data.sort((a, b) => b.card_type.localeCompare(a.card_type));
+                    break;
+                case 2: // vehicle_type (text)
+                    data.sort((a, b) => b.vehicle_type.localeCompare(a.vehicle_type));
+                    break;
+                case 3: // card_id (text)
+                    data.sort((a, b) => b.card_id.localeCompare(a.card_id));
+                    break;
+                case 4: // license_plate_no (text)
+                    data.sort((a, b) => b.license_plate_no.localeCompare(a.license_plate_no));
+                    break;
+                case 5: // payment_type (text)
+                    data.sort((a, b) => b.payment_type.localeCompare(a.payment_type));
+                    break;
+                case 6: // time_in (datetime)
+                    data.sort((a, b) => new Date(b.time_in) - new Date(a.time_in));
+                    break;
+                case 7: // time_out (datetime)
+                    data.sort((a, b) => new Date(b.time_out) - new Date(a.time_out));
+                    break;
+                case 8: // parking_time (time)
+                    data.sort((a, b) => {
+                        const timeA = a.parking_time.split(":");
+                        const timeB = b.parking_time.split(":");
+                        return new Date(1970, 0, 1, 0, timeB[0], timeB[1], timeB[2]) - new Date(1970, 0, 1, 0, timeA[0], timeA[1], timeA[2]);
+                    });
+                    break;
+                case 9: // visitor_type (text)
+                    data.sort((a, b) => b.visitor_type.localeCompare(a.visitor_type));
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        function ascSort(columnIndex) {
+            switch (columnIndex) {
+                case 0: // tran_id (number)
+                    data.sort((a, b) => a.tran_id - b.tran_id);
+                    break;
+                case 1: // card_type (text)
+                    data.sort((a, b) => a.card_type.localeCompare(b.card_type));
+                    break;
+                case 2: // vehicle_type (text)
+                    data.sort((a, b) => a.vehicle_type.localeCompare(b.vehicle_type));
+                    break;
+                case 3: // card_id (text)
+                    data.sort((a, b) => a.card_id.localeCompare(b.card_id));
+                    break;
+                case 4: // license_plate_no (text)
+                    data.sort((a, b) => a.license_plate_no.localeCompare(b.license_plate_no));
+                    break;
+                case 5: // payment_type (text)
+                    data.sort((a, b) => a.payment_type.localeCompare(b.payment_type));
+                    break;
+                case 6: // time_in (datetime)
+                    data.sort((a, b) => new Date(a.time_in) - new Date(b.time_in));
+                    break;
+                case 7: // time_out (datetime)
+                    data.sort((a, b) => new Date(a.time_out) - new Date(b.time_out));
+                    break;
+                case 8: // parking_time (time)
+                    data.sort((a, b) => {
+                        const timeA = a.parking_time.split(":");
+                        const timeB = b.parking_time.split(":");
+                        return new Date(1970, 0, 1, 0, timeA[0], timeA[1], timeA[2]) - new Date(1970, 0, 1, 0, timeB[0], timeB[1], timeB[2]);
+                    });
+                    break;
+                case 9: // visitor_type (text)
+                    data.sort((a, b) => a.visitor_type.localeCompare(b.visitor_type));
+                    break;
+                default:
+                    break;
+            }
+        }
+
+    </script>
+
+    {% include "manage/comps/footer.html" %}
+</body>
