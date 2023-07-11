@@ -830,6 +830,18 @@
             }
         }
 
+        function toggleIcon(button) {
+            var icon = button.querySelector("i");
+
+            if (icon.classList.contains("fa-chevron-up")) {
+                icon.classList.remove("fa-chevron-up");
+                icon.classList.add("fa-chevron-down");
+            } else if (icon.classList.contains("fa-chevron-down")) {
+                icon.classList.remove("fa-chevron-down");
+                icon.classList.add("fa-chevron-up");
+            }
+        }
+
     </script>
 
     {% include "manage/comps/footer.html" %}
