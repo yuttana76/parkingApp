@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    {% include "include/manage-css.html" %}
+    {% include "include/manage-js.html" %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ตั้งค่าวันหยุด</title>
+
+    <!-- Include Material-UI CSS -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+
+    <!-- Include MUI CSS -->
+    <link rel="stylesheet" href="https://cdn.muicss.com/mui-0.9.41/css/mui.min.css">
+
+    <!-- Include jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <!-- Include Excel Library -->
+    <script src="https://unpkg.com/xlsx/dist/xlsx.full.min.js"></script>
+
+    <!-- MUI CSS -->
+    <link href="https://cdn.muicss.com/mui-0.10.3/css/mui.min.css" rel="stylesheet" type="text/css">
+
+    <!-- MUI JavaScript -->
+    <script src="https://cdn.muicss.com/mui-0.10.3/js/mui.min.js"></script>
+
+</head>
+
+<style>
+    .date-time {
+        background-color: white;
+        border-radius: 5px;
+        border: 1px solid #ccc;
+    }
+
+    .date-time-picker {
+        padding-bottom: 9px;
+        padding-top: 7px;
+        padding-left: 15px;
+        padding-right: 15px;
+        margin-bottom: 0px;
+    }
+
+    table {
+        table-layout: auto;
+    }
+
+    .mui-dialog {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 9999;
+        background-color: #fff;
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
+    }
+
+    .mui-dialog-content {
+        padding: 16px;
+    }
+
+    .mui-dialog-content label {
+        margin-bottom: 8px;
+    }
+
+    .mui-dialog-content input[type="text"],
+    .mui-dialog-content input[type="date"] {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+    }
+
+    .mui-dialog-content button {
+        margin-top: 16px;
+    }
+
+    .content-wrapper.modal-active {
+        position: relative;
+        filter: blur(4px);
+        pointer-events: none;
+    }
+
+    .content-wrapper.modal-active .mui-dialog {
+        pointer-events: auto;
+    }
+
+    #datagrid-body tr:hover {
+        background-color: #e9eaeb;
+        /* Change this color to your desired highlight color */
+    }
+
+    td i:hover {
+        border-radius: 50%;
+        background-color: #ffffff;
+        /* Change this color to your desired highlight color */
+        padding: 5px;
+    }
+
+    #create-button {
+        border: black 2px dotted;
+        border-radius: 5px;
+        margin-top: 15px;
+    }
+
+    #create-button:hover {
+        background-color: #1a086e;
+        color: #ccc;
+    }
+</style>
+
+
+<body class="hold-transition sidebar-mini layout-fixed">
+    <div class="wrapper">
+        {% include "manage/comps/header.html" %}
+        {% include "manage/comps/sidebar.html" %}
+
+        <div class="content-wrapper">
+            <div class="content-header" style="padding-bottom: 0px;">
+                <div class="container-fluid">
+                    <div class="row mb-3">
+                        <div class="col-sm-12 mb-3">
+                            <h1 class="m-0 mui--text-primary"
+                                style="font-size: 28px; font-weight: bold; color: #1a086e">
+                                ปฏิทินวันหยุด
+                            </h1>
+                        </div>
+                        <div class="col-sm-12 mb-3">
+                            <div id="dataSection" class="collapse show">
+                                <div class="row">
+                                    <div class="col-lg-3">
+                                        <div class="row">
+                                            <div class="col-sm-12">
+                                                <label for="yearSelect">ปี</label>
+                                                <select id="yearSelect" class="mui-select" onchange="sendSearchData()">
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-3">
+                                        <div class="row">
+                                            <div class="col-sm-12">
+                                                <label for="parkingSelect">เลือกสถานีรถไฟฟ้า</label>
+                                                <select id="parkingSelect" class="mui-select"
+                                                    onchange="sendSearchData()">
+                                                    <option value="สถานีลาดพร้าว 9 ชั้น">สถานีลาดพร้าว 9 ชั้น
+                                                    </option>
+                                                    <option value="สถานีรัชดาภิเษก">สถานีรัชดาภิเษก</option>
+                                                    <option value="สถานีศูนย์วัฒนธรรม (ลาน 1)">
+                                                        สถานีศูนย์วัฒนธรรม (ลาน
+                                                        1)
+                                                    </option>
+                                                    <option value="สถานีศูนย์วัฒนธรรม (รัชดาภิเษกซอย 6)">
+                                                        สถานีศูนย์วัฒนธรรม
+                                                        (รัชดาภิเษกซอย 6)</option>
+                                                    <option value="สถานีพระราม 9">สถานีพระราม 9</option>
+                                                    <option value="สถานีสุขุมวิท">สถานีสุขุมวิท</option>
+                                                    <option value="สถานีศูนย์การประชุมแห่งชาติสิริกิติ์">
+                                                        สถานีศูนย์การประชุมแห่งชาติสิริกิติ์</option>
+                                                    <option value="ฝั่งตรงข้ามศูนย์การประชุมแห่งชาติสิริกิติ์">
+                                                        ฝั่งตรงข้ามศูนย์การประชุมแห่งชาติสิริกิติ์</option>
+                                                    <option value="สถานีสามย่าน">สถานีสามย่าน</option>
+                                                    <option value="สถานีหลักสอง">สถานีหลักสอง</option>
+                                                    <option value="สถานีคลองบางไผ่">สถานีคลองบางไผ่</option>
+                                                    <option value="สถานีสามแยกบางใหญ่">สถานีสามแยกบางใหญ่
+                                                    </option>
+                                                    <option value="สถานีบางรักน้อยท่าอิฐ">สถานีบางรักน้อยท่าอิฐ
+                                                    </option>
+                                                    <option value="สถานีแยกนนทบุรี 1">สถานีแยกนนทบุรี 1</option>
+                                                    <option value="สถานีเคหะฯ">สถานีเคหะฯ</option>
+                                                    <option value="สถานีแยก คปอ.">สถานีแยก คปอ.</option>
+                                                    <option value="สถานีคูคต">สถานีคูคต</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="content-header" style="padding-top: 0px;">
+                <div class="container-fluid">
+                    <div class="row mb-3">
+                        <div class="col-lg-6" style="margin-top: 10px;">
+                            <div class="mui-panel" style="border-radius: 5px; border: 1px solid #ccc;">
+                                <div class="mui-datagrid" style="border-radius: 5px; border: 1px solid #ccc;">
+                                    <div class="table-container" style="overflow-x: auto;">
+                                        <table class="mui-table" style="white-space: nowrap; table-layout: auto;"
+                                            id="datagrid-table">
+                                            <thead>
+                                                <tr
+                                                    style="background-color: #1a086e; color: white; border-radius: 5px;">
+                                                    <th>รายละเอียดวันหยุด</th>
+                                                    <th>วันหยุด</th>
+                                                    <th>แก้ไข</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="datagrid-body">
+                                                <!-- holiday list -->
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                                <div>
+                                    <button id='create-button' class="mui-btn" style="width: 100%;"
+                                        onclick="createHoliday()">
+                                        <i class="fas fa-plus"></i> เพิ่มวันหยุด
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="content">
+                <div class="container-fluid">
+                    <table id="datagrid-table">
+                        <!-- table rows -->
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Dialog to add holiday -->
+    <div id="add-holiday-dialog" class="mui-dialog" style="display: none;">
+        <div class="mui-dialog-content">
+            <h2 class="mui--text-center" style="font-weight: bold; color: #1a086e;">เพิ่มวันหยุด</h2>
+            <form id="add-holiday-form" class="mui-form">
+                <label for="holiday-description">รายละเอียดวันหยุด</label>
+                <input type="text" id="holiday-description" required>
+                <label for="holiday-date" style="margin-top: 15px;">วันหยุด</label>
+                <input type="date" id="holiday-date" required>
+                <div id="validation-message" style="color: red;"></div>
+                <div class="mui--text-center">
+                    <button type="button" class="mui-btn mui-btn--primary" onclick="insertHoliday()">บันทึก</button>
+                    <button type="button" class="mui-btn" onclick="closeDialog()">ยกเลิก</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Dialog to edit or remove holiday -->
+    <div id="edit-holiday-dialog" class="mui-dialog" style="display: none;">
+        <div class="mui-dialog-content">
+            <h2 class="mui--text-center" style="font-weight: bold; color: #1a086e;">แก้ไขวันหยุด</h2>
+            <form id="edit-holiday-form" class="mui-form">
+                <input type="text" id="edit-holiday-settings-id" required style="display:none;">
+                <label for="edit-holiday-description">รายละเอียดวันหยุด</label>
+                <input type="text" id="edit-holiday-description" required>
+                <label for="edit-holiday-date" style="margin-top: 15px;">วันหยุด</label>
+                <input type="date" id="edit-holiday-date" required>
+                <div id="edit-validation-message" style="color: red; margin-top: 15px;"></div>
+                <div class="mui--text-center">
+                    <button type="button" class="mui-btn mui-btn--primary" onclick="updateHoliday()">บันทึก</button>
+                    <button type="button" class="mui-btn mui-btn--danger" onclick="deleteHoliday()">ลบ</button>
+                    <button type="button" class="mui-btn" onclick="closeEditDialog()">ยกเลิก</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        var data;
+
+        function initialLoad() {
+            let selectElement = document.getElementById("yearSelect");
+
+            // Get the holiday date input element
+            var holidayDateInput = document.getElementById('holiday-date');
+            var currentDate = new Date();
+            var currentYear = currentDate.getFullYear();
+            var currentMonth = String(currentDate.getMonth() + 1).padStart(2, '0');
+            var currentDay = String(currentDate.getDate()).padStart(2, '0');
+            holidayDateInput.min = `${currentYear}-01-01`;
+            holidayDateInput.max = `${currentYear}-12-31`;
+            holidayDateInput.value = `${currentYear}-${currentMonth}-${currentDay}`;
+
+            // Generate options for years 1900 to 2100
+            for (var year = 1900; year <= 2100; year++) {
+                var option = document.createElement("option");
+                option.value = year;
+                option.textContent = year;
+
+                if (year === currentYear) {
+                    option.selected = true; // Set the current year as the default option
+                }
+
+                selectElement.appendChild(option);
+            }
+
+            sendSearchData();
+        }
+        document.addEventListener("DOMContentLoaded", initialLoad)
+
+        function sendSearchData() {
+            var yearSelect = document.getElementById('yearSelect').value
+            var parkingSelect = document.getElementById('parkingSelect').value
+            var searchData = {
+                yearSelect: yearSelect,
+                parkingSelect: parkingSelect
+            }
+            fetch('/manage/holiday_settings', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(searchData)
+            }).then(response => response.json())
+                .then(data => {
+                    var encodedData = data.encode_data
+                    assignTableData(resData = encodedData)
+                })
+                .catch(error => {
+                    console.log(error)
+                })
+        }
+
+        function assignTableData(resData) {
+            var encodedData = '';
+            if (resData) {
+                encodedData = resData;;
+            } else {
+                encodedData = '{{ data|safe }}';
+            }
+            data = JSON.parse(decodeURIComponent(encodedData));
+
+            var datagridBody = document.getElementById('datagrid-body');
+            var tableRows = "";
+
+            data.forEach(function (row) {
+                tableRows += "<tr data-holiday-settings-id='" + row.holidaySettingsId + "'>";
+                tableRows += "<td>" + row.description + "</td>";
+                tableRows += "<td>" + row.holidayDate + "</td>";
+                tableRows += `<td><i class='fas fa-pen' onclick="editHoliday(${row.holidaySettingsId})"></i></td>`;
+                tableRows += "</tr>";
+            })
+            datagridBody.innerHTML = tableRows;
+        }
+
+        function createHoliday() {
+            var dialog = document.getElementById("add-holiday-dialog");
+            dialog.style.display = "block";
+            var contentWrapper = document.querySelector(".content-wrapper");
+            contentWrapper.classList.add("modal-active");
+        }
+
+        function closeDialog() {
+            var dialog = document.getElementById("add-holiday-dialog");
+            dialog.style.display = "none";
+            var contentWrapper = document.querySelector(".content-wrapper");
+            contentWrapper.classList.remove("modal-active");
+        }
+
+        function insertHoliday() {
+            var description = document.getElementById("holiday-description").value;
+            var holidayDate = document.getElementById("holiday-date").value;
+
+            var isDuplicate = data.some(function (row) {
+                return row.holidayDate === holidayDate;
+            });
+
+            var validationMessage = document.getElementById("validation-message");
+            if (isDuplicate) {
+                validationMessage.textContent = "วันหยุดนี้เคยสร้างไปแล้ว";
+                return;
+            } else if (description.length == 0) {
+                validationMessage.textContent = "กรุณาใส่รายละเอียดวันหยุด";
+                return;
+            } else {
+                var yearSelect = document.getElementById('yearSelect').value
+                var parkingSelect = document.getElementById('parkingSelect').value
+                var insertData = {
+                    description: description,
+                    holidayDate: holidayDate,
+                    yearSelect: yearSelect,
+                    parkingSelect: parkingSelect
+                };
+
+                fetch('/manage/cud_holiday_settings', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(insertData)
+                })
+                    .then(response => {
+                        sendSearchData()
+                    })
+            }
+
+            // Close the dialog
+            closeDialog();
+        }
+
+        function editHoliday(holidaySettingsId) {
+            var dialog = document.getElementById("edit-holiday-dialog");
+            dialog.style.display = "block";
+            var contentWrapper = document.querySelector(".content-wrapper");
+            contentWrapper.classList.add("modal-active");
+
+            // Find the corresponding data object
+            var holidayData = data.find(function (row) {
+                if (row.holidaySettingsId == holidaySettingsId) {
+                    return row;
+                }
+            });
+
+            // Check if holidayData is defined
+            if (holidayData) {
+                // Populate the input fields in the edit-holiday dialog
+                var editHolidayDescription = document.getElementById("edit-holiday-description");
+                editHolidayDescription.value = holidayData.description;
+
+                var editHolidayDate = document.getElementById("edit-holiday-date");
+                var currentDate = new Date(holidayData.holidayDate);
+                var currentYear = currentDate.getFullYear();
+                var currentMonth = String(currentDate.getMonth() + 1).padStart(2, '0');
+                var currentDay = String(currentDate.getDate()).padStart(2, '0');
+                editHolidayDate.min = `${currentYear}-01-01`;
+                editHolidayDate.max = `${currentYear}-12-31`;
+                editHolidayDate.value = `${currentYear}-${currentMonth}-${currentDay}`;
+
+                // Store the holiday settings ID in a hidden input field
+                var editHolidaySettingsId = document.getElementById("edit-holiday-settings-id");
+                editHolidaySettingsId.value = holidaySettingsId;
+
+                // Show the edit-holiday dialog
+                var editHolidayDialog = document.getElementById("edit-holiday-dialog");
+                editHolidayDialog.style.display = "block";
+
+                // Add modal-active class to the content wrapper to show the modal overlay
+                var contentWrapper = document.querySelector(".content-wrapper");
+                contentWrapper.classList.add("modal-active");
+            } else {
+                console.error("Holiday data not found for ID:", holidaySettingsId);
+            }
+        }
+
+        function closeEditDialog() {
+            // Close the edit-holiday dialog
+            var editHolidayDialog = document.getElementById("edit-holiday-dialog");
+            editHolidayDialog.style.display = "none";
+
+            // Remove the modal-active class from the content wrapper to hide the modal overlay
+            var contentWrapper = document.querySelector(".content-wrapper");
+            contentWrapper.classList.remove("modal-active");
+        }
+
+        function updateHoliday() {
+            // Get the updated holiday details
+            var description = document.getElementById("edit-holiday-description").value;
+            var holidayDate = document.getElementById("edit-holiday-date").value;
+            var holidaySettingsId = document.getElementById("edit-holiday-settings-id").value;
+
+            var duplicates = 0
+            data.forEach(function (row) {
+                if (row.holidayDate == holidayDate) {
+                    duplicates++;
+                }
+            })
+
+            var validationMessage = document.getElementById("edit-validation-message");
+            if (duplicates > 1) {
+                validationMessage.textContent = "วันหยุดนี้เคยสร้างไปแล้ว";
+                return;
+            } else if (description.length == 0) {
+                validationMessage.textContent = "กรุณาใส่รายละเอียดวันหยุด";
+                return;
+            }
+
+            var updateData = {
+                holidaySettingsId: holidaySettingsId,
+                description: description,
+                holidayDate: holidayDate
+            };
+
+            fetch('/manage/cud_holiday_settings', {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(updateData)
+            })
+                .then(response => {
+                    sendSearchData();
+                });
+
+            // Perform the update operation using the holidaySettingsId and updated details
+
+            // Close the edit-holiday dialog
+            closeEditDialog();
+        }
+
+        function deleteHoliday() {
+            // Get the holiday settings ID from the hidden input field
+            var holidaySettingsId = document.getElementById("edit-holiday-settings-id").value;
+            var deleteData = {
+                holidaySettingsId: holidaySettingsId
+            };
+
+            fetch('/manage/cud_holiday_settings', {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(deleteData)
+            })
+                .then(response => {
+                    sendSearchData();
+                });
+            // Perform the delete operation using the holidaySettingsId
+
+            // Close the edit-holiday dialog
+            closeEditDialog();
+        }
+
+        // Get the dialog element
+        const addHolidayDialog = document.getElementById('add-holiday-dialog');
+
+        // Listen for key events
+        document.addEventListener('keydown', function (event) {
+            if (event.key === 'Enter') {
+                // Check if the dialog is open and the active element is within the dialog
+                if (addHolidayDialog.style.display === 'block' && addHolidayDialog.contains(document.activeElement)) {
+                    event.preventDefault(); // Prevent the default Enter key behavior
+                    insertHoliday(); // Call the insertHoliday() function
+                }
+            } else if (event.key === 'Escape') {
+                // Check if the dialog is open
+                if (addHolidayDialog.style.display === 'block') {
+                    event.preventDefault(); // Prevent the default Escape key behavior
+                    closeDialog(); // Call the closeDialog() function
+                }
+            }
+        });
+
+        // Get the dialog element
+        const editHolidayDialog = document.getElementById('edit-holiday-dialog');
+
+        // Listen for key events
+        document.addEventListener('keydown', function (event) {
+            if (event.key === 'Enter') {
+                // Check if the dialog is open and the active element is within the dialog
+                if (editHolidayDialog.style.display === 'block' && editHolidayDialog.contains(document.activeElement)) {
+                    event.preventDefault(); // Prevent the default Enter key behavior
+                    updateHoliday(); // Call the insertHoliday() function
+                }
+            } else if (event.key === 'Escape') {
+                // Check if the dialog is open
+                if (editHolidayDialog.style.display === 'block') {
+                    event.preventDefault(); // Prevent the default Escape key behavior
+                    closeEditDialog(); // Call the closeDialog() function
+                }
+            }
+        });
+
+    </script>
+
+    {% include "manage/comps/footer.html" %}
+</body>

@@ -38,6 +38,7 @@ from user_owned_card import checkCardNotRandom
 from apiMember import ApiMember
 from senddatatolocal import send_data_to_publish_service_with_ordernumber
 from mail_notification import change_verify_status_notification
+import urllib.parse
 
 
 @app.route('/manage/', methods=['GET', 'POST'])
@@ -961,11 +962,6 @@ def insert_parking_manage2():
         db.session.commit()
         
         return redirect(url_for('parking_manage'))
-
-@app.route('/manage/income-summary-report')
-def income_summary_report():
-    return render_template('manage/income-summary-report.html')
-
 
 # @app.route('')
 @app.route('/manage/permission')
@@ -2680,6 +2676,378 @@ def change_address():
     db.session.commit()
     # print(type(data['id']))
     return 'success'
+
+# =========== Jirameth - Add on date 11-07-2023 ===========
+class CustomJSONEncoder(json.JSONEncoder):
+    def default(self, obj):
+        if isinstance(obj, date):
+            return obj.isoformat()
+        return super().default(obj)
+
+@app.route('/manage/cud_holiday_settings', methods=['POST', 'DELETE', 'PATCH'])
+def cud_holiday_settings():
+    try:
+        if request.method == 'POST':
+            holiday = {}
+            data = request.get_json()
+            if data is None:
+                return jsonify(error='Invalid JSON data'), 400
+            holiday['description'] = data['description']
+            holiday['holiday_date'] = data['holidayDate']
+            holiday['parking_name'] = data['parkingSelect']
+            with mysql.connection.cursor() as cursor:
+                cursor.execute("insert into `holiday_settings` (`description`,`holiday_date`,`parking_name`) values('{}', '{}', '{}')".format(holiday['description'], holiday['holiday_date'], holiday['parking_name']))
+                mysql.connection.commit()
+
+            return jsonify(success=True)
+        if request.method == 'DELETE':
+            data = request.get_json()
+            holidaySettingId = data['holidaySettingsId']  # Update the variable name to match the JavaScript code
+            with mysql.connection.cursor() as cursor:
+                # Delete the row from the holiday_settings table based on holidaySettingId
+                cursor.execute("DELETE FROM `holiday_settings` WHERE `holiday_settings_id` = '{}'".format(holidaySettingId))
+                mysql.connection.commit()
+
+            return jsonify(success=True)
+        if request.method == 'PATCH':
+            data = request.get_json()
+
+            # Extract the fields to be updated
+            holidaySettingId = data['holidaySettingsId']
+            description = data['description']
+            holidayDate = data['holidayDate']
+
+            with mysql.connection.cursor() as cursor:
+                cursor.execute("""
+                UPDATE holiday_settings
+                    SET description = '{}', holiday_date = '{}'
+                WHERE holiday_settings_id = '{}'
+                """.format(description, holidayDate, holidaySettingId))
+                mysql.connection.commit()
+
+            return jsonify(success=True)
+    except Exception as e:
+        return jsonify(error="An error occurred while inserting the holiday settings"), 500
+
+@app.route('/manage/holiday_settings', methods=['GET', 'POST'])
+def holiday_settings():
+    # Access the search parameters using the keys in search_data dictionary
+    filters={};
+    try:
+        if request.method == 'POST':
+            data = request.get_json()
+            if data is None:
+                return jsonify(error='Invalid JSON data'), 400
+            filters['year'] = data['yearSelect']
+            filters['parking_name'] = data['parkingSelect']
+        elif request.method == 'GET':
+            year = datetime.datetime.now().strftime("%Y")
+            filters['year'] = year
+            filters['parking_name'] = 'All'
+    except:
+        print("Error in member_info_report function.")
+
+    whereStr = ''
+    if filters:
+        if filters['year']:
+            whereStr += "\nand year(holiday_date) = '%s'" % filters['year']
+        if filters['parking_name']:
+            if filters['parking_name'] != 'All':
+                whereStr += "\nand parking_name = '%s'" % filters['parking_name']
+
+    cursor = mysql.connection.cursor()
+    cursor.execute("""
+    select
+        holiday_settings_id as holidaySettingsId,
+        description,
+        holiday_date as holidayDate
+    from holiday_settings
+    where holiday_settings_id is not null{}
+    order by holiday_date asc
+    """.format(whereStr))
+    data = cursor.fetchall()
+    columns = [column[0] for column in cursor.description]
+    result = [dict(zip(columns, row)) for row in data]
+    json_data = json.dumps(result, ensure_ascii=False, cls=CustomJSONEncoder)
+    encoded_data = urllib.parse.quote(json_data)
+    if request.method == 'POST':
+        return jsonify(encode_data=encoded_data)
+    return render_template('/manage/settings/holiday-settings.html', data=encoded_data)
+
+@app.route('/manage/member_info_report', methods=['GET', 'POST'])
+def member_info_report():
+    # Access the search parameters using the keys in search_data dictionary
+    filters={};
+    try:
+        if request.method == 'POST':
+            data = request.get_json()
+            if data is None:
+                return jsonify(error='Invalid JSON data'), 400
+            filters['line'] = data['lineSelect']
+            filters['parking_name'] = data['parkingSelect']
+            filters['visitor_type'] = data['customerTypeSelect']
+            filters['from_date'] = data['fromDate']
+            filters['to_date'] = data['toDate']
+        elif request.method == 'GET':
+            today = datetime.datetime.now().strftime("%Y-%m-%d")
+            minusOneMonthDate = (datetime.datetime.now() - relativedelta(months=1)).strftime("%Y-%m-%d")
+            filters = {
+                'line': "All",
+                'parking_name': 'All',
+                'visitor_type': 'All',
+                'from_date': minusOneMonthDate,
+                'to_date': today,
+            }
+    except:
+        print("Error in member_info_report function.")
+    print("Filters: {}".format(filters))
+
+    whereStr = ''
+    if filters:
+        if 'line' in filters:
+            if filters['line'] != 'All':
+                whereStr += "\nand pmang.line_name = '%s'" % filters['line']
+        if 'parking_name' in filters:
+            if filters['parking_name'] != 'All':
+                whereStr += "\nand pmang.parking_name = '%s'" % filters['parking_name']
+        if 'visitor_type' in filters:
+            if filters['visitor_type'] == 'Visitor':
+                whereStr += "\nand pmem.id IS NULL"
+            elif filters['visitor_type'] == 'Member':
+                whereStr += "\nand pmem.id IS NOT NULL"
+        if 'from_date' in filters or 'to_date' in filters:
+            if 'from_date' in filters and 'to_date' in filters:
+                whereStr += "\nand DATE(pm.parking_register_date) between '%s' and '%s'" % (filters['from_date'], filters['to_date'])
+            elif 'from_date' in filters and 'to_date' not in filters:
+                whereStr += "\nand DATE(pm.parking_register_date) between '%s' and '%s'" % (filters['from_date'], filters['from_date'])
+            else:
+                whereStr += "\nand DATE(pm.parking_register_date) between '%s' and '%s'" % (filters['to_date'], filters['to_date'])
+    print("Where Condition: {}".format(whereStr))
+
+    cursor = mysql.connection.cursor()
+    cursor.execute("""
+    select 
+        CAST(pm.id as CHAR) as 'member_id',
+        '-' as 'card_type',
+        pm.card_id as 'card_no',
+        "รถยนต์" as 'vehicle_type',
+        case
+        	when pm.license_plate2 is not null and pm.license_plate2 != '' then concat(pm.license_plate1, ', ', pm.license_plate2)
+        	else pm.license_plate1
+        end as 'license_plate',
+        pm.first_name_th as 'first_name',
+        pm.last_name_th as 'last_name',
+        IFNULL(DATE(pm.parking_register_date), '-') as 'card_start_date',
+        IFNULL(pm.card_expire_date, '-') as "card_end_date",
+        '-' as 'remark'
+    from parking_member pm
+    left join parking_manage pmang
+        on pm.parking_code = pmang.parking_code
+    where pm.id is not null{}
+    order by DATE(pm.parking_register_date) desc
+    """.format(whereStr))
+    data = cursor.fetchall()
+    columns = [column[0] for column in cursor.description]
+    result = [dict(zip(columns, row)) for row in data]
+    json_data = json.dumps(result, ensure_ascii=False)
+    encoded_data = urllib.parse.quote(json_data)
+    if request.method == 'POST':
+        return jsonify(encode_data=encoded_data)
+    return render_template('/manage/reports/member-info-report.html', data=encoded_data)
+
+@app.route('/manage/income_summary_report', methods=['GET', 'POST'])
+def income_summary_report():
+   # Access the search parameters using the keys in search_data dictionary
+    filters = {};
+    try:
+        if request.method == 'POST':
+            data = request.get_json()
+            if data is None:
+                return jsonify(error='Invalid JSON data'), 400
+            filters['line'] = data['lineSelect']
+            filters['parking_name'] = data['parkingSelect']
+            filters['from_date'] = data['fromDate']
+            filters['to_date'] = data['toDate']
+        elif request.method == 'GET':
+            today = datetime.datetime.now().strftime("%Y-%m-%d")
+            minusOneMonthDate = (datetime.datetime.now() - relativedelta(months=1)).strftime("%Y-%m-%d")
+            filters = {
+                'line': "All",
+                'parking_name': 'All',
+                'from_date': minusOneMonthDate,
+                'to_date': today,
+            }
+    except:
+        print("Error in income_summary_report function.")
+
+    print("Filters: {}".format(filters))
+
+    whereStr = ''
+    if filters:
+        if 'line' in filters:
+            if filters['line'] != 'All':
+                whereStr += "\nand pm.line_name = '%s'" % filters['line']
+        if 'parking_name' in filters:
+            if filters['parking_name'] != 'All':
+                whereStr += "\nand pm.parking_name = '%s'" % filters['parking_name']
+        if 'from_date' in filters or 'to_date' in filters:
+            if 'from_date' in filters and 'to_date' in filters:
+                whereStr += "\nand pl.payment_date between '%s' and '%s'" % (filters['from_date'], filters['to_date'])
+            elif 'from_date' in filters and 'to_date' not in filters:
+                whereStr += "\nand pl.payment_date between '%s' and '%s'" % (filters['from_date'], filters['from_date'])
+            else:
+                whereStr += "\nand pl.payment_date between '%s' and '%s'" % (filters['to_date'], filters['to_date'])
+
+    print("Where Condition: {}".format(whereStr))
+
+    cursor = mysql.connection.cursor()
+    cursor.execute("""
+    select 
+        IFNULL(bd.payment_date, '-') as payment_date,
+        (case 
+            when DAYNAME(bd.payment_date) = 'Sunday' then 'วันอาทิตย์'
+            when DAYNAME(bd.payment_date) = 'Monday' then 'วันจันทร์'
+            when DAYNAME(bd.payment_date) = 'Tuesday' then 'วันอังคาร'
+            when DAYNAME(bd.payment_date) = 'Wednesday' then 'วันพุธ'
+            when DAYNAME(bd.payment_date) = 'Thursday' then 'วันพฤหัสบดี'
+            when DAYNAME(bd.payment_date) = 'Friday' then 'วันศุกร์'
+            else 'วันเสาร์'
+        end
+        ) as payment_day_name,
+        (select ifnull(sum(total), 0) from parking_log where cast(payment_date as DATE) = bd.payment_date and payment_name = 1 and ifnull(fine, 0) = 0) as 'cash',
+        (select ifnull(sum(total), 0) from parking_log where cast(payment_date as DATE) = bd.payment_date and payment_name = 3 and ifnull(fine, 0) = 0) as 'qr_code',
+        (select ifnull(sum(total), 0) from parking_log where cast(payment_date as DATE) = bd.payment_date and payment_name = 2 and ifnull(fine, 0) = 0) as 'cr',
+        (select ifnull(sum(total), 0) from parking_log where cast(payment_date as DATE) = bd.payment_date and payment_name = 4 and ifnull(fine, 0) = 0) as 'ktb_bank',
+        (select ifnull(sum(total), 0) from parking_log where cast(payment_date as DATE) = bd.payment_date and payment_name = 5 and ifnull(fine, 0) = 0) as 'cheque',
+        (select ifnull(sum(total), 0) from parking_log where cast(payment_date as DATE) = bd.payment_date) as 'total',
+        (select ifnull(sum(fine), 0) from parking_log where cast(payment_date as DATE) = bd.payment_date and ifnull(fine, 0) > 0) as 'fine'
+    from (
+    select 
+        CAST(pl.payment_date AS DATE) AS payment_date
+    from parking_log pl
+    left join parking_manage pm 
+    	on pl.parking_code = pm.parking_code
+    where pl.payment_status = 1
+    and pl.payment_date is not null{}
+    group by CAST(pl.payment_date AS DATE)
+    ) bd
+    order by bd.payment_date desc
+    """.format(whereStr))
+    data = cursor.fetchall()
+    columns = [column[0] for column in cursor.description]
+    result = [dict(zip(columns, row)) for row in data]
+    json_data = json.dumps(result, ensure_ascii=False)
+    encoded_data = urllib.parse.quote(json_data)
+    if request.method == 'POST':
+        return jsonify(encode_data=encoded_data)
+    return render_template('/manage/reports/income-summary-report.html', data=encoded_data)
+
+@app.route('/manage/car_in_out_report', methods=['GET', 'POST'])
+def car_in_out_report():
+    # Access the search parameters using the keys in search_data dictionary
+    filters={};
+    try:
+        print("request method name: " + request.method)
+        if request.method == 'POST':
+            data = request.get_json()
+            if data is None:
+                return jsonify(error='Invalid JSON data'), 400
+            filters['line'] = data['lineSelect']
+            filters['parking_name'] = data['parkingSelect']
+            filters['visitor_type'] = data['customerTypeSelect']
+            filters['period'] = data['periodSelect']
+            filters['from_date'] = data['fromDate']
+            filters['to_date'] = data['toDate']
+            filters['from_time'] = data['fromTime']
+            filters['to_time'] = data['toTime']
+        elif request.method == 'GET':
+            today = datetime.datetime.now().strftime("%Y-%m-%d")
+            minusOneMonthDate = (datetime.datetime.now() - relativedelta(months=1)).strftime("%Y-%m-%d")
+            filters = {
+                'line': "All",
+                'parking_name': 'All',
+                'visitor_type': 'All',
+                'period': 'All',
+                'from_date': minusOneMonthDate,
+                'to_date': today,
+                'from_time': '09:00',
+                'to_time': '18:00',
+            }
+    except:
+        print("Error in car_in_out_report function.")
+
+    print(filters)
+
+    whereStr = ''
+    joinStr = ''
+    if filters:
+        if 'line' in filters:
+            if filters['line'] != 'All':
+                whereStr += "\nand pm.line_name = '%s'" % filters['line']
+        if 'parking_name' in filters:
+            if filters['parking_name'] != 'All':
+                whereStr += "\nand pm.parking_name = '%s'" % filters['parking_name']
+        if 'visitor_type' in filters:
+            if filters['visitor_type'] == 'Visitor':
+                whereStr += "\nand pmem.id IS NULL"
+            elif filters['visitor_type'] == 'Member':
+                whereStr += "\nand pmem.id IS NOT NULL"
+        if 'period' in filters:
+            if filters['period'] == 'วันทำการ':
+                whereStr += '\nand hs.holiday_date is null'
+            if filters['period'] == 'วันหยุดนักขัตฤกษ์':
+                whereStr += '\nand hs.holiday_date is not null'
+            if filters['period'] == 'วันเสาร์-อาทิตย์':
+                whereStr += "\nand (DAYOFWEEK(plv.time_in) = 1 OR DAYOFWEEK(plv.time_in) = 7)"
+        if 'from_date' in filters or 'to_date' in filters:
+            if 'from_date' in filters and 'to_date' in filters:
+                whereStr += "\nand plv.time_in between '%s' and '%s'" % (filters['from_date'], filters['to_date'])
+            elif 'from_date' in filters and 'to_date' not in filters:
+                whereStr += "\nand plv.time_in between '%s' and '%s'" % (filters['from_date'], filters['from_date'])
+            else:
+                whereStr += "\nand plv.time_in between '%s' and '%s'" % (filters['to_date'], filters['to_date'])
+        if 'from_time' in filters or 'to_time' in filters:
+            if 'from_time' in filters and 'to_time' in filters:
+                whereStr += "\nand TIME(plv.time_in) between '%s' and '%s'" % (filters['from_time'], filters['to_time'])
+            elif 'from_time' in filters and 'to_time' not in filters:
+                whereStr += "\nand TIME(plv.time_in) between '%s' and '%s'" % (filters['from_time'], filters['from_time'])
+            else:
+                whereStr += "\nand TIME(plv.time_in) between '%s' and '%s'" % (filters['to_time'], filters['to_time'])
+
+    cursor = mysql.connection.cursor()
+    cursor.execute("""
+    select
+        plv.id as 'tran_id',
+        (case when pmem.id is not null then 'MEMBER'
+        else 'VISITOR' end) as 'card_type',
+        "รถยนต์" as 'vehicle_type',
+        IFNULL(pmem.card_id, '-') as 'card_id',
+        IFNULL(plv.license_plate, '-') as 'license_plate_no',
+        "-" as 'payment_type',
+        IFNULL(plv.time_in, "-") as 'time_in',
+	    IFNULL(plv.time_out, "-") as 'time_out',
+        DATE_FORMAT(timediff(ifnull(plv.time_out, now()), plv.time_in), '%T') as 'parking_time',
+        (case when plv.estamp is not null then 'ใช้บริการรถไฟฟ้า'
+            else 'ไม่ใช้บริการรถไฟฟ้า' end) as 'visitor_type'
+    from parking_logvisitor plv
+    left join parking_manage pm
+        on plv.parking_code = pm.parking_code
+    left join parking_member pmem
+        on plv.license_plate in (pmem.license_plate1, pmem.license_plate2) and plv.parking_code = pmem.parking_code
+    left join holiday_settings hs
+    	on pm.parking_name = hs.parking_name and date(plv.time_in) = hs.holiday_date
+    where plv.type = 1{}
+    order by plv.time_in DESC""".format(whereStr))
+    data = cursor.fetchall()
+    columns = [column[0] for column in cursor.description]
+    result = [dict(zip(columns, row)) for row in data]
+    json_data = json.dumps(result, ensure_ascii=False)
+    encoded_data = urllib.parse.quote(json_data)
+    if request.method == 'POST':
+        return jsonify(encode_data=encoded_data)
+    return render_template('/manage/reports/car-in-out-report.html', data=encoded_data)
+
+# =========== Jirameth - Add on date 11-07-2023 ===========
 
 if __name__ == '__main__':
     app.run(debug=True)
