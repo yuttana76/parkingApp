@@ -40,7 +40,7 @@ def capacity_count(parking_code,log_id):
             pass
         else:
             last_invoice = station.start_inv_no
-            invoice = last_invoice.split('/')[0]+ '/' + station.parking_branch+'/' +str(int(last_invoice.split('/')[-1])+1).zfill(3)
+            invoice = last_invoice.split('/')[0]+ '/' + station.parking_branch+'/' +str(int(last_invoice.split('/')[-1])+1).zfill(4)
             station.start_inv_no = invoice
             log_update.invoice_no = invoice
             same_branch = Parking_manage.query.filter_by(parking_branch = station.parking_branch).all()
@@ -56,7 +56,7 @@ def capacity_count(parking_code,log_id):
             if log_update.invoice_deposit:
                 pass
             else:
-                invoice2 = invoice.split('/')[0]+ '/' + station.parking_branch+'/' +str(int(invoice.split('/')[-1])+1).zfill(3)
+                invoice2 = invoice.split('/')[0]+ '/' + station.parking_branch+'/' +str(int(invoice.split('/')[-1])+1).zfill(4)
                 station.start_inv_no = invoice2
                 log_update.invoice_deposit = invoice2
                 same_branch2 = Parking_manage.query.filter_by(parking_branch = station.parking_branch).all()
